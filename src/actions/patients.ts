@@ -9,6 +9,7 @@ import { auditLog, getClientIpFromHeaders } from '@/lib/audit';
 import { generateId } from '@/lib/utils/generate-id';
 import { patientCreateSchema, patientUpdateSchema } from '@/lib/validators/patient';
 import { checkDuplicateIdNumber, getPatientById } from '@/queries/patients';
+import { toDateStr } from '@/lib/dates';
 
 export type PatientActionState =
   | null
@@ -54,7 +55,7 @@ export async function createPatient(
   }
 
   const patientId = generateId();
-  const dob = data.date_of_birth.toISOString().split('T')[0];
+  const dob = toDateStr(data.date_of_birth);
 
   await db.transaction(async (tx) => {
     await tx.insert(patients).values({
@@ -150,7 +151,7 @@ export async function updatePatient(
   if (fields.first_name !== undefined) updateData.firstName = fields.first_name;
   if (fields.last_name !== undefined) updateData.lastName = fields.last_name;
   if (fields.date_of_birth !== undefined)
-    updateData.dateOfBirth = fields.date_of_birth.toISOString().split('T')[0];
+    updateData.dateOfBirth = toDateStr(fields.date_of_birth);
   if (fields.sex !== undefined) updateData.sex = fields.sex;
   if (fields.phone !== undefined) updateData.phone = fields.phone ?? null;
   if (fields.email !== undefined) updateData.email = fields.email || null;

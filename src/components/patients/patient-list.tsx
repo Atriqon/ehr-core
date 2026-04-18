@@ -115,40 +115,44 @@ export function PatientList({ data }: PatientListProps) {
 }
 
 function PatientRow({ patient }: { patient: PatientListItem }) {
+  const router = useRouter();
   const prefix = ID_TYPE_LABELS[patient.idType] ?? '';
   const age = calcAge(patient.dateOfBirth);
+  const href = `/pacientes/${patient.id}`;
 
   return (
-    <Link
-      href={`/pacientes/${patient.id}`}
-      className="group flex cursor-pointer"
-      prefetch={false}
+    <tr
+      className="group cursor-pointer transition-colors hover:bg-blue-50/50 dark:hover:bg-blue-950/20 [&_td]:px-4 [&_td]:py-3.5"
+      onClick={() => router.push(href)}
     >
-      <tr className="group w-full cursor-pointer transition-colors hover:bg-blue-50/50 dark:hover:bg-blue-950/20 [&_td]:px-4 [&_td]:py-3.5">
-        <td>
-          <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-semibold text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
-              {patient.firstName[0]}
-              {patient.lastName[0]}
-            </div>
-            <div>
-              <p className="font-medium text-zinc-900 group-hover:text-blue-700 dark:text-zinc-100 dark:group-hover:text-blue-400">
-                {patient.lastName}, {patient.firstName}
-              </p>
-              {!patient.isActive && (
-                <span className="text-xs text-zinc-400 dark:text-zinc-500">(Inactivo)</span>
-              )}
-            </div>
+      <td>
+        <div className="flex items-center gap-3">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-semibold text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
+            {patient.firstName[0]}
+            {patient.lastName[0]}
           </div>
-        </td>
-        <td className="text-zinc-600 dark:text-zinc-400">
-          {prefix}
-          {patient.idNumber}
-        </td>
-        <td className="text-zinc-600 dark:text-zinc-400">{patient.phone ?? '—'}</td>
-        <td className="text-zinc-600 dark:text-zinc-400">{age} años</td>
-        <td className="text-zinc-400 dark:text-zinc-500">—</td>
-      </tr>
-    </Link>
+          <div>
+            <Link
+              href={href}
+              prefetch={false}
+              onClick={(e) => e.stopPropagation()}
+              className="font-medium text-zinc-900 group-hover:text-blue-700 dark:text-zinc-100 dark:group-hover:text-blue-400"
+            >
+              {patient.lastName}, {patient.firstName}
+            </Link>
+            {!patient.isActive && (
+              <span className="block text-xs text-zinc-400 dark:text-zinc-500">(Inactivo)</span>
+            )}
+          </div>
+        </div>
+      </td>
+      <td className="text-zinc-600 dark:text-zinc-400">
+        {prefix}
+        {patient.idNumber}
+      </td>
+      <td className="text-zinc-600 dark:text-zinc-400">{patient.phone ?? '—'}</td>
+      <td className="text-zinc-600 dark:text-zinc-400">{age} años</td>
+      <td className="text-zinc-400 dark:text-zinc-500">—</td>
+    </tr>
   );
 }

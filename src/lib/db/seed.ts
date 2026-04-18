@@ -4,6 +4,7 @@ import { Pool } from 'pg';
 import * as argon2 from 'argon2';
 import { v7 as uuidv7 } from 'uuid';
 import * as schema from './schema';
+import { toDateStr } from '../dates';
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL! });
 const db = drizzle(pool, { schema });
@@ -24,10 +25,6 @@ function daysFromNow(n: number): Date {
   const d = new Date();
   d.setDate(d.getDate() + n);
   return d;
-}
-
-function toDateStr(d: Date): string {
-  return d.toISOString().split('T')[0];
 }
 
 async function main() {
@@ -176,9 +173,37 @@ async function main() {
 
   // ─── Appointments (30 distributed this week) ──────────────────────────────
 
-  const statuses: Array<typeof schema.appointments.$inferInsert['status']> = [
-    'scheduled', 'confirmed', 'waiting', 'in_progress', 'completed', 'completed', 'no_show',
-  ];
+  // Pick a status that's realistic for the appointment's date and time.
+  // Past days are mostly completed (with the occasional no_show / cancelled),
+  // today reflects the time of day, and future days are scheduled/confirmed.
+  type ApptStatus = typeof schema.appointments.$inferInsert['status'];
+  const now = new Date();
+  const currentHour = now.getHours();
+
+  function pickStatus(dayOffset: number, hour: number, idx: number): ApptStatus {
+    if (dayOffset < 0) {
+      // Past day: 80% completed, 15% no_show, 5% cancelled
+      const r = idx % 20;
+      if (r < 16) return 'completed';
+      if (r < 19) return 'no_show';
+      return 'cancelled';
+    }
+
+    if (dayOffset > 0) {
+      // Future day: mostly scheduled, some confirmed, an occasional cancellation
+      const r = idx % 10;
+      if (r < 5) return 'scheduled';
+      if (r < 9) return 'confirmed';
+      return 'cancelled';
+    }
+
+    // Today: status depends on whether the slot has already passed.
+    if (hour + 1 <= currentHour - 1) return 'completed';
+    if (hour <= currentHour && hour + 1 > currentHour) return 'in_progress';
+    if (hour === currentHour + 1) return 'waiting';
+    // Slot is later today.
+    return idx % 2 === 0 ? 'confirmed' : 'scheduled';
+  }
 
   const appointmentIds: string[] = [];
   for (let i = 0; i < 30; i++) {
@@ -187,7 +212,7 @@ async function main() {
     const dayOffset = (i % 7) - 3; // spread across -3 to +3 days
     const hour = 8 + (i % 9); // 8:00 to 16:00
     const minutes = i % 2 === 0 ? '00' : '30';
-    const status = statuses[i % statuses.length];
+    const status = pickStatus(dayOffset, hour, i);
 
     await db.insert(schema.appointments).values({
       id: aptId,

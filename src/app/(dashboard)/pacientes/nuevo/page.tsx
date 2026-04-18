@@ -4,10 +4,15 @@ import { getSession } from '@/lib/auth/session';
 import { redirect } from 'next/navigation';
 import { createPatient } from '@/actions/patients';
 import { PatientForm } from '@/components/patients/patient-form';
+import { getClinicSettings } from '@/queries/clinic';
+import { todayInTz } from '@/lib/dates';
 
 export default async function NuevoPacientePage() {
   const session = await getSession();
   if (!session) redirect('/login');
+
+  const { timezone } = await getClinicSettings(session.clinicId);
+  const todayStr = todayInTz(timezone);
 
   return (
     <div className="mx-auto max-w-2xl p-6 lg:p-8">
@@ -28,7 +33,7 @@ export default async function NuevoPacientePage() {
           Los campos marcados con <span className="text-red-500">*</span> son obligatorios.
         </p>
 
-        <PatientForm action={createPatient} mode="create" />
+        <PatientForm action={createPatient} mode="create" todayStr={todayStr} />
       </div>
     </div>
   );

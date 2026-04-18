@@ -29,6 +29,8 @@ interface PatientTabsProps {
   // in this list is neither rendered in the nav nor in the content area, and
   // no amount of client-side state manipulation can reveal its contents.
   allowedTabs: PatientTabId[];
+  /** "Today" in the clinic's timezone (YYYY-MM-DD). Forwarded to PatientForm. */
+  todayStr: string;
   // Server-rendered slots for role-gated clinical tabs. `undefined` when the
   // current user isn't permitted to view them.
   historiaSlot?: ReactNode;
@@ -39,6 +41,7 @@ interface PatientTabsProps {
 export function PatientTabs({
   patient,
   allowedTabs,
+  todayStr,
   historiaSlot,
   notasSlot,
   citasSlot,
@@ -109,7 +112,7 @@ export function PatientTabs({
               <h2 className="mb-4 text-base font-semibold text-zinc-900 dark:text-zinc-100">
                 Editar datos del paciente
               </h2>
-              <PatientForm action={updatePatient} patient={patient} mode="edit" />
+              <PatientForm action={updatePatient} patient={patient} mode="edit" todayStr={todayStr} />
             </div>
           ) : (
             <PatientSummary patient={patient} />

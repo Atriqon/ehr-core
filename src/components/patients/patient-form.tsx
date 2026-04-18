@@ -5,6 +5,7 @@ import { AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { PatientActionState } from '@/actions/patients';
 import type { Patient } from '@/lib/db/schema';
+import { toDateStr } from '@/lib/dates';
 
 type Tab = 'personal' | 'contact' | 'insurance';
 
@@ -18,9 +19,15 @@ interface PatientFormProps {
   action: (state: PatientActionState, formData: FormData) => Promise<PatientActionState>;
   patient?: Patient;
   mode?: 'create' | 'edit';
+  /**
+   * "Today" in the clinic's timezone (YYYY-MM-DD). Used as the upper bound
+   * of the date-of-birth input so a user in a different timezone than the
+   * clinic cannot pick a "future" DOB that's still today for the clinic.
+   */
+  todayStr: string;
 }
 
-export function PatientForm({ action, patient, mode = 'create' }: PatientFormProps) {
+export function PatientForm({ action, patient, mode = 'create', todayStr }: PatientFormProps) {
   const [state, formAction, isPending] = useActionState(action, null);
   const [activeTab, setActiveTab] = useState<Tab>('personal');
 
@@ -34,7 +41,7 @@ export function PatientForm({ action, patient, mode = 'create' }: PatientFormPro
   const dobValue = patient?.dateOfBirth
     ? typeof patient.dateOfBirth === 'string'
       ? patient.dateOfBirth
-      : new Date(patient.dateOfBirth).toISOString().split('T')[0]
+      : toDateStr(new Date(patient.dateOfBirth))
     : '';
 
   return (
@@ -152,7 +159,7 @@ export function PatientForm({ action, patient, mode = 'create' }: PatientFormPro
               name="date_of_birth"
               type="date"
               defaultValue={dobValue}
-              max={new Date().toISOString().split('T')[0]}
+              max={todayStr}
               className={fieldClass(!!field('date_of_birth'))}
             />
             {field('date_of_birth') && <FieldError msg={field('date_of_birth')} />}

@@ -104,6 +104,7 @@ export default async function PatientDetailPage({ params }: PageProps) {
       <PatientTabs
         patient={patient}
         allowedTabs={allowedTabs}
+        todayStr={todayStr}
         citasSlot={
           <PatientAppointments
             appointments={patientAppointments}
