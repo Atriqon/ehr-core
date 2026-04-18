@@ -1,0 +1,1 @@
+ALTER TABLE "clinics" ADD COLUMN "week_starts_on" smallint DEFAULT 1 NOT NULL;

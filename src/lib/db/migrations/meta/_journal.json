@@ -8,6 +8,13 @@
       "when": 1776378601885,
       "tag": "0000_cheerful_swordsman",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1776534992826,
+      "tag": "0001_messy_living_mummy",
+      "breakpoints": true
     }
   ]
 }

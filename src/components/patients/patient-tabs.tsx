@@ -33,6 +33,7 @@ interface PatientTabsProps {
   // current user isn't permitted to view them.
   historiaSlot?: ReactNode;
   notasSlot?: ReactNode;
+  citasSlot?: ReactNode;
 }
 
 export function PatientTabs({
@@ -40,6 +41,7 @@ export function PatientTabs({
   allowedTabs,
   historiaSlot,
   notasSlot,
+  citasSlot,
 }: PatientTabsProps) {
   const allowed = new Set(allowedTabs);
   const initialTab: PatientTabId = allowed.has('datos')
@@ -116,10 +118,12 @@ export function PatientTabs({
       )}
 
       {activeTab === 'citas' && allowed.has('citas') && (
-        <PlaceholderSection
-          title="Citas"
-          description="Las citas del paciente aparecerán aquí una vez que se implemente el módulo de agenda."
-        />
+        citasSlot ?? (
+          <PlaceholderSection
+            title="Citas"
+            description="Las citas del paciente aparecerán aquí."
+          />
+        )
       )}
 
       {activeTab === 'historia' && allowed.has('historia') && historiaSlot}

@@ -9,6 +9,7 @@ import {
   date,
   time,
   integer,
+  smallint,
   jsonb,
   uniqueIndex,
   index,
@@ -60,6 +61,10 @@ export const clinics = pgTable('clinics', {
   address: text('address'),
   phone: varchar('phone', { length: 50 }),
   timezone: varchar('timezone', { length: 50 }).notNull().default('America/Caracas'),
+  // First day of the calendar week for this clinic. 0 = Sunday (US convention),
+  // 1 = Monday (most of Europe / ISO 8601). Default 1 because it is the most
+  // universal expectation; Venezuela accepts either without friction.
+  weekStartsOn: smallint('week_starts_on').notNull().default(1),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });

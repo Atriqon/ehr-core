@@ -4,10 +4,14 @@ import { ArrowLeft } from 'lucide-react';
 import { getSession } from '@/lib/auth/session';
 import { getPatientById } from '@/queries/patients';
 import { getMedicalHistory } from '@/queries/medical-history';
+import { getAppointmentsByPatient } from '@/queries/appointments';
+import { getClinicSettings } from '@/queries/clinic';
 import { PatientTabs, type PatientTabId } from '@/components/patients/patient-tabs';
 import { ToggleActiveButton } from '@/components/patients/toggle-active-button';
 import { MedicalHistoryForm } from '@/components/patients/medical-history-form';
+import { PatientAppointments } from '@/components/appointments/patient-appointments';
 import { safeAuditLog, getClientIpFromHeaders } from '@/lib/audit';
+import { todayInTz } from '@/lib/dates';
 
 const CLINICAL_ROLES = new Set(['admin', 'doctor']);
 
@@ -44,9 +48,12 @@ export default async function PatientDetailPage({ params }: PageProps) {
   // Only fetch medical history for roles that can access it. The query itself
   // re-enforces the role gate, but we still branch here to avoid throwing on
   // legitimate non-clinical viewers.
-  const medicalHistory = canViewClinical
-    ? await getMedicalHistory(patient.id)
-    : null;
+  const [medicalHistory, patientAppointments, clinicSettings] = await Promise.all([
+    canViewClinical ? getMedicalHistory(patient.id) : Promise.resolve(null),
+    getAppointmentsByPatient(session.clinicId, patient.id),
+    getClinicSettings(session.clinicId),
+  ]);
+  const todayStr = todayInTz(clinicSettings.timezone);
 
   const dob = patient.dateOfBirth as string;
   const [year, month, day] = dob.split('-');
@@ -97,6 +104,13 @@ export default async function PatientDetailPage({ params }: PageProps) {
       <PatientTabs
         patient={patient}
         allowedTabs={allowedTabs}
+        citasSlot={
+          <PatientAppointments
+            appointments={patientAppointments}
+            patientId={patient.id}
+            todayStr={todayStr}
+          />
+        }
         historiaSlot={
           canViewClinical ? (
             <MedicalHistoryForm patientId={patient.id} history={medicalHistory} />
