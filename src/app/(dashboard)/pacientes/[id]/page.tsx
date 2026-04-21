@@ -7,11 +7,14 @@ import { getMedicalHistory } from '@/queries/medical-history';
 import { getAppointmentsByPatient } from '@/queries/appointments';
 import { getClinicalNotesByPatient } from '@/queries/clinical-notes';
 import { getClinicSettings } from '@/queries/clinic';
+import { getAttachmentsByPatient } from '@/queries/attachments';
 import { PatientTabs, type PatientTabId } from '@/components/patients/patient-tabs';
 import { ToggleActiveButton } from '@/components/patients/toggle-active-button';
 import { MedicalHistoryForm } from '@/components/patients/medical-history-form';
 import { PatientAppointments } from '@/components/appointments/patient-appointments';
 import { ClinicalNoteTimeline } from '@/components/clinical-notes/clinical-note-timeline';
+import { AttachmentUploader } from '@/components/attachments/attachment-uploader';
+import { AttachmentList } from '@/components/attachments/attachment-list';
 import { safeAuditLog, getClientIpFromHeaders } from '@/lib/audit';
 import { todayInTz } from '@/lib/dates';
 
@@ -50,13 +53,20 @@ export default async function PatientDetailPage({ params }: PageProps) {
   // Only fetch medical history + notes for roles that can access them. Both
   // queries re-enforce the role gate, but we still branch here to avoid
   // throwing on legitimate non-clinical viewers.
-  const [medicalHistory, clinicalNotes, patientAppointments, clinicSettings] = await Promise.all([
+  const [
+    medicalHistory,
+    clinicalNotes,
+    patientAppointments,
+    clinicSettings,
+    patientAttachments,
+  ] = await Promise.all([
     canViewClinical ? getMedicalHistory(patient.id) : Promise.resolve(null),
     canViewClinical
       ? getClinicalNotesByPatient(session.clinicId, patient.id)
       : Promise.resolve([]),
     getAppointmentsByPatient(session.clinicId, patient.id),
     getClinicSettings(session.clinicId),
+    getAttachmentsByPatient(session.clinicId, patient.id),
   ]);
   const todayStr = todayInTz(clinicSettings.timezone);
   const canCreateNote = session.role === 'doctor';
@@ -131,6 +141,22 @@ export default async function PatientDetailPage({ params }: PageProps) {
               canCreate={canCreateNote}
             />
           ) : undefined
+        }
+        adjuntosSlot={
+          <div className="space-y-4">
+            <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900">
+              <h2 className="mb-3 text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+                Subir adjunto
+              </h2>
+              <AttachmentUploader patientId={patient.id} />
+            </div>
+            <AttachmentList
+              attachments={patientAttachments}
+              sessionUserId={session.userId}
+              sessionRole={session.role}
+              timeZone={clinicSettings.timezone}
+            />
+          </div>
         }
       />
     </div>

@@ -4,8 +4,11 @@ import { ArrowLeft } from 'lucide-react';
 import { getSession } from '@/lib/auth/session';
 import { getClinicalNoteById } from '@/queries/clinical-notes';
 import { getClinicSettings } from '@/queries/clinic';
+import { getAttachmentsByClinicalNote } from '@/queries/attachments';
 import { ClinicalNoteForm } from '@/components/clinical-notes/clinical-note-form';
 import { ClinicalNoteView } from '@/components/clinical-notes/clinical-note-view';
+import { AttachmentUploader } from '@/components/attachments/attachment-uploader';
+import { AttachmentList } from '@/components/attachments/attachment-list';
 import { safeAuditLog, getClientIpFromHeaders } from '@/lib/audit';
 import { todayInTz } from '@/lib/dates';
 
@@ -51,7 +54,10 @@ export default async function ClinicalNoteDetailPage({ params }: PageProps) {
   const isOwnUnsignedByDoctor =
     session.role === 'doctor' && session.userId === note.authorId && !note.isSigned;
 
-  const clinicSettings = await getClinicSettings(session.clinicId);
+  const [clinicSettings, noteAttachments] = await Promise.all([
+    getClinicSettings(session.clinicId),
+    getAttachmentsByClinicalNote(session.clinicId, note.id),
+  ]);
   const todayStr = todayInTz(clinicSettings.timezone);
   const canViewInternalNotes = session.role === 'doctor';
 
@@ -102,6 +108,26 @@ export default async function ClinicalNoteDetailPage({ params }: PageProps) {
       ) : (
         <ClinicalNoteView note={note} canViewInternalNotes={canViewInternalNotes} />
       )}
+
+      {/* Attachments tied to this note. Doctor authoring an unsigned note can
+          upload; everyone else (admin, or doctor viewing a signed/other note)
+          still sees the list + download. */}
+      <section className="mt-8 space-y-4">
+        <h2 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+          Adjuntos de la nota
+        </h2>
+        {isOwnUnsignedByDoctor && (
+          <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900">
+            <AttachmentUploader patientId={note.patientId} clinicalNoteId={note.id} />
+          </div>
+        )}
+        <AttachmentList
+          attachments={noteAttachments}
+          sessionUserId={session.userId}
+          sessionRole={session.role}
+          timeZone={clinicSettings.timezone}
+        />
+      </section>
     </div>
   );
 }

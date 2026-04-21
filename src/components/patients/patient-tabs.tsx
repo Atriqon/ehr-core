@@ -36,6 +36,7 @@ interface PatientTabsProps {
   historiaSlot?: ReactNode;
   notasSlot?: ReactNode;
   citasSlot?: ReactNode;
+  adjuntosSlot?: ReactNode;
 }
 
 export function PatientTabs({
@@ -45,6 +46,7 @@ export function PatientTabs({
   historiaSlot,
   notasSlot,
   citasSlot,
+  adjuntosSlot,
 }: PatientTabsProps) {
   const allowed = new Set(allowedTabs);
   const initialTab: PatientTabId = allowed.has('datos')
@@ -134,10 +136,12 @@ export function PatientTabs({
       {activeTab === 'notas' && allowed.has('notas') && notasSlot}
 
       {activeTab === 'adjuntos' && allowed.has('adjuntos') && (
-        <PlaceholderSection
-          title="Adjuntos"
-          description="Los documentos y archivos del paciente aparecerán aquí una vez que se implemente el módulo de adjuntos."
-        />
+        adjuntosSlot ?? (
+          <PlaceholderSection
+            title="Adjuntos"
+            description="Los documentos y archivos del paciente aparecerán aquí."
+          />
+        )
       )}
     </div>
   );
