@@ -52,6 +52,40 @@ export async function getClinic(clinicId: string): Promise<ClinicSummary | null>
  * server's local clock so the app behaves consistently regardless of where
  * it is hosted.
  */
+export interface FullClinic {
+  id: string;
+  name: string;
+  address: string | null;
+  phone: string | null;
+  timezone: string;
+  weekStartsOn: 0 | 1;
+}
+
+export async function getFullClinic(clinicId: string): Promise<FullClinic | null> {
+  const rows = await db
+    .select({
+      id: clinics.id,
+      name: clinics.name,
+      address: clinics.address,
+      phone: clinics.phone,
+      timezone: clinics.timezone,
+      weekStartsOn: clinics.weekStartsOn,
+    })
+    .from(clinics)
+    .where(eq(clinics.id, clinicId))
+    .limit(1);
+  const row = rows[0];
+  if (!row) return null;
+  return {
+    id: row.id,
+    name: row.name,
+    address: row.address,
+    phone: row.phone,
+    timezone: row.timezone,
+    weekStartsOn: normalizeWeekStartsOn(row.weekStartsOn),
+  };
+}
+
 export async function getClinicSettings(clinicId: string): Promise<ClinicSettings> {
   const rows = await db
     .select({
