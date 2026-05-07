@@ -36,6 +36,7 @@ export interface PatientListItem {
   sex: string;
   phone: string | null;
   email: string | null;
+  avatarStorageKey: string | null;
   isActive: boolean;
   createdAt: Date;
 }
@@ -71,6 +72,7 @@ export async function getPatients(
         sex: patients.sex,
         phone: patients.phone,
         email: patients.email,
+        avatarStorageKey: patients.avatarStorageKey,
         isActive: patients.isActive,
         createdAt: patients.createdAt,
       })

@@ -15,6 +15,9 @@ import { PatientAppointments } from '@/components/appointments/patient-appointme
 import { ClinicalNoteTimeline } from '@/components/clinical-notes/clinical-note-timeline';
 import { AttachmentUploader } from '@/components/attachments/attachment-uploader';
 import { AttachmentList } from '@/components/attachments/attachment-list';
+import { PatientAvatar } from '@/components/patients/patient-avatar';
+import { PatientAvatarUploader } from '@/components/patients/patient-avatar-uploader';
+import { PatientAvatarRemoveButton } from '@/components/patients/patient-avatar-remove-button';
 import { safeAuditLog, getClientIpFromHeaders } from '@/lib/audit';
 import { todayInTz } from '@/lib/dates';
 
@@ -70,6 +73,10 @@ export default async function PatientDetailPage({ params }: PageProps) {
   ]);
   const todayStr = todayInTz(clinicSettings.timezone);
   const canCreateNote = session.role === 'doctor';
+  // Mirrors the policy of `updatePatient` / `updatePatientAvatar` (any
+  // authenticated session). Centralised here so tightening the rule later is
+  // a one-line change.
+  const canEditPatient = true;
 
   const dob = patient.dateOfBirth as string;
   const [year, month, day] = dob.split('-');
@@ -87,10 +94,20 @@ export default async function PatientDetailPage({ params }: PageProps) {
 
       {/* Patient header */}
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-blue-100 text-lg font-bold text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
-            {patient.firstName[0]}
-            {patient.lastName[0]}
+        <div className="flex items-start gap-4">
+          <div className="flex flex-col items-center gap-1.5">
+            <PatientAvatar
+              patientId={patient.id}
+              firstName={patient.firstName}
+              lastName={patient.lastName}
+              avatarStorageKey={patient.avatarStorageKey}
+              className="h-20 w-20"
+              textClassName="text-xl"
+            />
+            {canEditPatient && <PatientAvatarUploader patientId={patient.id} />}
+            {canEditPatient && patient.avatarStorageKey && (
+              <PatientAvatarRemoveButton patientId={patient.id} />
+            )}
           </div>
           <div>
             <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { ChevronLeft, ChevronRight, User } from 'lucide-react';
 import type { PatientListItem, PatientsPage } from '@/queries/patients';
+import { PatientAvatar } from '@/components/patients/patient-avatar';
 
 function calcAge(dateOfBirth: string): number {
   const dob = new Date(dateOfBirth);
@@ -127,10 +128,14 @@ function PatientRow({ patient }: { patient: PatientListItem }) {
     >
       <td>
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-semibold text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
-            {patient.firstName[0]}
-            {patient.lastName[0]}
-          </div>
+          <PatientAvatar
+            patientId={patient.id}
+            firstName={patient.firstName}
+            lastName={patient.lastName}
+            avatarStorageKey={patient.avatarStorageKey}
+            className="h-8 w-8"
+            textClassName="text-xs"
+          />
           <div>
             <Link
               href={href}

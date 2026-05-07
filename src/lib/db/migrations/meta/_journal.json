@@ -15,6 +15,13 @@
       "when": 1776534992826,
       "tag": "0001_messy_living_mummy",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1778163720329,
+      "tag": "0002_yummy_moon_knight",
+      "breakpoints": true
     }
   ]
 }
