@@ -1,11 +1,27 @@
 'use client';
 
 import { useActionState, useState } from 'react';
-import { ChevronDown, ChevronRight, AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronRight,
+  AlertCircle,
+  CheckCircle2,
+  Loader2,
+  Plus,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { updateMedicalHistory, type MedicalHistoryActionState } from '@/actions/medical-history';
 import type { MedicalHistoryRow } from '@/queries/medical-history';
 import type { GynecologyData } from '@/lib/validators/medical-history';
+import {
+  allergyPhrases,
+  familyHistoryPhrases,
+  medicationPhrases,
+  personalHistoryPhrases,
+  surgicalHistoryPhrases,
+  type PhraseList,
+} from '@/lib/constants/medical-phrases';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -99,6 +115,106 @@ function Label({ htmlFor, children }: { htmlFor?: string; children: React.ReactN
       {children}
     </label>
   );
+}
+
+// ─── Phrase picker ────────────────────────────────────────────────────────────
+// Appends the chosen phrase to an existing textarea value. Doctors keep
+// writing freely; the picker just saves them from typing the boilerplate.
+//
+// Append rules:
+//   - empty value      → phrase
+//   - already present  → no-op (avoids duplicate "Penicilina, Penicilina")
+//   - otherwise        → existing + ", " + phrase
+//
+// "Already present" matches whole tokens (split on comma / newline) so
+// "Asma" doesn't shadow "Asma severa".
+
+function appendPhrase(current: string, phrase: string): string {
+  const trimmed = current.trim();
+  if (trimmed === '') return phrase;
+  const tokens = trimmed
+    .split(/[,\n]/)
+    .map((t) => t.trim().toLowerCase())
+    .filter(Boolean);
+  if (tokens.includes(phrase.toLowerCase())) return current;
+  // Preserve trailing whitespace style: if user ends with newline, keep one.
+  if (/\n\s*$/.test(current)) return current + phrase;
+  return trimmed + ', ' + phrase;
+}
+
+function PhrasePicker({
+  phrases,
+  onPick,
+  label = 'Agregar frase frecuente',
+}: {
+  phrases: PhraseList;
+  onPick: (phrase: string) => void;
+  label?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger
+        render={
+          <button
+            type="button"
+            aria-label={label}
+            title={label}
+            className="inline-flex h-7 items-center gap-1 rounded-md border border-zinc-200 bg-white px-2 text-xs font-medium text-zinc-600 shadow-sm transition-colors hover:bg-zinc-50 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            <span>Frase frecuente</span>
+          </button>
+        }
+      />
+      <PopoverContent align="end" sideOffset={6} className="w-64 p-1.5">
+        <div className="flex flex-col">
+          {phrases.map((phrase) => (
+            <button
+              key={phrase}
+              type="button"
+              onClick={() => {
+                onPick(phrase);
+                setOpen(false);
+              }}
+              className="rounded-md px-2 py-1.5 text-left text-sm text-zinc-700 transition-colors hover:bg-zinc-100 focus:bg-zinc-100 focus:outline-none dark:text-zinc-200 dark:hover:bg-zinc-800 dark:focus:bg-zinc-800"
+            >
+              {phrase}
+            </button>
+          ))}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+// ─── Obstetric-formula natural-language summary ────────────────────────────────
+// e.g. (3, 1, 1, 1, 0, 1) → "Gesta 3, Para 1, Cesárea 1, Aborto 1 — 1 hijo vivo".
+// Skips zero-valued slots so the summary stays readable; only renders when at
+// least one slot is set.
+
+function obstetricSummary(g: GynecologyData): string | null {
+  const parts: string[] = [];
+  const push = (val: number | null | undefined, singular: string, plural: string) => {
+    if (val == null || val <= 0) return;
+    parts.push(`${singular === plural || val === 1 ? singular : plural} ${val}`);
+  };
+  push(g.gravida, 'Gesta', 'Gestas');
+  push(g.para, 'Para', 'Paras');
+  push(g.cesarean, 'Cesárea', 'Cesáreas');
+  push(g.abortions, 'Aborto', 'Abortos');
+  push(g.ectopic, 'Ectópico', 'Ectópicos');
+  if (parts.length === 0 && (g.living_children == null || g.living_children <= 0)) {
+    return null;
+  }
+  let summary = parts.join(', ');
+  if (g.living_children != null && g.living_children > 0) {
+    const word = g.living_children === 1 ? 'hijo vivo' : 'hijos vivos';
+    summary = summary
+      ? `${summary} — ${g.living_children} ${word}`
+      : `${g.living_children} ${word}`;
+  }
+  return summary;
 }
 
 // ─── Main component ───────────────────────────────────────────────────────────
@@ -231,7 +347,15 @@ export function MedicalHistoryForm({ patientId, history }: MedicalHistoryFormPro
         hasContent={textData.personalHistory.length > 0}
       >
         <div className="space-y-1.5">
-          <Label htmlFor="personal_history">Antecedentes personales patológicos</Label>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="personal_history">Antecedentes personales patológicos</Label>
+            <PhrasePicker
+              phrases={personalHistoryPhrases}
+              onPick={(p) =>
+                setTextField('personalHistory', appendPhrase(textData.personalHistory, p))
+              }
+            />
+          </div>
           <textarea
             id="personal_history"
             name="personal_history"
@@ -251,7 +375,15 @@ export function MedicalHistoryForm({ patientId, history }: MedicalHistoryFormPro
         hasContent={textData.familyHistory.length > 0}
       >
         <div className="space-y-1.5">
-          <Label htmlFor="family_history">Antecedentes familiares relevantes</Label>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="family_history">Antecedentes familiares relevantes</Label>
+            <PhrasePicker
+              phrases={familyHistoryPhrases}
+              onPick={(p) =>
+                setTextField('familyHistory', appendPhrase(textData.familyHistory, p))
+              }
+            />
+          </div>
           <textarea
             id="family_history"
             name="family_history"
@@ -271,7 +403,15 @@ export function MedicalHistoryForm({ patientId, history }: MedicalHistoryFormPro
         hasContent={textData.surgicalHistory.length > 0}
       >
         <div className="space-y-1.5">
-          <Label htmlFor="surgical_history">Cirugías y procedimientos previos</Label>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="surgical_history">Cirugías y procedimientos previos</Label>
+            <PhrasePicker
+              phrases={surgicalHistoryPhrases}
+              onPick={(p) =>
+                setTextField('surgicalHistory', appendPhrase(textData.surgicalHistory, p))
+              }
+            />
+          </div>
           <textarea
             id="surgical_history"
             name="surgical_history"
@@ -291,7 +431,13 @@ export function MedicalHistoryForm({ patientId, history }: MedicalHistoryFormPro
         hasContent={textData.allergies.length > 0}
       >
         <div className="space-y-1.5">
-          <Label htmlFor="allergies">Alergias conocidas</Label>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="allergies">Alergias conocidas</Label>
+            <PhrasePicker
+              phrases={allergyPhrases}
+              onPick={(p) => setTextField('allergies', appendPhrase(textData.allergies, p))}
+            />
+          </div>
           <textarea
             id="allergies"
             name="allergies"
@@ -311,7 +457,15 @@ export function MedicalHistoryForm({ patientId, history }: MedicalHistoryFormPro
         hasContent={textData.currentMedications.length > 0}
       >
         <div className="space-y-1.5">
-          <Label htmlFor="current_medications">Medicamentos en uso</Label>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="current_medications">Medicamentos en uso</Label>
+            <PhrasePicker
+              phrases={medicationPhrases}
+              onPick={(p) =>
+                setTextField('currentMedications', appendPhrase(textData.currentMedications, p))
+              }
+            />
+          </div>
           <textarea
             id="current_medications"
             name="current_medications"
@@ -502,6 +656,15 @@ export function MedicalHistoryForm({ patientId, history }: MedicalHistoryFormPro
             <p className="mt-1.5 text-xs text-zinc-400 dark:text-zinc-500">
               G = Gestas · P = Partos · C = Cesáreas · A = Abortos · E = Ectópicos
             </p>
+            {(() => {
+              const summary = obstetricSummary(gynData);
+              if (!summary) return null;
+              return (
+                <p className="mt-2 rounded-md bg-zinc-50 px-3 py-2 text-sm text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
+                  {summary}
+                </p>
+              );
+            })()}
           </div>
 
           {/* Hijos vivos */}

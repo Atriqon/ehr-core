@@ -20,6 +20,7 @@ import {
 } from '@/actions/clinical-notes';
 import type { ClinicalNoteSpecialtyData } from '@/lib/validators/clinical-note';
 import { bloodPressureRegex } from '@/lib/validators/clinical-note';
+import { consultationReasonPhrases } from '@/lib/constants/medical-phrases';
 
 // ─── Shared input classes ─────────────────────────────────────────────────────
 
@@ -458,15 +459,33 @@ export function ClinicalNoteForm({
 
             <div className="space-y-1.5 sm:col-span-2">
               <Label htmlFor="chief_complaint">Motivo de consulta</Label>
-              <input
-                id="chief_complaint"
-                type="text"
-                value={textData.chief_complaint}
-                onChange={(e) => setText('chief_complaint', e.target.value)}
-                placeholder="Ej: Control ginecológico rutinario"
-                maxLength={1000}
-                className={fieldClass(!!fieldErrors?.chief_complaint)}
-              />
+              <div className="flex gap-2">
+                <input
+                  id="chief_complaint"
+                  type="text"
+                  value={textData.chief_complaint}
+                  onChange={(e) => setText('chief_complaint', e.target.value)}
+                  placeholder="Ej: Control ginecológico rutinario"
+                  maxLength={1000}
+                  className={fieldClass(!!fieldErrors?.chief_complaint)}
+                />
+                <select
+                  aria-label="Motivos de consulta frecuentes"
+                  value=""
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    if (v) setText('chief_complaint', v);
+                  }}
+                  className="h-9 max-w-[180px] shrink-0 rounded-lg border border-zinc-200 bg-white px-2 text-sm text-zinc-600 shadow-sm outline-none transition-colors hover:bg-zinc-50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                >
+                  <option value="">Frecuentes…</option>
+                  {consultationReasonPhrases.map((r) => (
+                    <option key={r} value={r}>
+                      {r}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
         </section>
