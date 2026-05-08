@@ -8,7 +8,13 @@ import { PatientForm } from '@/components/patients/patient-form';
 import type { PatientDetail } from '@/queries/patients';
 import { updatePatient } from '@/actions/patients';
 
-export type PatientTabId = 'datos' | 'citas' | 'historia' | 'notas' | 'adjuntos';
+export type PatientTabId =
+  | 'datos'
+  | 'citas'
+  | 'historia'
+  | 'notas'
+  | 'documentos'
+  | 'adjuntos';
 
 interface TabDef {
   id: PatientTabId;
@@ -20,6 +26,7 @@ const ALL_TABS: TabDef[] = [
   { id: 'citas', label: 'Citas' },
   { id: 'historia', label: 'Historia clínica' },
   { id: 'notas', label: 'Notas clínicas' },
+  { id: 'documentos', label: 'Documentos' },
   { id: 'adjuntos', label: 'Adjuntos' },
 ];
 
@@ -36,6 +43,7 @@ interface PatientTabsProps {
   historiaSlot?: ReactNode;
   notasSlot?: ReactNode;
   citasSlot?: ReactNode;
+  documentosSlot?: ReactNode;
   adjuntosSlot?: ReactNode;
 }
 
@@ -46,6 +54,7 @@ export function PatientTabs({
   historiaSlot,
   notasSlot,
   citasSlot,
+  documentosSlot,
   adjuntosSlot,
 }: PatientTabsProps) {
   const allowed = new Set(allowedTabs);
@@ -134,6 +143,8 @@ export function PatientTabs({
       {activeTab === 'historia' && allowed.has('historia') && historiaSlot}
 
       {activeTab === 'notas' && allowed.has('notas') && notasSlot}
+
+      {activeTab === 'documentos' && allowed.has('documentos') && documentosSlot}
 
       {activeTab === 'adjuntos' && allowed.has('adjuntos') && (
         adjuntosSlot ?? (

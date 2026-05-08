@@ -53,6 +53,14 @@ export const auditActionEnum = pgEnum('audit_action', [
   'EXPORT',
 ]);
 
+export const clinicalDocumentTypeEnum = pgEnum('clinical_document_type', [
+  'medical_rest',
+  'medical_certificate',
+  'referral',
+  'prescription',
+  'patient_instructions',
+]);
+
 // ─── Tables ───────────────────────────────────────────────────────────────────
 
 export const clinics = pgTable('clinics', {
@@ -236,6 +244,37 @@ export const attachments = pgTable(
   ],
 );
 
+// Generated clinical documents (medical rest, certificates, referrals,
+// prescriptions, patient instructions). Body fields live in the JSONB
+// `content` column with shape varying per `document_type` — see
+// `src/lib/validators/clinical-document.ts` for the discriminated schemas.
+export const clinicalDocuments = pgTable(
+  'clinical_documents',
+  {
+    id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+    clinicId: uuid('clinic_id')
+      .notNull()
+      .references(() => clinics.id),
+    patientId: uuid('patient_id')
+      .notNull()
+      .references(() => patients.id),
+    clinicalNoteId: uuid('clinical_note_id').references(() => clinicalNotes.id),
+    authorId: uuid('author_id')
+      .notNull()
+      .references(() => users.id),
+    documentType: clinicalDocumentTypeEnum('document_type').notNull(),
+    title: varchar('title', { length: 255 }).notNull(),
+    content: jsonb('content').notNull().default({}),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  },
+  (table) => [
+    index('clinical_documents_clinic_patient_idx').on(table.clinicId, table.patientId),
+    index('clinical_documents_patient_created_idx').on(table.patientId, table.createdAt),
+    index('clinical_documents_clinical_note_idx').on(table.clinicalNoteId),
+  ],
+);
+
 // Append-only: no FK constraints so records survive user deletion
 export const auditLogs = pgTable('audit_logs', {
   id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
@@ -301,6 +340,16 @@ export const clinicalNotesRelations = relations(clinicalNotes, ({ one, many }) =
   attachments: many(attachments),
 }));
 
+export const clinicalDocumentsRelations = relations(clinicalDocuments, ({ one }) => ({
+  clinic: one(clinics, { fields: [clinicalDocuments.clinicId], references: [clinics.id] }),
+  patient: one(patients, { fields: [clinicalDocuments.patientId], references: [patients.id] }),
+  clinicalNote: one(clinicalNotes, {
+    fields: [clinicalDocuments.clinicalNoteId],
+    references: [clinicalNotes.id],
+  }),
+  author: one(users, { fields: [clinicalDocuments.authorId], references: [users.id] }),
+}));
+
 export const attachmentsRelations = relations(attachments, ({ one }) => ({
   patient: one(patients, { fields: [attachments.patientId], references: [patients.id] }),
   clinicalNote: one(clinicalNotes, {
@@ -332,6 +381,15 @@ export type NewClinicalNote = typeof clinicalNotes.$inferInsert;
 
 export type Attachment = typeof attachments.$inferSelect;
 export type NewAttachment = typeof attachments.$inferInsert;
+
+export type ClinicalDocument = typeof clinicalDocuments.$inferSelect;
+export type NewClinicalDocument = typeof clinicalDocuments.$inferInsert;
+export type ClinicalDocumentType =
+  | 'medical_rest'
+  | 'medical_certificate'
+  | 'referral'
+  | 'prescription'
+  | 'patient_instructions';
 
 export type AuditLog = typeof auditLogs.$inferSelect;
 export type NewAuditLog = typeof auditLogs.$inferInsert;

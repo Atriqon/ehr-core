@@ -22,6 +22,13 @@
       "when": 1778163720329,
       "tag": "0002_yummy_moon_knight",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1778184067645,
+      "tag": "0003_flowery_toro",
+      "breakpoints": true
     }
   ]
 }

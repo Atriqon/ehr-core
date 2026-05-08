@@ -8,7 +8,9 @@ import { getAppointmentsByPatient } from '@/queries/appointments';
 import { getClinicalNotesByPatient } from '@/queries/clinical-notes';
 import { getClinicSettings } from '@/queries/clinic';
 import { getAttachmentsByPatient } from '@/queries/attachments';
+import { getClinicalDocumentsByPatient } from '@/queries/clinical-documents';
 import { PatientTabs, type PatientTabId } from '@/components/patients/patient-tabs';
+import { ClinicalDocumentList } from '@/components/clinical-documents/clinical-document-list';
 import { ToggleActiveButton } from '@/components/patients/toggle-active-button';
 import { MedicalHistoryForm } from '@/components/patients/medical-history-form';
 import { PatientAppointments } from '@/components/appointments/patient-appointments';
@@ -50,7 +52,7 @@ export default async function PatientDetailPage({ params }: PageProps) {
 
   const canViewClinical = CLINICAL_ROLES.has(session.role);
   const allowedTabs: PatientTabId[] = canViewClinical
-    ? ['datos', 'citas', 'historia', 'notas', 'adjuntos']
+    ? ['datos', 'citas', 'historia', 'notas', 'documentos', 'adjuntos']
     : ['datos', 'citas', 'adjuntos'];
 
   // Only fetch medical history + notes for roles that can access them. Both
@@ -62,6 +64,7 @@ export default async function PatientDetailPage({ params }: PageProps) {
     patientAppointments,
     clinicSettings,
     patientAttachments,
+    patientDocuments,
   ] = await Promise.all([
     canViewClinical ? getMedicalHistory(patient.id) : Promise.resolve(null),
     canViewClinical
@@ -70,9 +73,13 @@ export default async function PatientDetailPage({ params }: PageProps) {
     getAppointmentsByPatient(session.clinicId, patient.id),
     getClinicSettings(session.clinicId),
     getAttachmentsByPatient(session.clinicId, patient.id),
+    canViewClinical
+      ? getClinicalDocumentsByPatient(session.clinicId, patient.id)
+      : Promise.resolve([]),
   ]);
   const todayStr = todayInTz(clinicSettings.timezone);
   const canCreateNote = session.role === 'doctor';
+  const canCreateDocument = session.role === 'doctor';
   // Mirrors the policy of `updatePatient` / `updatePatientAvatar` (any
   // authenticated session). Centralised here so tightening the rule later is
   // a one-line change.
@@ -156,6 +163,16 @@ export default async function PatientDetailPage({ params }: PageProps) {
               notes={clinicalNotes}
               patientId={patient.id}
               canCreate={canCreateNote}
+            />
+          ) : undefined
+        }
+        documentosSlot={
+          canViewClinical ? (
+            <ClinicalDocumentList
+              documents={patientDocuments}
+              patientId={patient.id}
+              canCreate={canCreateDocument}
+              timeZone={clinicSettings.timezone}
             />
           ) : undefined
         }
