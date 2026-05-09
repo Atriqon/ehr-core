@@ -1,6 +1,6 @@
 {
-  "id": "0006_diagnoses_jsonb",
-  "prevId": "0006_diagnoses_jsonb",
+  "id": "9f384e9a-96e9-44db-9ac6-df762e66de70",
+  "prevId": "b11f7e92-1460-42c8-a4f3-f0a4bf7172af",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
