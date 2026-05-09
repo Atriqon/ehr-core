@@ -2,6 +2,7 @@
 
 import { and, eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 import { patients, medicalHistories, patientPartners } from '@/lib/db/schema';
 import { requireSession, requireRole } from '@/lib/auth/session';
@@ -189,6 +190,8 @@ export async function updatePatient(
     ipAddress: await getClientIpFromHeaders(),
   });
 
+  revalidatePath(`/pacientes/${patient_id}`);
+
   return { success: true, patientId: patient_id };
 }
 
@@ -312,6 +315,8 @@ export async function upsertPatientPartner(
     details: { fields: Object.keys(fields) },
     ipAddress: await getClientIpFromHeaders(),
   });
+
+  revalidatePath(`/pacientes/${patient_id}`);
 
   return { success: true, patientId: patient_id };
 }

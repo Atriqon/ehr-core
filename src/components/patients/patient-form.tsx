@@ -1,6 +1,7 @@
 'use client';
 
-import { useActionState, useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { PatientActionState } from '@/actions/patients';
@@ -31,6 +32,17 @@ interface PatientFormProps {
 export function PatientForm({ action, patient, mode = 'create', todayStr }: PatientFormProps) {
   const [state, formAction, isPending] = useActionState(action, null);
   const [activeTab, setActiveTab] = useState<Tab>('personal');
+  const router = useRouter();
+
+  // After a successful edit, pull fresh server data so the patient header,
+  // summary card, and other RSC-rendered slots reflect the new values
+  // without a manual reload. revalidatePath in the action invalidates the
+  // server cache; router.refresh() re-fetches the RSC payload.
+  useEffect(() => {
+    if (state?.success && mode === 'edit') {
+      router.refresh();
+    }
+  }, [state, mode, router]);
 
   const errors =
     state && !state.success && 'fieldErrors' in state ? state.fieldErrors : {};

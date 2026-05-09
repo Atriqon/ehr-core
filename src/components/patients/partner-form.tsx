@@ -1,9 +1,10 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { upsertPatientPartner, type PatientActionState } from '@/actions/patients';
+import { upsertPatientPartner } from '@/actions/patients';
 import type { PatientPartner } from '@/lib/db/schema';
 import { BLOOD_TYPES } from '@/lib/validators/patient';
 
@@ -14,6 +15,15 @@ interface PartnerFormProps {
 
 export function PartnerForm({ patientId, partner }: PartnerFormProps) {
   const [state, formAction, isPending] = useActionState(upsertPatientPartner, null);
+  const router = useRouter();
+
+  // Pull fresh server data after save so the partner card (avatar, name,
+  // blood type chip) reflects the new values without a manual reload.
+  useEffect(() => {
+    if (state?.success) {
+      router.refresh();
+    }
+  }, [state, router]);
 
   const errors =
     state && !state.success && 'fieldErrors' in state ? state.fieldErrors : {};
