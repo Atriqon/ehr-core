@@ -237,8 +237,7 @@ export const clinicalNotes = pgTable(
     objective: text('objective'),
     assessment: text('assessment'),
     plan: text('plan'),
-    diagnosisText: varchar('diagnosis_text', { length: 500 }),
-    diagnosisCode: varchar('diagnosis_code', { length: 20 }),
+    diagnoses: jsonb('diagnoses').notNull().default([]),
     internalNotes: text('internal_notes'),
     specialtyData: jsonb('specialty_data').default({}),
     isSigned: boolean('is_signed').notNull().default(false),
@@ -471,6 +470,7 @@ export type NewAppointment = typeof appointments.$inferInsert;
 
 export type ClinicalNote = typeof clinicalNotes.$inferSelect;
 export type NewClinicalNote = typeof clinicalNotes.$inferInsert;
+export type DiagnosisEntry = { code?: string; text: string };
 
 export type Attachment = typeof attachments.$inferSelect;
 export type NewAttachment = typeof attachments.$inferInsert;

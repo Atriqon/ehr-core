@@ -74,6 +74,17 @@ function parseSpecialtyData(
 // Map FormData → raw object shaped for the Zod schemas. Keeps the action
 // bodies short and makes it easy to see exactly which fields come from the
 // client.
+function parseDiagnoses(formData: FormData) {
+  const raw = formData.get('diagnoses');
+  if (raw === null || raw === '') return undefined;
+  try {
+    const parsed = JSON.parse(raw as string);
+    return Array.isArray(parsed) ? parsed : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 function extractCreateInput(formData: FormData) {
   return {
     patient_id: (formData.get('patient_id') as string | null) ?? '',
@@ -84,8 +95,7 @@ function extractCreateInput(formData: FormData) {
     objective: emptyToUndefined(formData.get('objective')),
     assessment: emptyToUndefined(formData.get('assessment')),
     plan: emptyToUndefined(formData.get('plan')),
-    diagnosis_text: emptyToUndefined(formData.get('diagnosis_text')),
-    diagnosis_code: emptyToUndefined(formData.get('diagnosis_code')),
+    diagnoses: parseDiagnoses(formData),
     internal_notes: emptyToUndefined(formData.get('internal_notes')),
   };
 }
@@ -99,8 +109,7 @@ function extractUpdateInput(formData: FormData) {
     objective: emptyToUndefined(formData.get('objective')),
     assessment: emptyToUndefined(formData.get('assessment')),
     plan: emptyToUndefined(formData.get('plan')),
-    diagnosis_text: emptyToUndefined(formData.get('diagnosis_text')),
-    diagnosis_code: emptyToUndefined(formData.get('diagnosis_code')),
+    diagnoses: parseDiagnoses(formData),
     internal_notes: emptyToUndefined(formData.get('internal_notes')),
   };
 }
@@ -190,8 +199,7 @@ export async function createClinicalNote(
     objective: data.objective ?? null,
     assessment: data.assessment ?? null,
     plan: data.plan ?? null,
-    diagnosisText: data.diagnosis_text ?? null,
-    diagnosisCode: data.diagnosis_code ?? null,
+    diagnoses: (data.diagnoses ?? []) as Record<string, unknown>[],
     internalNotes: data.internal_notes ?? null,
     specialtyData: (data.specialty_data ?? {}) as Record<string, unknown>,
     isSigned: false,
@@ -206,7 +214,7 @@ export async function createClinicalNote(
     details: {
       patientId: data.patient_id,
       appointmentId: data.appointment_id ?? null,
-      diagnosisCode: data.diagnosis_code ?? null,
+      diagnosesCodes: (data.diagnoses ?? []).map((d) => (d as { code?: string }).code).filter(Boolean),
     },
     ipAddress: await getClientIpFromHeaders(),
   });
@@ -311,10 +319,8 @@ export async function updateClinicalNote(
   if (fields.objective !== undefined) updateData.objective = fields.objective || null;
   if (fields.assessment !== undefined) updateData.assessment = fields.assessment || null;
   if (fields.plan !== undefined) updateData.plan = fields.plan || null;
-  if (fields.diagnosis_text !== undefined)
-    updateData.diagnosisText = fields.diagnosis_text || null;
-  if (fields.diagnosis_code !== undefined)
-    updateData.diagnosisCode = fields.diagnosis_code || null;
+  if (fields.diagnoses !== undefined)
+    updateData.diagnoses = fields.diagnoses as Record<string, unknown>[];
   if (fields.internal_notes !== undefined)
     updateData.internalNotes = fields.internal_notes || null;
   if (specialty_data !== undefined) {

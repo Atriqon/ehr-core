@@ -13,6 +13,7 @@ import {
   createClinicalDocument,
   type ClinicalDocumentActionState,
 } from '@/actions/clinical-documents';
+import { Cie10Combobox } from '@/components/ui/cie10-combobox';
 import {
   CLINICAL_DOCUMENT_TYPES,
   CLINICAL_DOCUMENT_TYPE_LABELS,
@@ -479,13 +480,20 @@ function MedicalRestFields({
           <Label htmlFor="diagnosis">
             Diagnóstico <span className="text-red-500">*</span>
           </Label>
+          <Cie10Combobox
+            placeholder="Buscar código CIE-10 o escribir diagnóstico…"
+            onSelect={(entry) => {
+              const text = entry.code ? `[${entry.code}] ${entry.text}` : entry.text;
+              onChange('diagnosis', text);
+            }}
+          />
           <input
             id="diagnosis"
             type="text"
             value={state.diagnosis}
             onChange={(e) => onChange('diagnosis', e.target.value)}
             maxLength={500}
-            placeholder="Ej: Síndrome viral agudo"
+            placeholder="Ej: [N76.0] Vaginitis aguda, o texto libre"
             className={fieldClass(!!err('content.diagnosis'))}
           />
           <FieldError msg={err('content.diagnosis')} />

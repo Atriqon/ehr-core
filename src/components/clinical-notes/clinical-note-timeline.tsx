@@ -76,8 +76,9 @@ export function ClinicalNoteTimeline({ notes, patientId, canCreate }: ClinicalNo
 }
 
 function TimelineRow({ note, patientId }: { note: ClinicalNoteListItem; patientId: string }) {
-  const diagnosis =
-    note.diagnosisText ||
+  const firstDiagnosis = note.diagnoses[0];
+  const displayText =
+    firstDiagnosis?.text ||
     note.chiefComplaint ||
     (note.isSigned ? 'Consulta sin diagnóstico registrado' : 'Borrador sin diagnóstico');
 
@@ -101,14 +102,17 @@ function TimelineRow({ note, patientId }: { note: ClinicalNoteListItem; patientI
             {formatDate(note.noteDate)}
           </span>
           <ClinicalNoteStatusBadge isSigned={note.isSigned} />
-          {note.diagnosisCode && (
-            <span className="inline-flex items-center rounded-full bg-zinc-100 px-2 py-0.5 font-mono text-[10px] text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
-              {note.diagnosisCode}
+          {note.diagnoses.map((d) => d.code).filter(Boolean).slice(0, 2).map((code) => (
+            <span
+              key={code}
+              className="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 font-mono text-[10px] font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
+            >
+              {code}
             </span>
-          )}
+          ))}
         </div>
         <p className="mt-0.5 truncate text-sm font-medium text-zinc-900 dark:text-zinc-100">
-          {diagnosis}
+          {displayText}
         </p>
         <div className="mt-0.5 flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
           <User className="h-3 w-3 shrink-0" />

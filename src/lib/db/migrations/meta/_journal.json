@@ -43,6 +43,13 @@
       "when": 1778319081672,
       "tag": "0005_legal_owl",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1746835200000,
+      "tag": "0006_diagnoses_jsonb",
+      "breakpoints": true
     }
   ]
 }

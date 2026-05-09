@@ -119,8 +119,7 @@ export default async function ClinicalNoteDetailPage({ params }: PageProps) {
             objective: note.objective,
             assessment: note.assessment,
             plan: note.plan,
-            diagnosisText: note.diagnosisText,
-            diagnosisCode: note.diagnosisCode,
+            diagnoses: note.diagnoses,
             // Always safe: we only render the form when the author (doctor)
             // is the current user, and doctors are the only role allowed
             // to see internal_notes.

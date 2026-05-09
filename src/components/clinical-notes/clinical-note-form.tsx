@@ -18,8 +18,9 @@ import {
   updateClinicalNote,
   type ClinicalNoteActionState,
 } from '@/actions/clinical-notes';
-import type { ClinicalNoteSpecialtyData } from '@/lib/validators/clinical-note';
+import type { ClinicalNoteSpecialtyData, DiagnosisEntry } from '@/lib/validators/clinical-note';
 import { bloodPressureRegex } from '@/lib/validators/clinical-note';
+import { DiagnosisListEditor } from '@/components/ui/diagnosis-list-editor';
 import { consultationReasonPhrases } from '@/lib/constants/medical-phrases';
 
 // ─── Shared input classes ─────────────────────────────────────────────────────
@@ -68,8 +69,6 @@ interface TextFields {
   objective: string;
   assessment: string;
   plan: string;
-  diagnosis_text: string;
-  diagnosis_code: string;
   internal_notes: string;
 }
 
@@ -96,8 +95,6 @@ function emptyTextFields(defaults: Partial<TextFields> = {}): TextFields {
     objective: defaults.objective ?? '',
     assessment: defaults.assessment ?? '',
     plan: defaults.plan ?? '',
-    diagnosis_text: defaults.diagnosis_text ?? '',
-    diagnosis_code: defaults.diagnosis_code ?? '',
     internal_notes: defaults.internal_notes ?? '',
   };
 }
@@ -169,8 +166,7 @@ export interface ExistingNote {
   objective: string | null;
   assessment: string | null;
   plan: string | null;
-  diagnosisText: string | null;
-  diagnosisCode: string | null;
+  diagnoses: DiagnosisEntry[];
   internalNotes: string | null;
   specialtyData: ClinicalNoteSpecialtyData | null;
   isSigned: boolean;
@@ -227,11 +223,10 @@ export function ClinicalNoteForm({
       objective: note?.objective ?? '',
       assessment: note?.assessment ?? '',
       plan: note?.plan ?? '',
-      diagnosis_text: note?.diagnosisText ?? '',
-      diagnosis_code: note?.diagnosisCode ?? '',
       internal_notes: note?.internalNotes ?? '',
     }),
   );
+  const [diagnoses, setDiagnoses] = useState<DiagnosisEntry[]>(() => note?.diagnoses ?? []);
   const [specialty, setSpecialty] = useState<SpecialtyState>(() =>
     buildSpecialtyState(note?.specialtyData ?? null),
   );
@@ -266,11 +261,10 @@ export function ClinicalNoteForm({
         objective: note.objective ?? '',
         assessment: note.assessment ?? '',
         plan: note.plan ?? '',
-        diagnosis_text: note.diagnosisText ?? '',
-        diagnosis_code: note.diagnosisCode ?? '',
         internal_notes: note.internalNotes ?? '',
       }),
     );
+    setDiagnoses(note.diagnoses ?? []);
     setSpecialty(buildSpecialtyState(note.specialtyData ?? null));
     // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: only `recordKey` (updatedAt) should trigger a resync
   }, [recordKey]);
@@ -357,8 +351,7 @@ export function ClinicalNoteForm({
     fd.set('objective', textData.objective);
     fd.set('assessment', textData.assessment);
     fd.set('plan', textData.plan);
-    fd.set('diagnosis_text', textData.diagnosis_text);
-    fd.set('diagnosis_code', textData.diagnosis_code);
+    fd.set('diagnoses', JSON.stringify(diagnoses));
     fd.set('internal_notes', textData.internal_notes);
     fd.set('specialty_data', JSON.stringify(serializeSpecialty(specialty)));
 
@@ -558,36 +551,18 @@ export function ClinicalNoteForm({
 
         {/* ── Diagnóstico ─────────────────────────────────────────────────── */}
         <section className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
-          <h2 className="mb-4 text-sm font-semibold text-zinc-800 dark:text-zinc-100">
-            Diagnóstico
-          </h2>
-          <div className="grid gap-4 sm:grid-cols-[1fr_200px]">
-            <div className="space-y-1.5">
-              <Label htmlFor="diagnosis_text">Diagnóstico (texto libre)</Label>
-              <input
-                id="diagnosis_text"
-                type="text"
-                value={textData.diagnosis_text}
-                onChange={(e) => setText('diagnosis_text', e.target.value)}
-                placeholder="Ej: Síndrome de ovario poliquístico"
-                maxLength={500}
-                className={fieldClass(!!fieldErrors?.diagnosis_text)}
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <Label htmlFor="diagnosis_code">CIE-10 (opcional)</Label>
-              <input
-                id="diagnosis_code"
-                type="text"
-                value={textData.diagnosis_code}
-                onChange={(e) => setText('diagnosis_code', e.target.value.toUpperCase())}
-                placeholder="Ej: E28.2"
-                maxLength={20}
-                className={`${fieldClass(!!fieldErrors?.diagnosis_code)} font-mono uppercase`}
-              />
-            </div>
+          <div className="mb-4 flex items-baseline justify-between">
+            <h2 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+              Diagnóstico(s)
+            </h2>
+            <p className="text-xs text-zinc-400 dark:text-zinc-500">Hasta 5 · CIE-10 o texto libre</p>
           </div>
+          <DiagnosisListEditor
+            diagnoses={diagnoses}
+            onChange={setDiagnoses}
+            disabled={isPending}
+            maxItems={5}
+          />
         </section>
 
         {/* ── specialty_data — consulta ginecológica ──────────────────────── */}

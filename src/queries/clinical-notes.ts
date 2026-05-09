@@ -6,14 +6,18 @@ import type { ClinicalNoteSpecialtyData } from '@/lib/validators/clinical-note';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+export interface DiagnosisEntry {
+  code?: string;
+  text: string;
+}
+
 export interface ClinicalNoteListItem {
   id: string;
   patientId: string;
   appointmentId: string | null;
   authorId: string;
   noteDate: string;
-  diagnosisText: string | null;
-  diagnosisCode: string | null;
+  diagnoses: DiagnosisEntry[];
   chiefComplaint: string | null;
   isSigned: boolean;
   signedAt: Date | null;
@@ -46,6 +50,11 @@ export interface ClinicalNoteDetail extends ClinicalNoteListItem {
   };
 }
 
+function parseDiagnoses(raw: unknown): DiagnosisEntry[] {
+  if (!Array.isArray(raw)) return [];
+  return raw as DiagnosisEntry[];
+}
+
 // ─── getClinicalNotesByPatient ────────────────────────────────────────────────
 //
 // Chronological DESC list of notes for a patient. Returns only the headline
@@ -75,8 +84,7 @@ export async function getClinicalNotesByPatient(
       appointmentId: clinicalNotes.appointmentId,
       authorId: clinicalNotes.authorId,
       noteDate: clinicalNotes.noteDate,
-      diagnosisText: clinicalNotes.diagnosisText,
-      diagnosisCode: clinicalNotes.diagnosisCode,
+      diagnoses: clinicalNotes.diagnoses,
       chiefComplaint: clinicalNotes.chiefComplaint,
       isSigned: clinicalNotes.isSigned,
       signedAt: clinicalNotes.signedAt,
@@ -102,8 +110,7 @@ export async function getClinicalNotesByPatient(
     appointmentId: r.appointmentId,
     authorId: r.authorId,
     noteDate: r.noteDate as string,
-    diagnosisText: r.diagnosisText,
-    diagnosisCode: r.diagnosisCode,
+    diagnoses: parseDiagnoses(r.diagnoses),
     chiefComplaint: r.chiefComplaint,
     isSigned: r.isSigned,
     signedAt: r.signedAt,
@@ -150,8 +157,7 @@ export async function getClinicalNoteById(
       objective: clinicalNotes.objective,
       assessment: clinicalNotes.assessment,
       plan: clinicalNotes.plan,
-      diagnosisText: clinicalNotes.diagnosisText,
-      diagnosisCode: clinicalNotes.diagnosisCode,
+      diagnoses: clinicalNotes.diagnoses,
       // Literal NULL substitution at SQL level for non-doctor roles. Even
       // if something downstream spreads `...note` into a response, there's
       // no internal_notes value to leak.
@@ -197,8 +203,7 @@ export async function getClinicalNoteById(
     objective: r.objective,
     assessment: r.assessment,
     plan: r.plan,
-    diagnosisText: r.diagnosisText,
-    diagnosisCode: r.diagnosisCode,
+    diagnoses: parseDiagnoses(r.diagnoses),
     internalNotes: (r.internalNotes as string | null) ?? null,
     specialtyData: (r.specialtyData as ClinicalNoteSpecialtyData | null) ?? null,
     isSigned: r.isSigned,

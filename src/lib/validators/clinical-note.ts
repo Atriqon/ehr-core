@@ -1,5 +1,14 @@
 import { z } from 'zod';
 
+// ─── Diagnosis entry ──────────────────────────────────────────────────────────
+
+export const diagnosisEntrySchema = z.object({
+  code: z.string().max(20).optional(),
+  text: z.string().max(500),
+});
+
+export type DiagnosisEntry = z.infer<typeof diagnosisEntrySchema>;
+
 // ─── specialty_data (consulta ginecológica) ───────────────────────────────────
 // Schema for the JSONB `specialty_data` column on clinical notes. Mirrors
 // PRD Técnico §1 plus `height_cm` which we keep here (not in the relational
@@ -61,8 +70,7 @@ export const clinicalNoteCreateSchema = z.object({
   objective: z.string().max(5000).optional(),
   assessment: z.string().max(5000).optional(),
   plan: z.string().max(5000).optional(),
-  diagnosis_text: z.string().max(500).optional(),
-  diagnosis_code: z.string().max(20).optional(),
+  diagnoses: z.array(diagnosisEntrySchema).max(10).optional(),
   internal_notes: z.string().max(5000).optional(),
   specialty_data: clinicalNoteSpecialtyDataSchema.optional(),
 });

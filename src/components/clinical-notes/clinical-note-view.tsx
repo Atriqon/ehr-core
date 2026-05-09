@@ -146,18 +146,20 @@ export function ClinicalNoteView({ note, canViewInternalNotes }: ClinicalNoteVie
       </SectionCard>
 
       {/* Diagnóstico */}
-      {(note.diagnosisText || note.diagnosisCode) && (
-        <SectionCard title="Diagnóstico">
-          <div className="flex flex-wrap items-center gap-3">
-            {note.diagnosisText && (
-              <p className="text-sm text-zinc-800 dark:text-zinc-200">{note.diagnosisText}</p>
-            )}
-            {note.diagnosisCode && (
-              <span className="inline-flex items-center rounded-full bg-zinc-100 px-2.5 py-0.5 font-mono text-xs text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-                {note.diagnosisCode}
-              </span>
-            )}
-          </div>
+      {note.diagnoses.length > 0 && (
+        <SectionCard title="Diagnóstico(s)">
+          <ul className="space-y-2">
+            {note.diagnoses.map((d, i) => (
+              <li key={i} className="flex flex-wrap items-center gap-2">
+                {d.code && (
+                  <span className="inline-flex shrink-0 items-center rounded-full bg-blue-100 px-2.5 py-0.5 font-mono text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                    {d.code}
+                  </span>
+                )}
+                <span className="text-sm text-zinc-800 dark:text-zinc-200">{d.text}</span>
+              </li>
+            ))}
+          </ul>
         </SectionCard>
       )}
 
