@@ -1,9 +1,48 @@
+import fs from 'node:fs';
 import { defineConfig } from 'drizzle-kit';
 
-// MIGRATE_DATABASE_URL: session pooler (port 5432, IPv4-only) — required for DDL migrations from WSL2
-// DATABASE_URL: transaction pooler (port 6543) — used by the app at runtime
-const rawUrl = process.env.MIGRATE_DATABASE_URL ?? process.env.DATABASE_URL;
-if (!rawUrl) throw new Error('MIGRATE_DATABASE_URL or DATABASE_URL must be set');
+// drizzle-kit auto-loads `.env` but not `.env.local`. Match Next.js
+// precedence (`.env.local` overrides `.env` in dev) so a developer running
+// `pnpm db:migrate` in dev hits their local DB, not the one in `.env`.
+function loadEnvLocal() {
+  try {
+    const content = fs.readFileSync('.env.local', 'utf8');
+    for (const line of content.split('\n')) {
+      const m = line.match(/^\s*([A-Z_][A-Z0-9_]*)\s*=\s*(.*?)\s*$/i);
+      if (!m) continue;
+      let value = m[2];
+      if (
+        (value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith("'") && value.endsWith("'"))
+      ) {
+        value = value.slice(1, -1);
+      }
+      process.env[m[1]] = value;
+    }
+  } catch {
+    // .env.local is optional
+  }
+}
+
+// MIGRATE_TARGET selects which DB drizzle-kit acts on:
+//   'local' (default) → DATABASE_URL from .env.local (your dev Postgres)
+//   'prod'            → MIGRATE_DATABASE_URL from .env (Supabase session pooler)
+// Keep these separate to prevent accidental prod migrations from `pnpm db:migrate`.
+const target = process.env.MIGRATE_TARGET ?? 'local';
+
+let rawUrl: string | undefined;
+if (target === 'local') {
+  loadEnvLocal();
+  rawUrl = process.env.DATABASE_URL;
+} else if (target === 'prod') {
+  rawUrl = process.env.MIGRATE_DATABASE_URL ?? process.env.DATABASE_URL;
+} else {
+  throw new Error(`Unknown MIGRATE_TARGET: ${target} (expected 'local' or 'prod')`);
+}
+
+if (!rawUrl) {
+  throw new Error(`No database URL found for target=${target}`);
+}
 
 // pg v8+ treats sslmode=require as verify-full; Supabase uses its own CA so verification fails.
 // uselibpqcompat=true restores libpq semantics: require = encrypt without cert verification.
