@@ -16,6 +16,7 @@ export const attachmentCategoryValues = [
   'imaging',
   'consent',
   'prescription',
+  'procedure_photo',
   'other',
 ] as const;
 

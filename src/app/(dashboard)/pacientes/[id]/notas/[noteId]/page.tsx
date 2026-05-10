@@ -133,7 +133,15 @@ export default async function ClinicalNoteDetailPage({ params }: PageProps) {
           appointmentId={note.appointmentId}
         />
       ) : (
-        <ClinicalNoteView note={note} canViewInternalNotes={canViewInternalNotes} />
+        <ClinicalNoteView
+          note={note}
+          canViewInternalNotes={canViewInternalNotes}
+          procedurePhotos={Object.fromEntries(
+            noteAttachments
+              .filter((a) => a.category === 'procedure_photo')
+              .map((a) => [a.id, { id: a.id, fileName: a.fileName }]),
+          )}
+        />
       )}
 
       {/* Attachments tied to this note. Doctor authoring an unsigned note can

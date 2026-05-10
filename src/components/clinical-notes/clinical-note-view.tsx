@@ -1,6 +1,25 @@
 import { CalendarDays, Lock, ShieldAlert, User } from 'lucide-react';
 import { ClinicalNoteStatusBadge } from '@/components/clinical-notes/status-badge';
 import type { ClinicalNoteDetail } from '@/queries/clinical-notes';
+import type {
+  GynecologicalExam,
+  ProcedureEntry,
+  ProcedureType,
+} from '@/lib/validators/clinical-note';
+import {
+  ADNEXA_LABELS,
+  CERVIX_LABELS,
+  DISCHARGE_LABELS,
+  DOUGLAS_LABELS,
+  LABIA_MAJORA_LABELS,
+  LABIA_MINORA_LABELS,
+  PERINEAL_LABELS,
+  PROCEDURE_LABELS,
+  UTERUS_POSITION_LABELS,
+  UTERUS_SIZE_LABELS,
+  VAGINA_LABELS,
+  VULVA_LABELS,
+} from '@/components/clinical-notes/gynecological-exam-section';
 
 interface ClinicalNoteViewProps {
   note: ClinicalNoteDetail;
@@ -10,6 +29,13 @@ interface ClinicalNoteViewProps {
    * for deciding whether to render the (empty) section at all.
    */
   canViewInternalNotes: boolean;
+  /**
+   * Procedure-photo attachments tied to this note, indexed by id. The page
+   * already fetches `getAttachmentsByClinicalNote` for the attachments list,
+   * so we just receive the relevant subset to render before/after thumbs
+   * inline with the procedure entries.
+   */
+  procedurePhotos?: Record<string, { id: string; fileName: string }>;
 }
 
 function formatDate(dateStr: string): string {
@@ -64,6 +90,254 @@ function TextBlock({ value, placeholder }: { value: string | null; placeholder?:
   );
 }
 
+function FindingRow({
+  label,
+  value,
+  note,
+}: {
+  label: string;
+  value: string | null;
+  note: string | null | undefined;
+}) {
+  if (!value && !note) return null;
+  return (
+    <div className="grid gap-1 py-2 sm:grid-cols-[180px_1fr]">
+      <span className="text-xs text-zinc-500 dark:text-zinc-400">{label}</span>
+      <div>
+        {value && (
+          <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+            {value}
+          </span>
+        )}
+        {note && (
+          <p className="mt-0.5 text-sm text-zinc-700 dark:text-zinc-300">{note}</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function hasAnyExamData(g: GynecologicalExam | null | undefined): g is GynecologicalExam {
+  if (!g) return false;
+  return Object.values(g).some((v) => {
+    if (v == null) return false;
+    if (Array.isArray(v)) return v.length > 0;
+    if (typeof v === 'object') return Object.values(v).some((x) => x != null && x !== '');
+    return v !== '';
+  });
+}
+
+function PhotoThumb({
+  attachmentId,
+  caption,
+  attachments,
+}: {
+  attachmentId: string | null | undefined;
+  caption: string;
+  attachments: Record<string, { id: string; fileName: string }>;
+}) {
+  if (!attachmentId || !attachments[attachmentId]) return null;
+  return (
+    <figure className="space-y-1">
+      <a
+        href={`/api/attachments/${attachmentId}/download`}
+        target="_blank"
+        rel="noreferrer"
+        className="block overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-700"
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={`/api/attachments/${attachmentId}/download`}
+          alt={caption}
+          className="h-32 w-full object-cover"
+        />
+      </a>
+      <figcaption className="text-xs text-zinc-500 dark:text-zinc-400">{caption}</figcaption>
+    </figure>
+  );
+}
+
+function ProcedureCard({
+  procedure,
+  attachments,
+}: {
+  procedure: ProcedureEntry;
+  attachments: Record<string, { id: string; fileName: string }>;
+}) {
+  const label =
+    procedure.type === 'otro' && procedure.custom_label
+      ? procedure.custom_label
+      : PROCEDURE_LABELS[procedure.type as ProcedureType];
+
+  const beforeId = procedure.photos?.before ?? null;
+  const afterId = procedure.photos?.after ?? null;
+  const hasPhotos = Boolean(
+    (beforeId && attachments[beforeId]) || (afterId && attachments[afterId]),
+  );
+
+  return (
+    <div className="rounded-lg border border-zinc-200 bg-zinc-50/60 p-4 dark:border-zinc-700 dark:bg-zinc-900/40">
+      <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{label}</p>
+      {procedure.notes && (
+        <p className="mt-1 whitespace-pre-wrap text-sm text-zinc-700 dark:text-zinc-300">
+          {procedure.notes}
+        </p>
+      )}
+      {hasPhotos && (
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <PhotoThumb attachmentId={beforeId} caption="Antes" attachments={attachments} />
+          <PhotoThumb attachmentId={afterId} caption="Después" attachments={attachments} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function GynecologicalExamReadOnly({
+  exam,
+  attachments,
+}: {
+  exam: GynecologicalExam;
+  attachments: Record<string, { id: string; fileName: string }>;
+}) {
+  const procedures = exam.procedures ?? [];
+  const uterus = exam.uterus ?? {};
+  const hasUterusData =
+    uterus.size || uterus.position || uterus.consistency || uterus.mobility || uterus.pain;
+
+  return (
+    <div className="space-y-5">
+      {(exam.labia_majora || exam.labia_minora || exam.vulva || exam.perineal) && (
+        <div>
+          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            Examen externo
+          </p>
+          <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+            <FindingRow
+              label="Labios mayores"
+              value={
+                exam.labia_majora?.value ? LABIA_MAJORA_LABELS[exam.labia_majora.value] : null
+              }
+              note={exam.labia_majora?.note}
+            />
+            <FindingRow
+              label="Labios menores"
+              value={
+                exam.labia_minora?.value ? LABIA_MINORA_LABELS[exam.labia_minora.value] : null
+              }
+              note={exam.labia_minora?.note}
+            />
+            <FindingRow
+              label="Vulva"
+              value={exam.vulva?.value ? VULVA_LABELS[exam.vulva.value] : null}
+              note={exam.vulva?.note}
+            />
+            <FindingRow
+              label="Región perineal"
+              value={exam.perineal?.value ? PERINEAL_LABELS[exam.perineal.value] : null}
+              note={exam.perineal?.note}
+            />
+          </div>
+        </div>
+      )}
+
+      {(exam.vagina || exam.cervix || exam.discharge) && (
+        <div>
+          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            Examen con espéculo
+          </p>
+          <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+            <FindingRow
+              label="Vagina"
+              value={exam.vagina?.value ? VAGINA_LABELS[exam.vagina.value] : null}
+              note={exam.vagina?.note}
+            />
+            <FindingRow
+              label="Cuello uterino"
+              value={exam.cervix?.value ? CERVIX_LABELS[exam.cervix.value] : null}
+              note={exam.cervix?.note}
+            />
+            <FindingRow
+              label="Secreción"
+              value={exam.discharge?.value ? DISCHARGE_LABELS[exam.discharge.value] : null}
+              note={exam.discharge?.note}
+            />
+          </div>
+        </div>
+      )}
+
+      {(hasUterusData || exam.right_adnexa || exam.left_adnexa || exam.douglas_pouch) && (
+        <div>
+          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            Tacto bimanual
+          </p>
+          <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+            {uterus.size && (
+              <FindingRow
+                label="Útero · tamaño"
+                value={UTERUS_SIZE_LABELS[uterus.size]}
+                note={null}
+              />
+            )}
+            {uterus.position && (
+              <FindingRow
+                label="Útero · posición"
+                value={UTERUS_POSITION_LABELS[uterus.position]}
+                note={null}
+              />
+            )}
+            {uterus.consistency && (
+              <FindingRow
+                label="Útero · consistencia"
+                value={uterus.consistency}
+                note={null}
+              />
+            )}
+            {uterus.mobility && (
+              <FindingRow label="Útero · movilidad" value={uterus.mobility} note={null} />
+            )}
+            {uterus.pain && (
+              <FindingRow label="Útero · dolor" value={uterus.pain} note={null} />
+            )}
+            <FindingRow
+              label="Anexo derecho"
+              value={
+                exam.right_adnexa?.value ? ADNEXA_LABELS[exam.right_adnexa.value] : null
+              }
+              note={exam.right_adnexa?.note}
+            />
+            <FindingRow
+              label="Anexo izquierdo"
+              value={exam.left_adnexa?.value ? ADNEXA_LABELS[exam.left_adnexa.value] : null}
+              note={exam.left_adnexa?.note}
+            />
+            <FindingRow
+              label="Fondo de saco de Douglas"
+              value={
+                exam.douglas_pouch?.value ? DOUGLAS_LABELS[exam.douglas_pouch.value] : null
+              }
+              note={exam.douglas_pouch?.note}
+            />
+          </div>
+        </div>
+      )}
+
+      {procedures.length > 0 && (
+        <div>
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            Procedimientos realizados
+          </p>
+          <div className="space-y-3">
+            {procedures.map((p) => (
+              <ProcedureCard key={p.type} procedure={p} attachments={attachments} />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function SpecialtyRow({
   label,
   value,
@@ -87,8 +361,13 @@ function SpecialtyRow({
   );
 }
 
-export function ClinicalNoteView({ note, canViewInternalNotes }: ClinicalNoteViewProps) {
+export function ClinicalNoteView({
+  note,
+  canViewInternalNotes,
+  procedurePhotos = {},
+}: ClinicalNoteViewProps) {
   const sp = note.specialtyData;
+  const exam = sp?.gynecological_exam;
 
   return (
     <div className="space-y-5">
@@ -213,6 +492,13 @@ export function ClinicalNoteView({ note, canViewInternalNotes }: ClinicalNoteVie
               <TextBlock value={sp.treatment_protocol ?? null} />
             </div>
           )}
+        </SectionCard>
+      )}
+
+      {/* Examen ginecológico estructurado (si fue llenado) */}
+      {hasAnyExamData(exam) && (
+        <SectionCard title="Examen ginecológico">
+          <GynecologicalExamReadOnly exam={exam} attachments={procedurePhotos} />
         </SectionCard>
       )}
 

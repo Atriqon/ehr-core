@@ -17,6 +17,7 @@ const CATEGORY_LABELS: Record<AttachmentCategory, string> = {
   imaging: 'Imagen',
   consent: 'Consentimiento',
   prescription: 'Récipe',
+  procedure_photo: 'Foto procedimiento',
   other: 'Otro',
 };
 
@@ -26,6 +27,8 @@ const CATEGORY_STYLES: Record<AttachmentCategory, string> = {
   imaging: 'bg-violet-50 text-violet-700 dark:bg-violet-950/40 dark:text-violet-300',
   consent: 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300',
   prescription: 'bg-sky-50 text-sky-700 dark:bg-sky-950/40 dark:text-sky-300',
+  procedure_photo:
+    'bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300',
   other: 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300',
 };
 
@@ -55,6 +58,11 @@ function canDelete(
   sessionUserId: string,
   sessionRole: UserRole,
 ): boolean {
+  // Signed-note immutability: a signed clinical note locks all linked
+  // evidence. Mirrors the server-side guard in `deleteAttachment` so the UI
+  // never offers an action the server would reject. Applies to every role,
+  // including admin.
+  if (att.clinicalNoteId && att.clinicalNoteIsSigned === true) return false;
   if (sessionRole === 'admin') return true;
   if (sessionRole === 'doctor') return att.uploadedBy === sessionUserId;
   return false;

@@ -16,6 +16,112 @@ export type DiagnosisEntry = z.infer<typeof diagnosisEntrySchema>;
 
 export const bloodPressureRegex = /^\s*\d{2,3}\/\d{2,3}\s*$/;
 
+// ─── Gynecological exam (subsección de specialty_data) ───────────────────────
+// Estructura por bloque: cada hallazgo tiene un `value` (select cerrado) y un
+// `note` (texto libre). El "otro" opcional permite escribir la opción que no
+// estaba en la lista. El schema fija los enums para que el doctor solo pueda
+// elegir valores válidos; cualquier matiz se escribe en `note`.
+
+const examFinding = <T extends readonly [string, ...string[]]>(values: T) =>
+  z
+    .object({
+      value: z.enum(values).nullable().optional(),
+      note: z.string().max(500).nullable().optional(),
+    })
+    .partial();
+
+export const labiaMajoraValues = ['normal', 'edema', 'lesiones', 'otro'] as const;
+export const labiaMinoraValues = ['normal', 'adherencias', 'lesiones', 'otro'] as const;
+export const vulvaValues = ['normal', 'leucoplasia', 'condilomas', 'otro'] as const;
+export const perinealValues = ['normal', 'desgarros', 'cicatrices', 'otro'] as const;
+export const vaginaValues = ['normal', 'leucorrea', 'lesiones', 'otro'] as const;
+export const cervixValues = [
+  'normal',
+  'ectropion',
+  'polipo',
+  'lesion_sospechosa',
+  'otro',
+] as const;
+export const dischargeValues = [
+  'sin_secrecion',
+  'blanca',
+  'amarilla',
+  'verdosa',
+  'sanguinolenta',
+] as const;
+export const uterusSizeValues = ['normal', 'aumentado', 'disminuido'] as const;
+export const uterusPositionValues = ['avf', 'rvf', 'lateral'] as const;
+export const adnexaValues = ['normal', 'masa_palpable', 'dolor'] as const;
+export const douglasValues = ['libre', 'abombado', 'doloroso'] as const;
+
+export const procedureTypeValues = [
+  'citologia',
+  'cultivo_vaginal',
+  'biopsia_cuello',
+  'biopsia_vulva',
+  'radiocirugia',
+  'laser',
+  'hifu',
+  'exosoma',
+  'colocacion_hilos',
+  'otro',
+] as const;
+
+export type ProcedureType = (typeof procedureTypeValues)[number];
+
+// Per-procedure entry. `photos` references attachment IDs uploaded with
+// category='procedure_photo' — the actual file lives in the attachments
+// table, this is just the linkage so the view can render before/after pairs
+// next to the right procedure.
+export const procedureEntrySchema = z.object({
+  type: z.enum(procedureTypeValues),
+  // Free-text label when type === 'otro'. Ignored otherwise.
+  custom_label: z.string().max(120).nullable().optional(),
+  notes: z.string().max(2000).nullable().optional(),
+  photos: z
+    .object({
+      before: z.string().uuid().nullable().optional(),
+      after: z.string().uuid().nullable().optional(),
+    })
+    .partial()
+    .optional(),
+});
+
+export type ProcedureEntry = z.infer<typeof procedureEntrySchema>;
+
+export const gynecologicalExamSchema = z
+  .object({
+    // External
+    labia_majora: examFinding(labiaMajoraValues).optional(),
+    labia_minora: examFinding(labiaMinoraValues).optional(),
+    vulva: examFinding(vulvaValues).optional(),
+    perineal: examFinding(perinealValues).optional(),
+    // Speculum
+    vagina: examFinding(vaginaValues).optional(),
+    cervix: examFinding(cervixValues).optional(),
+    discharge: examFinding(dischargeValues).optional(),
+    // Bimanual
+    uterus: z
+      .object({
+        size: z.enum(uterusSizeValues).nullable().optional(),
+        position: z.enum(uterusPositionValues).nullable().optional(),
+        consistency: z.string().max(200).nullable().optional(),
+        mobility: z.string().max(200).nullable().optional(),
+        pain: z.string().max(200).nullable().optional(),
+      })
+      .partial()
+      .optional(),
+    right_adnexa: examFinding(adnexaValues).optional(),
+    left_adnexa: examFinding(adnexaValues).optional(),
+    douglas_pouch: examFinding(douglasValues).optional(),
+    // Procedures performed during this visit (structured replacement for the
+    // free-text `procedure_performed` field — both can coexist).
+    procedures: z.array(procedureEntrySchema).max(20).optional(),
+  })
+  .partial();
+
+export type GynecologicalExam = z.infer<typeof gynecologicalExamSchema>;
+
 export const clinicalNoteSpecialtyDataSchema = z.object({
   blood_pressure: z
     .string()
@@ -47,6 +153,7 @@ export const clinicalNoteSpecialtyDataSchema = z.object({
     (v) => (v === '' ? null : v),
     z.string().max(2000).nullable().optional(),
   ),
+  gynecological_exam: gynecologicalExamSchema.nullable().optional(),
 });
 
 export type ClinicalNoteSpecialtyData = z.infer<typeof clinicalNoteSpecialtyDataSchema>;

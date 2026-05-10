@@ -18,9 +18,14 @@ import {
   updateClinicalNote,
   type ClinicalNoteActionState,
 } from '@/actions/clinical-notes';
-import type { ClinicalNoteSpecialtyData, DiagnosisEntry } from '@/lib/validators/clinical-note';
+import type {
+  ClinicalNoteSpecialtyData,
+  DiagnosisEntry,
+  GynecologicalExam,
+} from '@/lib/validators/clinical-note';
 import { bloodPressureRegex } from '@/lib/validators/clinical-note';
 import { DiagnosisListEditor } from '@/components/ui/diagnosis-list-editor';
+import { GynecologicalExamSection } from '@/components/clinical-notes/gynecological-exam-section';
 import { consultationReasonPhrases } from '@/lib/constants/medical-phrases';
 
 // ─── Shared input classes ─────────────────────────────────────────────────────
@@ -85,6 +90,10 @@ type SpecialtyState = {
   endometrial_thickness_mm: string;
   procedure_performed: string;
   treatment_protocol: string;
+  // The gynecological exam is a structured nested object; keep it as-is
+  // (no string-flattening) since selects + checkboxes consume the typed
+  // shape directly. Empty/cleared = `{}`.
+  gynecological_exam: GynecologicalExam;
 };
 
 function emptyTextFields(defaults: Partial<TextFields> = {}): TextFields {
@@ -125,6 +134,7 @@ function buildSpecialtyState(d: ClinicalNoteSpecialtyData | null | undefined): S
       d?.endometrial_thickness_mm != null ? String(d.endometrial_thickness_mm) : '',
     procedure_performed: d?.procedure_performed ?? '',
     treatment_protocol: d?.treatment_protocol ?? '',
+    gynecological_exam: d?.gynecological_exam ?? {},
   };
 }
 
@@ -152,6 +162,11 @@ function serializeSpecialty(s: SpecialtyState): ClinicalNoteSpecialtyData {
     endometrial_thickness_mm: num(s.endometrial_thickness_mm),
     procedure_performed: str(s.procedure_performed),
     treatment_protocol: str(s.treatment_protocol),
+    // Only persist the gynecological_exam blob when it has at least one
+    // non-empty key. An always-present `{}` would otherwise overwrite the
+    // existing value on partial saves and is just noise in the audit log.
+    gynecological_exam:
+      Object.keys(s.gynecological_exam).length > 0 ? s.gynecological_exam : undefined,
   };
   return out;
 }
@@ -756,6 +771,27 @@ export function ClinicalNoteForm({
               />
             </div>
           </div>
+        </section>
+
+        {/* ── Examen ginecológico estructurado ─────────────────────────────── */}
+        <section className="space-y-3">
+          <div className="px-1">
+            <h2 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+              Examen ginecológico
+            </h2>
+            <p className="text-xs text-zinc-400 dark:text-zinc-500">
+              Hallazgos por bloque anatómico y procedimientos realizados durante la consulta.
+            </p>
+          </div>
+          <GynecologicalExamSection
+            value={specialty.gynecological_exam}
+            onChange={(next) =>
+              setSpecialty((prev) => ({ ...prev, gynecological_exam: next }))
+            }
+            patientId={patientId}
+            noteId={isEdit ? note.id : null}
+            disabled={isPending}
+          />
         </section>
 
         {/* ── internal_notes ──────────────────────────────────────────────── */}

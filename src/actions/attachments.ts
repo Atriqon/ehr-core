@@ -4,7 +4,7 @@ import { and, eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { db } from '@/lib/db';
-import { attachments, patients } from '@/lib/db/schema';
+import { attachments, clinicalNotes, patients } from '@/lib/db/schema';
 import { requireSession } from '@/lib/auth/session';
 import { auditLog, getClientIpFromHeaders } from '@/lib/audit';
 import { deleteFile } from '@/lib/storage';
@@ -45,7 +45,10 @@ export async function deleteAttachment(
   const { attachment_id } = parsed.data;
 
   // Clinic-scoped fetch + info we need for the permission check + the
-  // subsequent storage delete. A cross-clinic id yields zero rows.
+  // subsequent storage delete. A cross-clinic id yields zero rows. The
+  // LEFT JOIN on clinical_notes pulls `is_signed` so we can enforce the
+  // signed-note immutability rule below — applies regardless of role,
+  // even admin, because a signed clinical note is a legal record.
   const rows = await db
     .select({
       id: attachments.id,
@@ -53,9 +56,11 @@ export async function deleteAttachment(
       uploadedBy: attachments.uploadedBy,
       patientId: attachments.patientId,
       clinicalNoteId: attachments.clinicalNoteId,
+      clinicalNoteIsSigned: clinicalNotes.isSigned,
     })
     .from(attachments)
     .innerJoin(patients, eq(attachments.patientId, patients.id))
+    .leftJoin(clinicalNotes, eq(attachments.clinicalNoteId, clinicalNotes.id))
     .where(and(eq(attachments.id, attachment_id), eq(patients.clinicId, session.clinicId)))
     .limit(1);
 
@@ -69,6 +74,18 @@ export async function deleteAttachment(
   }
   if (session.role === 'doctor' && att.uploadedBy !== session.userId) {
     return { success: false, error: 'Solo puedes eliminar adjuntos que tú subiste' };
+  }
+  // Signed-note immutability: once a clinical note is signed, all linked
+  // evidence (including procedure_photo) becomes part of the signed record
+  // and cannot be deleted. Applied to every role — admin's "delete anything"
+  // privilege stops at the signature line. Note-less attachments still
+  // follow the per-role rules above.
+  if (att.clinicalNoteId && att.clinicalNoteIsSigned === true) {
+    return {
+      success: false,
+      error:
+        'No se puede eliminar: el adjunto pertenece a una nota firmada. Las notas firmadas son inmutables.',
+    };
   }
   // admin passes through.
 

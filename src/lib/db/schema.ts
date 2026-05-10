@@ -43,6 +43,7 @@ export const attachmentCategoryEnum = pgEnum('attachment_category', [
   'imaging',
   'consent',
   'prescription',
+  'procedure_photo',
   'other',
 ]);
 

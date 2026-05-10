@@ -24,6 +24,7 @@ const CATEGORY_LABELS: Record<AttachmentCategory, string> = {
   imaging: 'Imagen / Eco',
   consent: 'Consentimiento',
   prescription: 'Récipe',
+  procedure_photo: 'Foto de procedimiento',
   other: 'Otro',
 };
 
