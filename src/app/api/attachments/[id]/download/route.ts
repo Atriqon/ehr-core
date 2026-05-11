@@ -5,7 +5,38 @@ import { db } from '@/lib/db';
 import { attachments, patients } from '@/lib/db/schema';
 import { getSession } from '@/lib/auth/session';
 import { safeAuditLog, getClientIpFromHeaders } from '@/lib/audit';
-import { getObject, getPresignedUrl } from '@/lib/storage';
+import { getObject } from '@/lib/storage';
+
+const FALLBACK_FILENAME = 'adjunto';
+
+function safeDownloadFileName(fileName: string | null | undefined): string {
+  const trimmed = (fileName ?? '').trim();
+  if (!trimmed) return FALLBACK_FILENAME;
+
+  return (
+    trimmed
+      .replace(/[/\\]/g, '_')
+      .replace(/[\u0000-\u001f\u007f"']/g, '')
+      .trim() || FALLBACK_FILENAME
+  );
+}
+
+function asciiFallbackFileName(fileName: string): string {
+  return fileName.replace(/[^\x20-\x7e]/g, '_') || FALLBACK_FILENAME;
+}
+
+function encodeContentDispositionFileName(fileName: string): string {
+  return encodeURIComponent(fileName).replace(/['()*]/g, (char) =>
+    `%${char.charCodeAt(0).toString(16).toUpperCase()}`,
+  );
+}
+
+function contentDispositionAttachment(fileName: string | null | undefined): string {
+  const safeFileName = safeDownloadFileName(fileName);
+  const asciiFileName = asciiFallbackFileName(safeFileName);
+  const encodedFileName = encodeContentDispositionFileName(safeFileName);
+  return `attachment; filename="${asciiFileName}"; filename*=UTF-8''${encodedFileName}`;
+}
 
 export async function GET(
   _request: NextRequest,
@@ -58,16 +89,9 @@ export async function GET(
     ipAddress: await getClientIpFromHeaders(),
   });
 
-  // Prefer a short-lived presigned URL when the provider supports it (R2).
-  // For the local dev provider, `getPresignedUrl` returns null and we stream
-  // the bytes through the handler instead. Either way the bucket is never
-  // exposed to the client directly.
+  // Stream through the authenticated route so the browser sees our forced
+  // download headers instead of provider defaults from a presigned URL.
   try {
-    const url = await getPresignedUrl(att.storageKey, 300);
-    if (url) {
-      return NextResponse.redirect(url, 302);
-    }
-
     const obj = await getObject(att.storageKey);
     const body =
       obj.body instanceof Buffer
@@ -78,7 +102,7 @@ export async function GET(
 
     const headers = new Headers({
       'Content-Type': obj.contentType || att.fileType || 'application/octet-stream',
-      'Content-Disposition': `attachment; filename="${encodeURIComponent(att.fileName)}"`,
+      'Content-Disposition': contentDispositionAttachment(att.fileName),
       'Cache-Control': 'private, no-store',
     });
     if (obj.contentLength !== undefined) {
