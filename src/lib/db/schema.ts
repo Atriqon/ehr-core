@@ -56,6 +56,7 @@ export const auditActionEnum = pgEnum('audit_action', [
   'LOGIN',
   'LOGOUT',
   'EXPORT',
+  'EMAIL_EXPORT',
 ]);
 
 export const clinicalDocumentTypeEnum = pgEnum('clinical_document_type', [
@@ -502,5 +503,13 @@ export type PatientPartner = typeof patientPartners.$inferSelect;
 export type NewPatientPartner = typeof patientPartners.$inferInsert;
 
 export type UserRole = 'admin' | 'doctor' | 'receptionist';
-export type AuditAction = 'CREATE' | 'READ' | 'UPDATE' | 'DELETE' | 'LOGIN' | 'LOGOUT' | 'EXPORT';
+export type AuditAction =
+  | 'CREATE'
+  | 'READ'
+  | 'UPDATE'
+  | 'DELETE'
+  | 'LOGIN'
+  | 'LOGOUT'
+  | 'EXPORT'
+  | 'EMAIL_EXPORT';
 export type BloodType = 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';

@@ -13,6 +13,7 @@ import { PatientTabs, type PatientTabId } from '@/components/patients/patient-ta
 import { ClinicalDocumentList } from '@/components/clinical-documents/clinical-document-list';
 import { ToggleActiveButton } from '@/components/patients/toggle-active-button';
 import { ExportHistoryButton } from '@/components/patients/export-history-button';
+import { EmailHistoryButton } from '@/components/patients/email-history-button';
 import { MedicalHistoryForm } from '@/components/patients/medical-history-form';
 import { PatientAppointments } from '@/components/appointments/patient-appointments';
 import { ClinicalNoteTimeline } from '@/components/clinical-notes/clinical-note-timeline';
@@ -243,6 +244,12 @@ export default async function PatientDetailPage({ params }: PageProps) {
 
         <div className="flex flex-wrap items-center gap-2">
           {canViewClinical && <ExportHistoryButton patientId={patient.id} />}
+          {canViewClinical && (
+            <EmailHistoryButton
+              patientId={patient.id}
+              defaultRecipientEmail={patient.email}
+            />
+          )}
           {session.role === 'admin' && (
             <ToggleActiveButton
               patientId={patient.id}
