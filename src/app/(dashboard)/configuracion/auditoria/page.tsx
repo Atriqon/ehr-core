@@ -1,11 +1,13 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight, Shield } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Shield } from 'lucide-react';
 import { getSession } from '@/lib/auth/session';
 import { getClinicSettings } from '@/queries/clinic';
 import { getAuditLogs, getClinicUsersForFilter } from '@/queries/audit-logs';
 import { AuditLogFilters } from '@/components/audit/audit-log-filters';
+import { Breadcrumbs } from '@/components/breadcrumbs';
+import { settingsTrail } from '@/lib/breadcrumbs';
 
 interface PageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -109,13 +111,7 @@ export default async function AuditoriaPage({ searchParams }: PageProps) {
 
   return (
     <div className="p-6 lg:p-8">
-      <Link
-        href="/configuracion"
-        className="mb-4 inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Configuración
-      </Link>
+      <Breadcrumbs items={settingsTrail({ label: 'Auditoría' })} />
 
       <div className="mb-6 flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/30">

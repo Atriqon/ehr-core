@@ -1,6 +1,7 @@
-import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { AlertTriangle, ArrowLeft } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
+import { Breadcrumbs } from '@/components/breadcrumbs';
+import { patientTrail } from '@/lib/breadcrumbs';
 import { getSession } from '@/lib/auth/session';
 import { getPatientById, getPatientPartner } from '@/queries/patients';
 import { getMedicalHistory, getPatientAllergies } from '@/queries/medical-history';
@@ -168,14 +169,7 @@ export default async function PatientDetailPage({ params }: PageProps) {
         </div>
       )}
 
-      {/* Back link */}
-      <Link
-        href="/pacientes"
-        className="mb-4 inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Volver a pacientes
-      </Link>
+      <Breadcrumbs items={patientTrail(patient)} />
 
       {/* Patient header */}
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">

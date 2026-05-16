@@ -62,7 +62,7 @@ export default async function PacientesPage({ searchParams }: PageProps) {
           <div className="h-64 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800" />
         }
       >
-        <PatientList data={data} todayStr={todayStr} />
+        <PatientList data={data} todayStr={todayStr} canCreate />
       </Suspense>
     </div>
   );

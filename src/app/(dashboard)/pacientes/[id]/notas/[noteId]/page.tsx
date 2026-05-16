@@ -1,7 +1,7 @@
-import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
 import { getSession } from '@/lib/auth/session';
+import { Breadcrumbs } from '@/components/breadcrumbs';
+import { patientTrail } from '@/lib/breadcrumbs';
 import { getClinicalNoteById } from '@/queries/clinical-notes';
 import { getClinicSettings } from '@/queries/clinic';
 import { getAttachmentsByClinicalNote } from '@/queries/attachments';
@@ -72,13 +72,13 @@ export default async function ClinicalNoteDetailPage({ params }: PageProps) {
 
   return (
     <div className="p-6 lg:p-8">
-      <Link
-        href={`/pacientes/${id}/notas`}
-        className="mb-4 inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Volver a notas
-      </Link>
+      <Breadcrumbs
+        items={patientTrail(
+          { id, firstName: note.patient.firstName, lastName: note.patient.lastName },
+          { label: 'Notas', href: `/pacientes/${id}/notas` },
+          { label: 'Nota clínica' },
+        )}
+      />
 
       <div className="mb-6">
         <p className="text-xs uppercase tracking-wider text-zinc-400 dark:text-zinc-500">

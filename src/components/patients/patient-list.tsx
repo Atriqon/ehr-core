@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { ChevronLeft, ChevronRight, User } from 'lucide-react';
+import { ChevronLeft, ChevronRight, SearchX, UserPlus, Users } from 'lucide-react';
 import type { PatientListItem, PatientsPage } from '@/queries/patients';
 import { PatientAvatar } from '@/components/patients/patient-avatar';
 import { calcGestationalAge } from '@/lib/obstetric';
@@ -25,9 +25,11 @@ const ID_TYPE_LABELS: Record<string, string> = {
 interface PatientListProps {
   data: PatientsPage;
   todayStr: string;
+  /** When true, the empty state shows the "Nuevo paciente" CTA. */
+  canCreate?: boolean;
 }
 
-export function PatientList({ data, todayStr }: PatientListProps) {
+export function PatientList({ data, todayStr, canCreate = false }: PatientListProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -39,15 +41,43 @@ export function PatientList({ data, todayStr }: PatientListProps) {
   }
 
   if (data.items.length === 0) {
+    // Distinguish "no patients at all" from "search returned nothing": the
+    // first invites the user to register their first patient, the second
+    // just confirms there are no matches.
+    const isSearching = (searchParams.get('q') ?? '').trim().length > 0;
+
+    if (isSearching) {
+      return (
+        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-zinc-200 bg-white py-16 text-center dark:border-zinc-700 dark:bg-zinc-900">
+          <SearchX className="mb-3 h-10 w-10 text-zinc-300 dark:text-zinc-600" />
+          <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            No se encontraron resultados.
+          </p>
+          <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
+            Intenta con otro término de búsqueda.
+          </p>
+        </div>
+      );
+    }
+
     return (
       <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-zinc-200 bg-white py-16 text-center dark:border-zinc-700 dark:bg-zinc-900">
-        <User className="mb-3 h-10 w-10 text-zinc-300 dark:text-zinc-600" />
-        <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-          No se encontraron pacientes
+        <Users className="mb-3 h-10 w-10 text-zinc-300 dark:text-zinc-600" />
+        <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">
+          Registra tu primer paciente
         </p>
-        <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
-          Intenta con otro término de búsqueda o registra un nuevo paciente
+        <p className="mt-1 max-w-sm text-xs text-zinc-400 dark:text-zinc-500">
+          Agrega un paciente para comenzar a gestionar su historia clínica.
         </p>
+        {canCreate && (
+          <Link
+            href="/pacientes/nuevo"
+            className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+          >
+            <UserPlus className="h-4 w-4" />
+            Nuevo paciente
+          </Link>
+        )}
       </div>
     );
   }

@@ -21,6 +21,7 @@ import {
   ATTACHMENT_CATEGORIES,
 } from '@/queries/reports';
 import { ReportFilters } from '@/components/reports/report-filters';
+import { Breadcrumbs } from '@/components/breadcrumbs';
 
 interface PageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -196,6 +197,7 @@ export default async function ReportesPage({ searchParams }: PageProps) {
 
   return (
     <div className="p-6 lg:p-8">
+      <Breadcrumbs items={[{ label: 'Reportes' }]} />
       <div className="mb-6 flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/30">
           <BarChart3 className="h-5 w-5 text-blue-600 dark:text-blue-400" />

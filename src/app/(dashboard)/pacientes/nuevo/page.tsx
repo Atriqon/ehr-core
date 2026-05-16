@@ -1,11 +1,11 @@
-import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
 import { getSession } from '@/lib/auth/session';
 import { redirect } from 'next/navigation';
 import { createPatient } from '@/actions/patients';
 import { PatientForm } from '@/components/patients/patient-form';
 import { getClinicSettings } from '@/queries/clinic';
 import { todayInTz } from '@/lib/dates';
+import { Breadcrumbs } from '@/components/breadcrumbs';
+import { patientsRootCrumb } from '@/lib/breadcrumbs';
 
 export default async function NuevoPacientePage() {
   const session = await getSession();
@@ -16,14 +16,9 @@ export default async function NuevoPacientePage() {
 
   return (
     <div className="mx-auto max-w-2xl p-6 lg:p-8">
-      {/* Back link */}
-      <Link
-        href="/pacientes"
-        className="mb-6 inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Volver a pacientes
-      </Link>
+      <Breadcrumbs
+        items={[patientsRootCrumb(), { label: 'Nuevo paciente' }]}
+      />
 
       <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
         <h1 className="mb-1 text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">

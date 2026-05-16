@@ -1,7 +1,7 @@
-import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
 import { getSession } from '@/lib/auth/session';
+import { Breadcrumbs } from '@/components/breadcrumbs';
+import { patientTrail } from '@/lib/breadcrumbs';
 import { getClinicalDocumentById } from '@/queries/clinical-documents';
 import { getFullClinic } from '@/queries/clinic';
 import { ClinicalDocumentPrint } from '@/components/clinical-documents/clinical-document-print';
@@ -53,13 +53,17 @@ export default async function ClinicalDocumentPrintPage({ params }: PageProps) {
   return (
     <div className="bg-zinc-50 dark:bg-zinc-950 print:bg-white">
       <div className="mx-auto max-w-3xl p-4 print:hidden">
-        <Link
-          href={`/pacientes/${document.patientId}/documentos`}
-          className="inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Volver a documentos
-        </Link>
+        <Breadcrumbs
+          items={patientTrail(
+            {
+              id: document.patientId,
+              firstName: document.patient.firstName,
+              lastName: document.patient.lastName,
+            },
+            { label: 'Documentos', href: `/pacientes/${document.patientId}/documentos` },
+            { label: 'Imprimir documento' },
+          )}
+        />
       </div>
 
       <ClinicalDocumentPrint

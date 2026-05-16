@@ -1,11 +1,12 @@
-import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ArrowLeft, Users } from 'lucide-react';
+import { Users } from 'lucide-react';
 import { getSession } from '@/lib/auth/session';
 import { getClinicSettings } from '@/queries/clinic';
 import { getClinicUsers } from '@/queries/users';
 import { createUser, updateUser, resetUserPassword } from '@/actions/users';
 import { UserManagement } from '@/components/settings/user-management';
+import { Breadcrumbs } from '@/components/breadcrumbs';
+import { settingsTrail } from '@/lib/breadcrumbs';
 
 export default async function UsuariosPage() {
   const session = await getSession();
@@ -19,13 +20,7 @@ export default async function UsuariosPage() {
 
   return (
     <div className="p-6 lg:p-8">
-      <Link
-        href="/configuracion"
-        className="mb-4 inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Configuración
-      </Link>
+      <Breadcrumbs items={settingsTrail({ label: 'Usuarios' })} />
 
       <div className="mb-6 flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/30">

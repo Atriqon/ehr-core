@@ -1,8 +1,9 @@
-import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ArrowLeft, Upload } from 'lucide-react';
+import { Upload } from 'lucide-react';
 import { getSession } from '@/lib/auth/session';
 import { CsvImporter } from '@/components/settings/csv-importer';
+import { Breadcrumbs } from '@/components/breadcrumbs';
+import { settingsTrail } from '@/lib/breadcrumbs';
 
 export default async function ImportarPage() {
   const session = await getSession();
@@ -11,13 +12,7 @@ export default async function ImportarPage() {
 
   return (
     <div className="p-6 lg:p-8">
-      <Link
-        href="/configuracion"
-        className="mb-4 inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Configuración
-      </Link>
+      <Breadcrumbs items={settingsTrail({ label: 'Importar' })} />
 
       <div className="mb-6 flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/30">

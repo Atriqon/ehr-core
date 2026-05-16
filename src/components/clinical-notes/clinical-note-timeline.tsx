@@ -68,11 +68,11 @@ export function ClinicalNoteTimeline({ notes, patientId, canCreate }: ClinicalNo
     return (
       <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-zinc-200 bg-white py-16 text-center dark:border-zinc-700 dark:bg-zinc-900">
         <FileText className="mb-3 h-8 w-8 text-zinc-300 dark:text-zinc-600" />
-        <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-          Sin notas de evolución
+        <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">
+          Aún no hay consultas registradas
         </p>
-        <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
-          Las notas clínicas del paciente aparecerán aquí.
+        <p className="mt-1 max-w-sm text-xs text-zinc-400 dark:text-zinc-500">
+          Crea una nota clínica para documentar la primera consulta del paciente.
         </p>
         {canCreate && (
           <Link

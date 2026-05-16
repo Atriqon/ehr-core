@@ -1,11 +1,11 @@
-import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
 import { getSession } from '@/lib/auth/session';
 import { getPatientById } from '@/queries/patients';
 import { getClinicalDocumentsByPatient } from '@/queries/clinical-documents';
 import { getClinicSettings } from '@/queries/clinic';
 import { ClinicalDocumentList } from '@/components/clinical-documents/clinical-document-list';
+import { Breadcrumbs } from '@/components/breadcrumbs';
+import { patientTrail } from '@/lib/breadcrumbs';
 
 const VIEWER_ROLES = new Set(['admin', 'doctor']);
 
@@ -34,13 +34,7 @@ export default async function PatientDocumentsPage({ params }: PageProps) {
 
   return (
     <div className="p-6 lg:p-8">
-      <Link
-        href={`/pacientes/${patient.id}`}
-        className="mb-4 inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Volver a la ficha
-      </Link>
+      <Breadcrumbs items={patientTrail(patient, { label: 'Documentos' })} />
 
       <div className="mb-6">
         <p className="text-xs uppercase tracking-wider text-zinc-400 dark:text-zinc-500">

@@ -115,6 +115,7 @@ export default async function AgendaPage({ searchParams }: PageProps) {
           appointments={appointments}
           date={activeDate}
           showDoctor={showDoctor}
+          isToday={activeDateStr === todayStr}
         />
       )}
     </div>

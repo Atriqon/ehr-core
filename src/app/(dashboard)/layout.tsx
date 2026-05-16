@@ -7,6 +7,8 @@ import { getSession } from '@/lib/auth/session';
 import { LogoutButton } from '@/components/logout-button';
 import { SidebarNav } from '@/components/sidebar-nav';
 import { MobileSidebar } from '@/components/mobile-sidebar';
+import { GlobalSearch } from '@/components/search/global-search';
+import { ToastProvider } from '@/components/ui/toast';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 
@@ -91,6 +93,8 @@ export default async function DashboardLayout({
             </button>
           </MobileSidebar>
 
+          <GlobalSearch />
+
           <div className="flex flex-1 items-center justify-end gap-3">
             <div className="hidden flex-col items-end sm:flex">
               <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
@@ -109,7 +113,7 @@ export default async function DashboardLayout({
 
         {/* ── Page content ── */}
         <main className="flex-1 overflow-y-auto bg-zinc-50 dark:bg-zinc-900">
-          {children}
+          <ToastProvider>{children}</ToastProvider>
         </main>
       </div>
     </div>

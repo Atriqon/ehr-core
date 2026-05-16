@@ -1,6 +1,7 @@
-import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { AlertTriangle, ArrowLeft } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
+import { Breadcrumbs } from '@/components/breadcrumbs';
+import { patientTrail } from '@/lib/breadcrumbs';
 import { getSession } from '@/lib/auth/session';
 import { getPatientById } from '@/queries/patients';
 import { getMedicalHistory } from '@/queries/medical-history';
@@ -93,13 +94,13 @@ export default async function NewClinicalDocumentPage({ params, searchParams }: 
           <span><strong>ALERGIAS:</strong> {allergies}</span>
         </div>
       )}
-      <Link
-        href={`/pacientes/${patient.id}/documentos`}
-        className="mb-4 inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Volver a documentos
-      </Link>
+      <Breadcrumbs
+        items={patientTrail(
+          patient,
+          { label: 'Documentos', href: `/pacientes/${patient.id}/documentos` },
+          { label: 'Nuevo documento' },
+        )}
+      />
 
       <div className="mb-6">
         <p className="text-xs uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
