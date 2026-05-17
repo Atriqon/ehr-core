@@ -75,7 +75,7 @@ export function AuditLogFilters({ clinicUsers, currentFilters }: AuditLogFilters
             type="date"
             value={currentFilters.dateFrom}
             onChange={(e) => setFilter('dateFrom', e.target.value)}
-            className="h-8 rounded-md border border-zinc-200 bg-white px-2 text-sm text-zinc-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+            className="h-8 rounded-md border border-zinc-200 bg-white px-2 text-sm text-zinc-900 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
           />
         </div>
 
@@ -87,7 +87,7 @@ export function AuditLogFilters({ clinicUsers, currentFilters }: AuditLogFilters
             type="date"
             value={currentFilters.dateTo}
             onChange={(e) => setFilter('dateTo', e.target.value)}
-            className="h-8 rounded-md border border-zinc-200 bg-white px-2 text-sm text-zinc-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+            className="h-8 rounded-md border border-zinc-200 bg-white px-2 text-sm text-zinc-900 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
           />
         </div>
 
@@ -96,7 +96,7 @@ export function AuditLogFilters({ clinicUsers, currentFilters }: AuditLogFilters
           <select
             value={currentFilters.userId}
             onChange={(e) => setFilter('userId', e.target.value)}
-            className="h-8 rounded-md border border-zinc-200 bg-white px-2 text-sm text-zinc-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+            className="h-8 rounded-md border border-zinc-200 bg-white px-2 text-sm text-zinc-900 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
           >
             <option value="">Todos los usuarios</option>
             {clinicUsers.map((u) => (
@@ -112,7 +112,7 @@ export function AuditLogFilters({ clinicUsers, currentFilters }: AuditLogFilters
           <select
             value={currentFilters.action}
             onChange={(e) => setFilter('action', e.target.value)}
-            className="h-8 rounded-md border border-zinc-200 bg-white px-2 text-sm text-zinc-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+            className="h-8 rounded-md border border-zinc-200 bg-white px-2 text-sm text-zinc-900 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
           >
             <option value="">Todas las acciones</option>
             {AUDIT_ACTIONS.map((a) => (
@@ -128,7 +128,7 @@ export function AuditLogFilters({ clinicUsers, currentFilters }: AuditLogFilters
           <select
             value={currentFilters.resourceType}
             onChange={(e) => setFilter('resourceType', e.target.value)}
-            className="h-8 rounded-md border border-zinc-200 bg-white px-2 text-sm text-zinc-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+            className="h-8 rounded-md border border-zinc-200 bg-white px-2 text-sm text-zinc-900 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
           >
             <option value="">Todos los recursos</option>
             {RESOURCE_TYPES.map((r) => (

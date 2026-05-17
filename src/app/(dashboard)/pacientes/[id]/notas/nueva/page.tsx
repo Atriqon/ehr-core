@@ -50,11 +50,13 @@ export default async function NewClinicalNotePage({ params, searchParams }: Page
   const appointmentId = typeof rawAppt === 'string' ? rawAppt : null;
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       {allergies && (
-        <div className="mb-4 flex items-start gap-3 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm font-medium text-red-800 dark:border-red-800 dark:bg-red-950/40 dark:text-red-300">
-          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
-          <span><strong>ALERGIAS:</strong> {allergies}</span>
+        <div className="mb-4 flex items-start gap-3 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm font-medium text-red-800 dark:border-red-800 dark:bg-red-950/40 dark:text-red-300">
+          <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-red-500" />
+          <span>
+            <strong className="font-bold uppercase tracking-wide">Alergias:</strong> {allergies}
+          </span>
         </div>
       )}
       <Breadcrumbs

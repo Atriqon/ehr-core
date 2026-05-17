@@ -114,9 +114,9 @@ export function AgendaControls({ doctors, weekStartsOn, todayStr }: AgendaContro
           type="button"
           onClick={() => switchView('day')}
           className={[
-            'px-3 py-1.5 text-sm font-medium rounded-l-lg transition-colors',
+            'px-3 py-1.5 text-sm font-medium rounded-l-lg transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40',
             view === 'day'
-              ? 'bg-blue-600 text-white'
+              ? 'bg-teal-600 text-white shadow-sm'
               : 'text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-800',
           ].join(' ')}
         >
@@ -126,9 +126,9 @@ export function AgendaControls({ doctors, weekStartsOn, todayStr }: AgendaContro
           type="button"
           onClick={() => switchView('week')}
           className={[
-            'px-3 py-1.5 text-sm font-medium rounded-r-lg transition-colors border-l border-zinc-200 dark:border-zinc-700',
+            'px-3 py-1.5 text-sm font-medium rounded-r-lg transition-colors duration-150 border-l border-zinc-200 dark:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40',
             view === 'week'
-              ? 'bg-blue-600 text-white'
+              ? 'bg-teal-600 text-white shadow-sm'
               : 'text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-800',
           ].join(' ')}
         >
@@ -154,7 +154,7 @@ export function AgendaControls({ doctors, weekStartsOn, todayStr }: AgendaContro
         <select
           value={selectedDoctorId}
           onChange={(e) => push({ doctor: e.target.value || undefined })}
-          className="h-8 rounded-lg border border-zinc-200 bg-white px-2 text-sm text-zinc-700 shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
+          className="h-8 rounded-lg border border-zinc-200 bg-white px-2 text-sm text-zinc-700 shadow-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
         >
           <option value="">Todos los médicos</option>
           {doctors.map((d) => (

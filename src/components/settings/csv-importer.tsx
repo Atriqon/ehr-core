@@ -226,7 +226,7 @@ export function CsvImporter() {
       {/* Step 1: Upload */}
       {step === 'upload' && (
         <div
-          className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-zinc-300 bg-zinc-50 px-6 py-16 text-center transition-colors hover:border-blue-400 hover:bg-blue-50/30 dark:border-zinc-600 dark:bg-zinc-800/50 dark:hover:border-blue-500"
+          className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-zinc-300 bg-zinc-50 px-6 py-16 text-center transition-colors hover:border-teal-400 hover:bg-teal-50/40 dark:border-zinc-600 dark:bg-zinc-800/50 dark:hover:border-teal-500"
           onClick={() => fileRef.current?.click()}
           onDragOver={(e) => e.preventDefault()}
           onDrop={(e) => {
@@ -269,7 +269,7 @@ export function CsvImporter() {
       {step === 'map' && (
         <div className="space-y-5">
           <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
-            <FileText className="h-4 w-4 text-blue-500" />
+            <FileText className="h-4 w-4 text-teal-600" />
             <span className="font-medium">{fileName}</span>
             <span className="text-zinc-400">·</span>
             <span>{allRows.length} filas</span>
@@ -315,7 +315,7 @@ export function CsvImporter() {
                               [header]: e.target.value as TargetField,
                             }))
                           }
-                          className="w-full rounded-md border border-zinc-300 bg-white px-2 py-1 text-xs focus:border-blue-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+                          className="w-full rounded-md border border-zinc-300 bg-white px-2 py-1 text-xs focus:border-teal-600 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
                         >
                           {(Object.entries(FIELD_LABELS) as [TargetField, string][]).map(
                             ([value, label]) => (

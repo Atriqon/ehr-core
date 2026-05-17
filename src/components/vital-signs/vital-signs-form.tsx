@@ -22,7 +22,7 @@ function severityClasses(sev: Severity): string {
   if (sev === 'warn') {
     return 'border-amber-400 bg-amber-50 text-amber-900 focus:border-amber-500 focus:ring-amber-500/20 dark:border-amber-700 dark:bg-amber-950/30 dark:text-amber-200';
   }
-  return 'border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-700 dark:focus:border-blue-500';
+  return 'border-zinc-200 focus:border-teal-600 focus:ring-teal-600/20 dark:border-zinc-700 dark:focus:border-teal-600';
 }
 
 function systolicSeverity(v: number): Severity {
@@ -194,7 +194,7 @@ export function VitalSignsForm({
     >
       {!compact && (
         <div className="mb-3 flex items-center gap-2">
-          <Activity className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+          <Activity className="h-4 w-4 text-teal-600 dark:text-teal-400" />
           <h2 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">
             Signos vitales
           </h2>
@@ -202,7 +202,7 @@ export function VitalSignsForm({
       )}
       {compact && (
         <div className="mb-3 flex items-center gap-2">
-          <Activity className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+          <Activity className="h-4 w-4 text-teal-600 dark:text-teal-400" />
           <h2 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">
             Signos vitales
           </h2>

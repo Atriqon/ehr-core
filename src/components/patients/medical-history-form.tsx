@@ -32,7 +32,7 @@ function fieldClass(hasError = false) {
     'dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500',
     hasError
       ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-700'
-      : 'border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-700 dark:focus:border-blue-500',
+      : 'border-zinc-200 focus:border-teal-600 focus:ring-teal-600/20 dark:border-zinc-700 dark:focus:border-teal-600',
   ].join(' ');
 }
 
@@ -43,22 +43,22 @@ function textareaClass(hasError = false) {
     'dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500',
     hasError
       ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-700'
-      : 'border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-700 dark:focus:border-blue-500',
+      : 'border-zinc-200 focus:border-teal-600 focus:ring-teal-600/20 dark:border-zinc-700 dark:focus:border-teal-600',
   ].join(' ');
 }
 
 function selectClass() {
   return [
     'flex h-9 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm shadow-sm outline-none transition-colors',
-    'focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20',
-    'dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:focus:border-blue-500',
+    'focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20',
+    'dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:focus:border-teal-600',
   ].join(' ');
 }
 
 function numFieldClass() {
   return [
     'h-9 w-16 rounded-lg border border-zinc-200 bg-white px-2 text-center text-sm shadow-sm outline-none transition-colors',
-    'focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20',
+    'focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20',
     'dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100',
   ].join(' ');
 }
@@ -160,7 +160,7 @@ function PhrasePicker({
             type="button"
             aria-label={label}
             title={label}
-            className="inline-flex h-7 items-center gap-1 rounded-md border border-zinc-200 bg-white px-2 text-xs font-medium text-zinc-600 shadow-sm transition-colors hover:bg-zinc-50 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+            className="inline-flex h-7 items-center gap-1 rounded-md border border-zinc-200 bg-white px-2 text-xs font-medium text-zinc-600 shadow-sm transition-colors hover:bg-zinc-50 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-teal-600/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
           >
             <Plus className="h-3.5 w-3.5" />
             <span>Frase frecuente</span>

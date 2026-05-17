@@ -115,8 +115,8 @@ function SectionHeader({
 }) {
   return (
     <div className="mb-3 flex items-center gap-2.5">
-      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/30">
-        <Icon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-50 dark:bg-teal-900/30">
+        <Icon className="h-4 w-4 text-teal-600 dark:text-teal-400" />
       </div>
       <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">{title}</h2>
     </div>
@@ -125,7 +125,7 @@ function SectionHeader({
 
 function BarList({
   rows,
-  color = 'bg-blue-500',
+  color = 'bg-teal-500',
 }: {
   rows: { label: string; value: number }[];
   color?: string;
@@ -196,11 +196,11 @@ export default async function ReportesPage({ searchParams }: PageProps) {
     report;
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       <Breadcrumbs items={[{ label: 'Reportes' }]} />
       <div className="mb-6 flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/30">
-          <BarChart3 className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-50 dark:bg-teal-900/30">
+          <BarChart3 className="h-5 w-5 text-teal-600 dark:text-teal-400" />
         </div>
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">

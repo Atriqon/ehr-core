@@ -77,7 +77,7 @@ export function ClinicalNoteTimeline({ notes, patientId, canCreate }: ClinicalNo
         {canCreate && (
           <Link
             href={`/pacientes/${patientId}/notas/nueva`}
-            className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+            className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-teal-600 px-3.5 py-2 text-sm font-medium text-white shadow-sm transition-colors duration-150 hover:bg-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40"
           >
             <FilePlus2 className="h-3.5 w-3.5" />
             Nueva nota
@@ -96,7 +96,7 @@ export function ClinicalNoteTimeline({ notes, patientId, canCreate }: ClinicalNo
         {canCreate && (
           <Link
             href={`/pacientes/${patientId}/notas/nueva`}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-teal-600 px-3.5 py-2 text-sm font-medium text-white shadow-sm transition-colors duration-150 hover:bg-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40"
           >
             <FilePlus2 className="h-3.5 w-3.5" />
             Nueva nota
@@ -140,7 +140,7 @@ function TimelineRow({
   return (
     <Link
       href={`/pacientes/${patientId}/notas/${note.id}`}
-      className="flex items-start gap-3 rounded-xl border border-zinc-200 bg-white p-3 transition-colors hover:border-blue-300 hover:bg-blue-50/30 dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-blue-800 dark:hover:bg-blue-950/20"
+      className="flex items-start gap-3 rounded-xl border border-zinc-200 bg-white p-3 shadow-sm transition-all duration-150 hover:border-teal-300 hover:bg-teal-50/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40 dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-teal-800 dark:hover:bg-teal-950/20"
     >
       <div className="flex w-12 shrink-0 flex-col items-center rounded-lg bg-zinc-50 py-1.5 text-center dark:bg-zinc-800">
         <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">

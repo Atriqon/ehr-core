@@ -145,7 +145,7 @@ export function AttachmentList({
             <div className="mt-1 flex items-center justify-end gap-1 border-t border-zinc-100 pt-2 dark:border-zinc-800">
               <a
                 href={`/api/attachments/${att.id}/download`}
-                className="inline-flex h-7 items-center gap-1 rounded-md px-2 text-xs font-medium text-blue-600 transition-colors hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-950/30"
+                className="inline-flex h-7 items-center gap-1 rounded-md px-2 text-xs font-medium text-teal-700 transition-colors hover:bg-teal-50 dark:text-teal-400 dark:hover:bg-teal-950/30"
                 aria-label={`Descargar ${att.fileName}`}
               >
                 <Download className="h-3.5 w-3.5" />

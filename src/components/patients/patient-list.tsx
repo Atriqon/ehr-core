@@ -48,7 +48,7 @@ export function PatientList({ data, todayStr, canCreate = false }: PatientListPr
 
     if (isSearching) {
       return (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-zinc-200 bg-white py-16 text-center dark:border-zinc-700 dark:bg-zinc-900">
+        <div className="flex flex-col items-center justify-center rounded-xl border border-zinc-200/80 bg-linear-to-br from-white to-zinc-50/70 py-16 text-center shadow-sm dark:border-zinc-700 dark:from-zinc-900 dark:to-zinc-900">
           <SearchX className="mb-3 h-10 w-10 text-zinc-300 dark:text-zinc-600" />
           <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
             No se encontraron resultados.
@@ -61,8 +61,10 @@ export function PatientList({ data, todayStr, canCreate = false }: PatientListPr
     }
 
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-zinc-200 bg-white py-16 text-center dark:border-zinc-700 dark:bg-zinc-900">
-        <Users className="mb-3 h-10 w-10 text-zinc-300 dark:text-zinc-600" />
+      <div className="flex flex-col items-center justify-center rounded-xl border border-zinc-200/80 bg-linear-to-br from-white to-teal-50/40 py-16 text-center shadow-sm dark:border-zinc-700 dark:from-zinc-900 dark:to-zinc-900">
+        <span className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-teal-50 ring-1 ring-teal-100 dark:bg-teal-900/30 dark:ring-teal-800">
+          <Users className="h-6 w-6 text-teal-500 dark:text-teal-400" />
+        </span>
         <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">
           Registra tu primer paciente
         </p>
@@ -72,7 +74,7 @@ export function PatientList({ data, todayStr, canCreate = false }: PatientListPr
         {canCreate && (
           <Link
             href="/pacientes/nuevo"
-            className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+            className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-teal-600 px-3.5 py-2 text-sm font-medium text-white shadow-sm transition-colors duration-150 hover:bg-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40"
           >
             <UserPlus className="h-4 w-4" />
             Nuevo paciente
@@ -83,11 +85,11 @@ export function PatientList({ data, todayStr, canCreate = false }: PatientListPr
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900">
+    <div className="overflow-hidden rounded-xl border border-zinc-200/80 bg-white shadow-sm ring-1 ring-zinc-900/2 dark:border-zinc-700 dark:bg-zinc-900 dark:ring-0">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-zinc-100 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800/50">
+            <tr className="border-b border-zinc-200 bg-linear-to-b from-zinc-50 to-zinc-50/40 dark:border-zinc-700 dark:from-zinc-800/60 dark:to-zinc-800/30">
               <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
                 Nombre
               </th>
@@ -123,7 +125,7 @@ export function PatientList({ data, todayStr, canCreate = false }: PatientListPr
               type="button"
               onClick={() => goToPage(data.page - 1)}
               disabled={data.page <= 1}
-              className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-zinc-200 text-zinc-600 transition-colors hover:bg-zinc-50 disabled:pointer-events-none disabled:opacity-40 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-600 transition-colors duration-150 hover:bg-zinc-50 hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40 disabled:pointer-events-none disabled:opacity-40 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
               aria-label="Página anterior"
             >
               <ChevronLeft className="h-3.5 w-3.5" />
@@ -135,7 +137,7 @@ export function PatientList({ data, todayStr, canCreate = false }: PatientListPr
               type="button"
               onClick={() => goToPage(data.page + 1)}
               disabled={data.page >= data.totalPages}
-              className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-zinc-200 text-zinc-600 transition-colors hover:bg-zinc-50 disabled:pointer-events-none disabled:opacity-40 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-600 transition-colors duration-150 hover:bg-zinc-50 hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40 disabled:pointer-events-none disabled:opacity-40 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
               aria-label="Página siguiente"
             >
               <ChevronRight className="h-3.5 w-3.5" />
@@ -162,7 +164,7 @@ function PatientRow({ patient, todayStr }: { patient: PatientListItem; todayStr:
 
   return (
     <tr
-      className="group cursor-pointer transition-colors hover:bg-blue-50/50 dark:hover:bg-blue-950/20 [&_td]:px-4 [&_td]:py-3.5"
+      className="group cursor-pointer transition-colors duration-150 hover:bg-teal-50/60 dark:hover:bg-teal-950/20 [&_td]:px-4 [&_td]:py-3.5"
       onClick={() => router.push(href)}
     >
       <td>
@@ -181,7 +183,7 @@ function PatientRow({ patient, todayStr }: { patient: PatientListItem; todayStr:
                 href={href}
                 prefetch={false}
                 onClick={(e) => e.stopPropagation()}
-                className="font-medium text-zinc-900 group-hover:text-blue-700 dark:text-zinc-100 dark:group-hover:text-blue-400"
+                className="font-medium text-zinc-900 transition-colors group-hover:text-teal-700 focus-visible:underline focus-visible:outline-none dark:text-zinc-100 dark:group-hover:text-teal-400"
               >
                 {patient.lastName}, {patient.firstName}
               </Link>

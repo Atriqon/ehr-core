@@ -88,7 +88,7 @@ export function PatientForm({ action, patient, mode = 'create', todayStr }: Pati
               className={[
                 'px-4 py-2.5 text-sm font-medium transition-colors',
                 activeTab === tab.id
-                  ? 'border-b-2 border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
+                  ? 'border-b-2 border-teal-600 text-teal-700 dark:border-teal-400 dark:text-teal-400'
                   : 'border-b-2 border-transparent text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200',
               ].join(' ')}
             >
@@ -223,7 +223,7 @@ export function PatientForm({ action, patient, mode = 'create', todayStr }: Pati
               type="checkbox"
               defaultChecked={patient?.rhIncompatibility ?? false}
               value="true"
-              className="h-4 w-4 rounded border-zinc-300 text-blue-600 focus:ring-blue-500 dark:border-zinc-600"
+              className="h-4 w-4 rounded border-zinc-300 text-teal-600 focus:ring-teal-600 dark:border-zinc-600"
             />
             <label htmlFor="rh_incompatibility" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
               Incompatibilidad Rh
@@ -438,7 +438,7 @@ function fieldClass(hasError: boolean) {
     'dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500',
     hasError
       ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-700'
-      : 'border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-700 dark:focus:border-blue-500',
+      : 'border-zinc-200 focus:border-teal-600 focus:ring-teal-600/20 dark:border-zinc-700 dark:focus:border-teal-600',
   ].join(' ');
 }
 
@@ -449,6 +449,6 @@ function textareaClass(hasError: boolean) {
     'dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500',
     hasError
       ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-700'
-      : 'border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-700 dark:focus:border-blue-500',
+      : 'border-zinc-200 focus:border-teal-600 focus:ring-teal-600/20 dark:border-zinc-700 dark:focus:border-teal-600',
   ].join(' ');
 }

@@ -63,7 +63,7 @@ export function ClinicSettingsForm({ clinic, action }: ClinicSettingsFormProps) 
             type="text"
             defaultValue={clinic.name}
             required
-            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
+            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
           />
           {field('name') && <p className="mt-1 text-xs text-red-600">{field('name')}</p>}
         </div>
@@ -76,7 +76,7 @@ export function ClinicSettingsForm({ clinic, action }: ClinicSettingsFormProps) 
             name="address"
             rows={2}
             defaultValue={clinic.address ?? ''}
-            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
+            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
           />
         </div>
 
@@ -88,7 +88,7 @@ export function ClinicSettingsForm({ clinic, action }: ClinicSettingsFormProps) 
             name="phone"
             type="tel"
             defaultValue={clinic.phone ?? ''}
-            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
+            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
           />
         </div>
 
@@ -99,7 +99,7 @@ export function ClinicSettingsForm({ clinic, action }: ClinicSettingsFormProps) 
           <select
             name="timezone"
             defaultValue={clinic.timezone}
-            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
           >
             {TIMEZONES.map((tz) => (
               <option key={tz} value={tz}>
@@ -119,7 +119,7 @@ export function ClinicSettingsForm({ clinic, action }: ClinicSettingsFormProps) 
           <select
             name="week_starts_on"
             defaultValue={String(clinic.weekStartsOn)}
-            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
           >
             <option value="1">Lunes</option>
             <option value="0">Domingo</option>

@@ -94,7 +94,7 @@ export function Cie10Combobox({ onSelect, placeholder, disabled }: Cie10Combobox
             'placeholder:text-zinc-400 focus:ring-2',
             'dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500',
             'disabled:cursor-not-allowed disabled:opacity-60',
-            'border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-700 dark:focus:border-blue-500',
+            'border-zinc-200 focus:border-teal-600 focus:ring-teal-600/20 dark:border-zinc-700 dark:focus:border-teal-600',
           ].join(' ')}
         />
         {query && (

@@ -43,7 +43,7 @@ function fieldClass(hasError = false) {
     'disabled:cursor-not-allowed disabled:opacity-60',
     hasError
       ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-700'
-      : 'border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-700 dark:focus:border-blue-500',
+      : 'border-zinc-200 focus:border-teal-600 focus:ring-teal-600/20 dark:border-zinc-700 dark:focus:border-teal-600',
   ].join(' ');
 }
 
@@ -55,7 +55,7 @@ function textareaClass(hasError = false) {
     'disabled:cursor-not-allowed disabled:opacity-60',
     hasError
       ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-700'
-      : 'border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-700 dark:focus:border-blue-500',
+      : 'border-zinc-200 focus:border-teal-600 focus:ring-teal-600/20 dark:border-zinc-700 dark:focus:border-teal-600',
   ].join(' ');
 }
 
@@ -524,7 +524,7 @@ export function ClinicalNoteForm({
                     const v = e.target.value;
                     if (v) setText('chief_complaint', v);
                   }}
-                  className="h-9 max-w-[180px] shrink-0 rounded-lg border border-zinc-200 bg-white px-2 text-sm text-zinc-600 shadow-sm outline-none transition-colors hover:bg-zinc-50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                  className="h-9 max-w-[180px] shrink-0 rounded-lg border border-zinc-200 bg-white px-2 text-sm text-zinc-600 shadow-sm outline-none transition-colors hover:bg-zinc-50 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
                 >
                   <option value="">Frecuentes…</option>
                   {consultationReasonPhrases.map((r) => (

@@ -15,7 +15,7 @@ interface ReportFiltersProps {
 }
 
 const SELECT_CLASS =
-  'h-8 rounded-md border border-zinc-200 bg-white px-2 text-sm text-zinc-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100';
+  'h-8 rounded-md border border-zinc-200 bg-white px-2 text-sm text-zinc-900 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100';
 
 export function ReportFilters({
   preset,

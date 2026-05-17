@@ -66,7 +66,7 @@ export function CreateUserModal({ action, onClose }: CreateUserModalProps) {
               name="full_name"
               type="text"
               required
-              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
             />
             {field('full_name') && (
               <p className="mt-1 text-xs text-red-600">{field('full_name')}</p>
@@ -81,7 +81,7 @@ export function CreateUserModal({ action, onClose }: CreateUserModalProps) {
               name="email"
               type="email"
               required
-              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
             />
             {field('email') && (
               <p className="mt-1 text-xs text-red-600">{field('email')}</p>
@@ -97,7 +97,7 @@ export function CreateUserModal({ action, onClose }: CreateUserModalProps) {
               type="password"
               required
               minLength={10}
-              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
             />
             <p className="mt-1 text-xs text-zinc-400">Mínimo 10 caracteres</p>
             {field('password') && (
@@ -112,7 +112,7 @@ export function CreateUserModal({ action, onClose }: CreateUserModalProps) {
             <select
               name="role"
               defaultValue="receptionist"
-              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
             >
               {Object.entries(ROLE_LABELS).map(([value, label]) => (
                 <option key={value} value={value}>
@@ -199,7 +199,7 @@ export function EditUserModal({
                 className={[
                   'px-3 py-2.5 text-sm font-medium transition-colors',
                   tab === t
-                    ? 'border-b-2 border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
+                    ? 'border-b-2 border-teal-600 text-teal-700 dark:border-teal-400 dark:text-teal-400'
                     : 'border-b-2 border-transparent text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200',
                 ].join(' ')}
               >
@@ -228,7 +228,7 @@ export function EditUserModal({
                 name="full_name"
                 type="text"
                 defaultValue={user.fullName}
-                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
               />
               {editErrors?.full_name?.[0] && (
                 <p className="mt-1 text-xs text-red-600">{editErrors.full_name[0]}</p>
@@ -242,7 +242,7 @@ export function EditUserModal({
               <select
                 name="role"
                 defaultValue={user.role}
-                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
               >
                 {Object.entries(ROLE_LABELS).map(([value, label]) => (
                   <option key={value} value={value}>
@@ -260,7 +260,7 @@ export function EditUserModal({
                   checked={isActive}
                   disabled={isSelf}
                   onChange={(e) => setIsActive(e.target.checked)}
-                  className="h-4 w-4 rounded border-zinc-300 text-blue-600 focus:ring-blue-500 disabled:opacity-50"
+                  className="h-4 w-4 rounded border-zinc-300 text-teal-600 focus:ring-teal-600 disabled:opacity-50"
                 />
                 <span className="text-sm text-zinc-700 dark:text-zinc-300">
                   Usuario activo
@@ -308,7 +308,7 @@ export function EditUserModal({
                 type="password"
                 required
                 minLength={10}
-                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
               />
               <p className="mt-1 text-xs text-zinc-400">Mínimo 10 caracteres</p>
             </div>

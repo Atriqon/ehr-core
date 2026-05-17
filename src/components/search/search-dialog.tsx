@@ -279,7 +279,7 @@ function ResultRow({
       className={cn(
         'flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors',
         active
-          ? 'bg-blue-50 dark:bg-blue-950/40'
+          ? 'bg-teal-50 text-teal-900 dark:bg-teal-950/40'
           : 'hover:bg-zinc-50 dark:hover:bg-zinc-800/60',
       )}
     >

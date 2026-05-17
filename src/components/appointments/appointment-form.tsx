@@ -84,7 +84,7 @@ export function AppointmentFormDrawer({ doctors, todayStr, defaultDate, defaultD
               id="doctor_id"
               name="doctor_id"
               defaultValue={defaultDoctorId ?? ''}
-              className="h-9 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+              className="h-9 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm shadow-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
             >
               <option value="">Seleccionar médico…</option>
               {doctors.map((d) => (
@@ -109,7 +109,7 @@ export function AppointmentFormDrawer({ doctors, todayStr, defaultDate, defaultD
               name="date"
               defaultValue={defaultDate ?? todayStr}
               min={todayStr}
-              className="h-9 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+              className="h-9 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm shadow-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
             />
             {fieldErrors?.date && (
               <p className="text-xs text-red-600 dark:text-red-400">{fieldErrors.date[0]}</p>
@@ -127,7 +127,7 @@ export function AppointmentFormDrawer({ doctors, todayStr, defaultDate, defaultD
                 type="time"
                 name="start_time"
                 defaultValue="08:00"
-                className="h-9 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+                className="h-9 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm shadow-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
               />
               {fieldErrors?.start_time && (
                 <p className="text-xs text-red-600 dark:text-red-400">{fieldErrors.start_time[0]}</p>
@@ -142,7 +142,7 @@ export function AppointmentFormDrawer({ doctors, todayStr, defaultDate, defaultD
                 type="time"
                 name="end_time"
                 defaultValue="08:30"
-                className="h-9 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+                className="h-9 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm shadow-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
               />
             </div>
           </div>
@@ -158,7 +158,7 @@ export function AppointmentFormDrawer({ doctors, todayStr, defaultDate, defaultD
               rows={2}
               maxLength={500}
               placeholder="Ej: Consulta de rutina, control prenatal…"
-              className="w-full resize-none rounded-lg border border-zinc-200 bg-white p-2.5 text-sm shadow-sm outline-none placeholder:text-zinc-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500"
+              className="w-full resize-none rounded-lg border border-zinc-200 bg-white p-2.5 text-sm shadow-sm outline-none placeholder:text-zinc-400 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500"
             />
           </div>
 

@@ -290,7 +290,7 @@ export function VitalSignsHistory({
             <button
               type="button"
               onClick={() => setShowAll((v) => !v)}
-              className="inline-flex items-center gap-1 text-xs text-blue-600 hover:underline dark:text-blue-400"
+              className="inline-flex items-center gap-1 text-xs text-teal-700 hover:underline dark:text-teal-400"
             >
               {showAll ? (
                 <>

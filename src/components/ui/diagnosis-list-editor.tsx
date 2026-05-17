@@ -45,7 +45,7 @@ export function DiagnosisListEditor({
             onChange={(e) => updateText(i, e.target.value)}
             disabled={disabled}
             aria-label={`Diagnóstico ${i + 1}`}
-            className="flex h-9 min-w-0 flex-1 rounded-lg border border-zinc-200 bg-white px-3 text-sm shadow-sm outline-none transition-colors placeholder:text-zinc-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:focus:border-blue-500"
+            className="flex h-9 min-w-0 flex-1 rounded-lg border border-zinc-200 bg-white px-3 text-sm shadow-sm outline-none transition-colors placeholder:text-zinc-400 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:focus:border-teal-600"
           />
           <button
             type="button"

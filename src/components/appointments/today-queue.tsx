@@ -24,15 +24,22 @@ export function TodayQueue({ appointments, showDoctor = false, compact = false }
 
   if (appointments.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-zinc-200 bg-white py-8 text-center dark:border-zinc-700 dark:bg-zinc-900">
-        <Users className="mb-2 h-6 w-6 text-zinc-300 dark:text-zinc-600" />
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">Sin citas hoy</p>
+      <div className="flex flex-col items-center justify-center rounded-xl border border-zinc-200/80 bg-linear-to-br from-white to-zinc-50/70 py-12 text-center shadow-sm dark:border-zinc-700 dark:from-zinc-900 dark:to-zinc-900">
+        <span className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-teal-50 ring-1 ring-teal-100 dark:bg-teal-900/30 dark:ring-teal-800">
+          <Users className="h-5 w-5 text-teal-500 dark:text-teal-400" />
+        </span>
+        <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          Sin citas hoy
+        </p>
+        <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
+          Las citas programadas para hoy se mostrarán aquí.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900">
+    <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
       <div className="flex items-center justify-between border-b border-zinc-100 px-4 py-3 dark:border-zinc-800">
         <div className="flex items-center gap-2">
           <Clock className="h-4 w-4 text-zinc-400" />
@@ -40,7 +47,7 @@ export function TodayQueue({ appointments, showDoctor = false, compact = false }
             Cola del día
           </span>
         </div>
-        <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
+        <span className="rounded-full bg-teal-100 px-2 py-0.5 text-xs font-semibold text-teal-700 dark:bg-teal-900/40 dark:text-teal-300">
           {active.length} activa{active.length !== 1 ? 's' : ''}
         </span>
       </div>
@@ -49,9 +56,9 @@ export function TodayQueue({ appointments, showDoctor = false, compact = false }
         {appointments.map((appt) => {
           const name = `${appt.patient.firstName} ${appt.patient.lastName}`;
           return (
-            <li key={appt.id} className="flex items-center gap-3 px-4 py-3">
+            <li key={appt.id} className="flex items-center gap-3 px-4 py-3 transition-colors duration-150 hover:bg-zinc-50 dark:hover:bg-zinc-800/40">
               {/* Avatar */}
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 text-xs font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-teal-50 text-xs font-semibold text-teal-700 dark:bg-teal-900/30 dark:text-teal-300">
                 {appt.patient.firstName[0]}
                 {appt.patient.lastName[0]}
               </div>
@@ -66,7 +73,7 @@ export function TodayQueue({ appointments, showDoctor = false, compact = false }
                 </div>
                 <Link
                   href={`/pacientes/${appt.patientId}`}
-                  className="block truncate text-sm font-medium text-zinc-900 hover:text-blue-600 dark:text-zinc-100 dark:hover:text-blue-400"
+                  className="block truncate text-sm font-medium text-zinc-900 hover:text-teal-700 dark:text-zinc-100 dark:hover:text-teal-400"
                 >
                   {name}
                 </Link>
@@ -90,7 +97,7 @@ export function TodayQueue({ appointments, showDoctor = false, compact = false }
         <div className="border-t border-zinc-100 px-4 py-2.5 dark:border-zinc-800">
           <Link
             href="/agenda"
-            className="text-xs font-medium text-blue-600 hover:underline dark:text-blue-400"
+            className="text-xs font-medium text-teal-700 hover:underline dark:text-teal-400"
           >
             Ver todas las citas →
           </Link>

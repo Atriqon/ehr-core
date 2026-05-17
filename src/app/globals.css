@@ -7,9 +7,10 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-heading: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -49,38 +50,40 @@
 }
 
 :root {
+  /* Hisamed premium medical palette (Phase 12).
+     Light mode only this phase — dark tokens kept below for future. */
   --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --foreground: oklch(0.21 0.034 264.665); /* slate-900 */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.21 0.034 264.665);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.21 0.034 264.665);
+  --primary: oklch(0.6 0.118 184.704); /* teal-600 #0D9488 */
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  --secondary: oklch(0.967 0.001 286.375); /* zinc-100 */
+  --secondary-foreground: oklch(0.21 0.034 264.665);
+  --muted: oklch(0.967 0.001 286.375);
+  --muted-foreground: oklch(0.552 0.016 285.938); /* zinc-500 */
+  --accent: oklch(0.953 0.025 184.0); /* teal-50 */
+  --accent-foreground: oklch(0.437 0.078 188.216); /* teal-700 */
+  --destructive: oklch(0.637 0.237 25.331); /* red-500 #EF4444 */
+  --border: oklch(0.92 0.004 286.32); /* zinc-200 */
+  --input: oklch(0.92 0.004 286.32);
+  --ring: oklch(0.6 0.118 184.704); /* teal-600 */
+  --chart-1: oklch(0.6 0.118 184.704);
+  --chart-2: oklch(0.623 0.214 259.815);
+  --chart-3: oklch(0.637 0.237 25.331);
+  --chart-4: oklch(0.769 0.188 70.08);
+  --chart-5: oklch(0.627 0.265 303.9);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar: oklch(0.279 0.041 260.031); /* slate-800 #1E293B */
+  --sidebar-foreground: oklch(0.869 0.022 252.894); /* slate-200 */
+  --sidebar-primary: oklch(0.6 0.118 184.704); /* teal-600 */
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-accent: oklch(0.372 0.044 257.287); /* slate-700 */
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.372 0.044 257.287); /* slate-700 */
+  --sidebar-ring: oklch(0.6 0.118 184.704);
 }
 
 .dark {
@@ -123,8 +126,38 @@
   }
   body {
     @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   html {
     @apply font-sans;
+  }
+}
+
+@layer components {
+  /* Soft ambient app surface — a near-white #FAFAFA base washed with faint
+     teal/slate brand gradients so authenticated pages share the login's
+     premium identity instead of reading as flat pure white. */
+  .app-surface {
+    background-color: #fafafa;
+    background-image:
+      radial-gradient(
+        44rem 44rem at 100% 0%,
+        rgba(13, 148, 136, 0.06),
+        transparent 65%
+      ),
+      radial-gradient(
+        40rem 40rem at 0% 100%,
+        rgba(30, 41, 59, 0.05),
+        transparent 60%
+      );
+    background-attachment: fixed;
+  }
+}
+
+/* Print: hide all app chrome so clinical documents print clean. */
+@media print {
+  .no-print {
+    display: none !important;
   }
 }

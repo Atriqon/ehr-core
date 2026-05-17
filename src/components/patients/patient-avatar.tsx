@@ -52,7 +52,7 @@ export function PatientAvatar({
   return (
     <div
       className={cn(
-        'flex shrink-0 items-center justify-center rounded-full bg-blue-100 font-semibold text-blue-700 dark:bg-blue-900/50 dark:text-blue-300',
+        'flex shrink-0 items-center justify-center rounded-full bg-teal-100 font-semibold text-teal-700 dark:bg-teal-900/50 dark:text-teal-300',
         className,
         textClassName,
       )}

@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { eq } from 'drizzle-orm';
-import { Menu, Stethoscope } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { db } from '@/lib/db';
 import { users } from '@/lib/db/schema';
 import { getSession } from '@/lib/auth/session';
@@ -9,8 +9,7 @@ import { SidebarNav } from '@/components/sidebar-nav';
 import { MobileSidebar } from '@/components/mobile-sidebar';
 import { GlobalSearch } from '@/components/search/global-search';
 import { ToastProvider } from '@/components/ui/toast';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Separator } from '@/components/ui/separator';
+import { BrandLogo } from '@/components/brand-logo';
 
 const roleLabels: Record<string, string> = {
   admin: 'Administrador',
@@ -45,34 +44,29 @@ export default async function DashboardLayout({
   const roleLabel = roleLabels[user.role] ?? user.role;
 
   return (
-    <div className="flex h-full">
-      {/* ── Desktop sidebar ── */}
-      <aside className="hidden w-60 shrink-0 flex-col border-r border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950 lg:flex">
-        <div className="flex h-16 items-center gap-2.5 px-5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
-            <Stethoscope className="h-4 w-4 text-white" />
-          </div>
-          <span className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-            ClinicaMVP
-          </span>
+    <div className="flex h-screen overflow-hidden">
+      {/* ── Desktop sidebar ──
+          h-screen on the wrapper + flex-col here makes the sidebar exactly
+          one viewport tall regardless of page content: it never shrinks on
+          short pages and never scrolls away the user block on long ones. */}
+      <aside className="hidden w-64 shrink-0 flex-col bg-linear-to-b from-slate-800 via-slate-800 to-slate-900 lg:flex">
+        <div className="flex h-16 shrink-0 items-center border-b border-slate-700/50 px-5">
+          <BrandLogo size="sm" onDark />
         </div>
-        <Separator />
-        <div className="flex-1 overflow-y-auto">
+        {/* Nav scrolls on its own; min-h-0 lets it shrink inside the flex column. */}
+        <div className="min-h-0 flex-1 overflow-y-auto">
           <SidebarNav role={user.role} />
         </div>
-        <Separator />
-        <div className="p-4">
-          <div className="flex items-center gap-3">
-            <Avatar className="h-8 w-8">
-              <AvatarFallback className="bg-blue-100 text-xs font-semibold text-blue-700 dark:bg-blue-900 dark:text-blue-300">
-                {getInitials(user.fullName)}
-              </AvatarFallback>
-            </Avatar>
+        <div className="shrink-0 border-t border-slate-700/70 p-3">
+          <div className="flex items-center gap-3 rounded-lg px-2 py-1.5">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-teal-600/20 text-xs font-semibold text-teal-300 ring-1 ring-teal-500/30">
+              {getInitials(user.fullName)}
+            </span>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-xs font-semibold text-zinc-900 dark:text-zinc-100">
+              <p className="truncate text-sm font-medium text-white">
                 {user.fullName}
               </p>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">{roleLabel}</p>
+              <p className="text-xs text-slate-400">{roleLabel}</p>
             </div>
           </div>
         </div>
@@ -81,12 +75,12 @@ export default async function DashboardLayout({
       {/* ── Main area ── */}
       <div className="flex min-w-0 flex-1 flex-col">
         {/* ── Top header ── */}
-        <header className="flex h-16 shrink-0 items-center gap-3 border-b border-zinc-200 bg-white px-4 dark:border-zinc-800 dark:bg-zinc-950 lg:px-6">
+        <header className="flex h-16 shrink-0 items-center gap-3 border-b border-zinc-200 bg-white px-4 lg:px-6">
           {/* Mobile hamburger */}
           <MobileSidebar role={user.role}>
             <button
               type="button"
-              className="inline-flex items-center justify-center rounded-md p-2 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100 lg:hidden"
+              className="inline-flex items-center justify-center rounded-lg p-2 text-zinc-500 transition-colors duration-150 hover:bg-zinc-100 hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40 lg:hidden"
               aria-label="Abrir menú"
             >
               <Menu className="h-5 w-5" />
@@ -96,23 +90,21 @@ export default async function DashboardLayout({
           <GlobalSearch />
 
           <div className="flex flex-1 items-center justify-end gap-3">
-            <div className="hidden flex-col items-end sm:flex">
-              <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+            <div className="hidden flex-col items-end leading-tight sm:flex">
+              <span className="text-sm font-semibold text-zinc-900">
                 {user.fullName}
               </span>
-              <span className="text-xs text-zinc-500 dark:text-zinc-400">{roleLabel}</span>
+              <span className="text-xs text-zinc-500">{roleLabel}</span>
             </div>
-            <Avatar className="h-8 w-8 lg:hidden">
-              <AvatarFallback className="bg-blue-100 text-xs font-semibold text-blue-700 dark:bg-blue-900 dark:text-blue-300">
-                {getInitials(user.fullName)}
-              </AvatarFallback>
-            </Avatar>
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-teal-50 text-xs font-semibold text-teal-700 ring-1 ring-teal-100">
+              {getInitials(user.fullName)}
+            </span>
             <LogoutButton />
           </div>
         </header>
 
         {/* ── Page content ── */}
-        <main className="flex-1 overflow-y-auto bg-zinc-50 dark:bg-zinc-900">
+        <main className="app-surface flex-1 overflow-y-auto">
           <ToastProvider>{children}</ToastProvider>
         </main>
       </div>

@@ -11,12 +11,12 @@ export default async function ImportarPage() {
   if (session.role !== 'admin') notFound();
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       <Breadcrumbs items={settingsTrail({ label: 'Importar' })} />
 
       <div className="mb-6 flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/30">
-          <Upload className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-50 dark:bg-teal-900/30">
+          <Upload className="h-5 w-5 text-teal-600 dark:text-teal-400" />
         </div>
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">

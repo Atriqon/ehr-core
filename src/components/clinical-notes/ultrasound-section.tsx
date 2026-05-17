@@ -100,7 +100,7 @@ export const PLACENTA_GRADE_LABELS: Record<(typeof placentaGradeValues)[number],
 function selectClass(): string {
   return [
     'h-9 w-full rounded-lg border border-zinc-200 bg-white px-2 text-sm shadow-sm outline-none transition-colors',
-    'focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20',
+    'focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20',
     'disabled:cursor-not-allowed disabled:opacity-60',
     'dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100',
   ].join(' ');
@@ -109,7 +109,7 @@ function selectClass(): string {
 function inputClass(): string {
   return [
     'h-9 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm shadow-sm outline-none transition-colors',
-    'placeholder:text-zinc-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20',
+    'placeholder:text-zinc-400 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20',
     'disabled:cursor-not-allowed disabled:opacity-60',
     'dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500',
   ].join(' ');
@@ -122,7 +122,7 @@ function readonlyInputClass(): string {
 function textareaClass(): string {
   return [
     'w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm shadow-sm outline-none transition-colors resize-y',
-    'placeholder:text-zinc-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20',
+    'placeholder:text-zinc-400 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20',
     'disabled:cursor-not-allowed disabled:opacity-60',
     'dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500',
   ].join(' ');

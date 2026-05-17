@@ -63,7 +63,7 @@ export function PatientCombobox({ name, defaultValue, defaultLabel, error }: Pat
       {selected ? (
         <div className="flex items-center justify-between rounded-lg border border-zinc-200 bg-white p-2.5 text-sm dark:border-zinc-700 dark:bg-zinc-900">
           <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-semibold text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-teal-100 text-xs font-semibold text-teal-700 dark:bg-teal-900/40 dark:text-teal-300">
               {selected.firstName[0]}
               {selected.lastName[0]}
             </div>
@@ -95,7 +95,7 @@ export function PatientCombobox({ name, defaultValue, defaultLabel, error }: Pat
               onFocus={() => results.length > 0 && setOpen(true)}
               placeholder="Buscar por nombre o cédula…"
               autoComplete="off"
-              className="h-9 w-full rounded-lg border border-zinc-200 bg-white py-2 pl-9 pr-3 text-sm shadow-sm outline-none transition-colors placeholder:text-zinc-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-blue-500"
+              className="h-9 w-full rounded-lg border border-zinc-200 bg-white py-2 pl-9 pr-3 text-sm shadow-sm outline-none transition-colors placeholder:text-zinc-400 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-teal-600"
             />
             {isPending && (
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-zinc-400">
@@ -115,7 +115,7 @@ export function PatientCombobox({ name, defaultValue, defaultLabel, error }: Pat
                     className="flex w-full items-center gap-3 px-3 py-2.5 text-left text-sm transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800"
                     onClick={() => handleSelect(p)}
                   >
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-semibold text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-teal-100 text-xs font-semibold text-teal-700 dark:bg-teal-900/40 dark:text-teal-300">
                       {p.firstName[0]}
                       {p.lastName[0]}
                     </div>

@@ -75,7 +75,7 @@ export default async function AgendaPage({ searchParams }: PageProps) {
     : formatDayTitle(activeDate);
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       {/* Page header */}
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>

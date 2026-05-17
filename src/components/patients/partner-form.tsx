@@ -191,7 +191,7 @@ function fieldClass(hasError: boolean) {
     'dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500',
     hasError
       ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-700'
-      : 'border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-700 dark:focus:border-blue-500',
+      : 'border-zinc-200 focus:border-teal-600 focus:ring-teal-600/20 dark:border-zinc-700 dark:focus:border-teal-600',
   ].join(' ');
 }
 
@@ -202,6 +202,6 @@ function textareaClass(hasError: boolean) {
     'dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500',
     hasError
       ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-700'
-      : 'border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-700 dark:focus:border-blue-500',
+      : 'border-zinc-200 focus:border-teal-600 focus:ring-teal-600/20 dark:border-zinc-700 dark:focus:border-teal-600',
   ].join(' ');
 }

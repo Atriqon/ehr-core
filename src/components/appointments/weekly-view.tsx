@@ -71,7 +71,7 @@ export function WeeklyView({
               key={dateStr}
               className={`rounded-t-lg px-2 py-2 text-center ${
                 isToday
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-teal-600 text-white'
                   : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400'
               }`}
             >
@@ -80,7 +80,7 @@ export function WeeklyView({
                 {day.getDate()}
               </p>
               {count > 0 && (
-                <p className={`text-xs ${isToday ? 'text-blue-100' : 'text-zinc-500 dark:text-zinc-500'}`}>
+                <p className={`text-xs ${isToday ? 'text-teal-100' : 'text-zinc-500 dark:text-zinc-500'}`}>
                   {count} cita{count !== 1 ? 's' : ''}
                 </p>
               )}
@@ -99,7 +99,7 @@ export function WeeklyView({
               key={dateStr}
               className={`min-h-[200px] rounded-b-lg border p-1.5 ${
                 isToday
-                  ? 'border-blue-200 bg-blue-50/50 dark:border-blue-900/50 dark:bg-blue-950/20'
+                  ? 'border-teal-200 bg-teal-50/50 dark:border-teal-900/50 dark:bg-teal-950/20'
                   : 'border-zinc-100 bg-white dark:border-zinc-800 dark:bg-zinc-900'
               }`}
             >
@@ -132,11 +132,11 @@ function WeeklyApptChip({ appointment, showDoctor }: WeeklyApptChipProps) {
 
   return (
     <Link href={`/pacientes/${appointment.patientId}`} className="block group">
-      <div className="rounded-md border border-zinc-200 bg-white p-1.5 text-xs shadow-sm transition-shadow hover:shadow-md dark:border-zinc-700 dark:bg-zinc-800">
+      <div className="rounded-md border border-zinc-200 bg-white p-1.5 text-xs shadow-sm transition-shadow duration-150 hover:shadow-md dark:border-zinc-700 dark:bg-zinc-800">
         <p className="font-medium text-zinc-600 dark:text-zinc-400">
           {formatTime(appointment.startTime)}
         </p>
-        <p className="mt-0.5 truncate font-semibold text-zinc-900 group-hover:text-blue-600 dark:text-zinc-100 dark:group-hover:text-blue-400">
+        <p className="mt-0.5 truncate font-semibold text-zinc-900 group-hover:text-teal-700 dark:text-zinc-100 dark:group-hover:text-teal-400">
           {name}
         </p>
         {showDoctor && (

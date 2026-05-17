@@ -182,7 +182,7 @@ export function AttachmentUploader({
           className={[
             'flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-6 py-10 text-center transition-colors',
             isDragging
-              ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/30'
+              ? 'border-teal-500 bg-teal-50 dark:bg-teal-950/30'
               : 'border-zinc-300 bg-zinc-50 hover:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-zinc-600',
           ].join(' ')}
         >
@@ -229,7 +229,7 @@ export function AttachmentUploader({
             <div className="mt-3">
               <div className="h-1.5 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800">
                 <div
-                  className="h-full bg-blue-500 transition-all"
+                  className="h-full bg-teal-500 transition-all"
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -252,7 +252,7 @@ export function AttachmentUploader({
                 value={category}
                 onChange={(e) => setCategory(e.target.value as AttachmentCategory)}
                 disabled={isUploading}
-                className="w-full rounded-md border border-zinc-300 bg-white px-2 py-1.5 text-sm focus:border-blue-500 focus:outline-none disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+                className="w-full rounded-md border border-zinc-300 bg-white px-2 py-1.5 text-sm focus:border-teal-600 focus:outline-none disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
               >
                 {categoryOptions.map((c) => (
                   <option key={c} value={c}>
@@ -276,7 +276,7 @@ export function AttachmentUploader({
                 onChange={(e) => setDescription(e.target.value)}
                 disabled={isUploading}
                 placeholder="ej: eco obstétrica 12 semanas"
-                className="w-full rounded-md border border-zinc-300 bg-white px-2 py-1.5 text-sm focus:border-blue-500 focus:outline-none disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+                className="w-full rounded-md border border-zinc-300 bg-white px-2 py-1.5 text-sm focus:border-teal-600 focus:outline-none disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
               />
             </div>
           </div>

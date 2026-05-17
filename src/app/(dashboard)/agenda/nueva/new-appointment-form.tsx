@@ -50,7 +50,7 @@ export function NewAppointmentForm({ doctors, todayStr }: NewAppointmentFormProp
           <select
             id="doctor_id"
             name="doctor_id"
-            className="h-9 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+            className="h-9 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm shadow-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
           >
             <option value="">Seleccionar médico…</option>
             {doctors.map((d) => (
@@ -75,7 +75,7 @@ export function NewAppointmentForm({ doctors, todayStr }: NewAppointmentFormProp
             name="date"
             defaultValue={todayStr}
             min={todayStr}
-            className="h-9 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+            className="h-9 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm shadow-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
           />
           {fieldErrors?.date && (
             <p className="text-xs text-red-600 dark:text-red-400">{fieldErrors.date[0]}</p>
@@ -93,7 +93,7 @@ export function NewAppointmentForm({ doctors, todayStr }: NewAppointmentFormProp
               type="time"
               name="start_time"
               defaultValue="08:00"
-              className="h-9 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+              className="h-9 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm shadow-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
             />
             {fieldErrors?.start_time && (
               <p className="text-xs text-red-600 dark:text-red-400">{fieldErrors.start_time[0]}</p>
@@ -108,7 +108,7 @@ export function NewAppointmentForm({ doctors, todayStr }: NewAppointmentFormProp
               type="time"
               name="end_time"
               defaultValue="08:30"
-              className="h-9 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+              className="h-9 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm shadow-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
             />
           </div>
         </div>
@@ -124,7 +124,7 @@ export function NewAppointmentForm({ doctors, todayStr }: NewAppointmentFormProp
             rows={3}
             maxLength={500}
             placeholder="Ej: Consulta de rutina, control prenatal, revisión de resultados…"
-            className="w-full resize-none rounded-lg border border-zinc-200 bg-white p-2.5 text-sm shadow-sm outline-none placeholder:text-zinc-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500"
+            className="w-full resize-none rounded-lg border border-zinc-200 bg-white p-2.5 text-sm shadow-sm outline-none placeholder:text-zinc-400 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500"
           />
         </div>
 
@@ -139,7 +139,7 @@ export function NewAppointmentForm({ doctors, todayStr }: NewAppointmentFormProp
             rows={2}
             maxLength={2000}
             placeholder="Notas adicionales para el equipo…"
-            className="w-full resize-none rounded-lg border border-zinc-200 bg-white p-2.5 text-sm shadow-sm outline-none placeholder:text-zinc-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500"
+            className="w-full resize-none rounded-lg border border-zinc-200 bg-white p-2.5 text-sm shadow-sm outline-none placeholder:text-zinc-400 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500"
           />
         </div>
 

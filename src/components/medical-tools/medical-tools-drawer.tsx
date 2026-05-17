@@ -19,7 +19,7 @@ import { cn } from '@/lib/utils';
 // ─── Shared styles ────────────────────────────────────────────────────────────
 
 function inputClass() {
-  return 'flex h-9 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm shadow-sm outline-none transition-colors placeholder:text-zinc-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
+  return 'flex h-9 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm shadow-sm outline-none transition-colors placeholder:text-zinc-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100';
 }
 
 function labelClass() {
@@ -138,7 +138,7 @@ function FPPTab() {
             className={cn(
               'flex-1 rounded-md py-1.5 text-xs font-medium transition-colors',
               mode === m
-                ? 'bg-blue-600 text-white shadow-sm'
+                ? 'bg-teal-600 text-white shadow-sm'
                 : 'text-zinc-500 hover:text-zinc-700 dark:text-zinc-400',
             )}
           >
@@ -275,7 +275,7 @@ function IMCTab() {
           type="checkbox"
           checked={isPregnant}
           onChange={(e) => setIsPregnant(e.target.checked)}
-          className="h-4 w-4 rounded border-zinc-300 accent-blue-600"
+          className="h-4 w-4 rounded border-zinc-300 accent-teal-600"
         />
         Paciente embarazada (mostrar ganancia recomendada)
       </label>
@@ -309,7 +309,7 @@ function IMCTab() {
         <table className="w-full text-xs">
           <tbody className="divide-y divide-zinc-100 dark:divide-zinc-700">
             {[
-              ['< 18.5', 'Bajo peso', 'text-blue-600 dark:text-blue-400'],
+              ['< 18.5', 'Bajo peso', 'text-teal-600 dark:text-teal-400'],
               ['18.5 – 24.9', 'Normal', 'text-green-600 dark:text-green-400'],
               ['25 – 29.9', 'Sobrepeso', 'text-yellow-600 dark:text-yellow-400'],
               ['30 – 34.9', 'Obesidad I', 'text-orange-600 dark:text-orange-400'],
@@ -456,16 +456,16 @@ export function MedicalToolsDrawer() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+        className="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-300 transition-colors duration-150 hover:bg-slate-700/40 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400/70"
       >
-        <Calculator className="h-4 w-4 shrink-0" />
+        <Calculator className="h-4 w-4 shrink-0 text-slate-400 transition-colors group-hover:text-slate-200" />
         Herramientas médicas
       </button>
 
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent side="right" className="flex w-full flex-col p-0 sm:max-w-md">
           <SheetHeader className="flex-row items-center gap-2.5 border-b border-zinc-200 px-5 py-4 space-y-0 dark:border-zinc-800">
-            <Calculator className="h-4 w-4 shrink-0 text-blue-600" />
+            <Calculator className="h-4 w-4 shrink-0 text-teal-600" />
             <SheetTitle className="text-sm font-semibold">Herramientas médicas</SheetTitle>
           </SheetHeader>
 
@@ -479,7 +479,7 @@ export function MedicalToolsDrawer() {
                 className={cn(
                   'shrink-0 px-4 py-3 text-xs font-medium transition-colors whitespace-nowrap',
                   activeTab === tab.id
-                    ? 'border-b-2 border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
+                    ? 'border-b-2 border-teal-600 text-teal-600 dark:border-teal-400 dark:text-teal-400'
                     : 'text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200',
                 )}
               >

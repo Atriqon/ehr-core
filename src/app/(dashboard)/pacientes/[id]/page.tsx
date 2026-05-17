@@ -155,16 +155,27 @@ export default async function PatientDetailPage({ params }: PageProps) {
   const dob = patient.dateOfBirth as string;
   const [year, month, day] = dob.split('-');
 
+  // Age in whole years, computed from date of birth.
+  const patientAge = (() => {
+    const d = new Date(dob);
+    const t = new Date();
+    let a = t.getFullYear() - d.getFullYear();
+    const m = t.getMonth() - d.getMonth();
+    if (m < 0 || (m === 0 && t.getDate() < d.getDate())) a--;
+    return a;
+  })();
+
   const allergiesBanner = allergies?.trim() || null;
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       {/* Allergy banner */}
       {allergiesBanner && (
-        <div className="mb-4 flex items-start gap-3 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm font-medium text-red-800 dark:border-red-800 dark:bg-red-950/40 dark:text-red-300">
-          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+        <div className="mb-4 flex items-start gap-3 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm font-medium text-red-800 dark:border-red-800 dark:bg-red-950/40 dark:text-red-300">
+          <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-red-500" />
           <span>
-            <strong>ALERGIAS:</strong> {allergiesBanner}
+            <strong className="font-bold uppercase tracking-wide">Alergias:</strong>{' '}
+            {allergiesBanner}
           </span>
         </div>
       )}
@@ -172,7 +183,8 @@ export default async function PatientDetailPage({ params }: PageProps) {
       <Breadcrumbs items={patientTrail(patient)} />
 
       {/* Patient header */}
-      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+      <div className="mb-6 rounded-xl border border-zinc-200 bg-white p-5 shadow-sm sm:p-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex items-start gap-4">
           <div className="flex flex-col items-center gap-1.5">
             <PatientAvatar
@@ -192,9 +204,12 @@ export default async function PatientDetailPage({ params }: PageProps) {
             <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
               {patient.firstName} {patient.lastName}
             </h1>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              {patient.idType === 'cedula' ? 'C.I. ' : ''}
-              {patient.idNumber} · {day}/{month}/{year} · {SEX_LABELS[patient.sex] ?? patient.sex}
+            <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">
+              {patientAge} años · {patient.idType === 'cedula' ? 'C.I. ' : ''}
+              {patient.idNumber} · {patient.phone?.trim() || 'Sin teléfono'}
+            </p>
+            <p className="text-xs text-zinc-400 dark:text-zinc-500">
+              {day}/{month}/{year} · {SEX_LABELS[patient.sex] ?? patient.sex}
             </p>
             <div className="mt-1 flex flex-wrap items-center gap-2">
               {patient.bloodType && (
@@ -229,7 +244,7 @@ export default async function PatientDetailPage({ params }: PageProps) {
                   <span className="text-xs text-zinc-500 dark:text-zinc-400">{lastVisitLabel}</span>
                 )}
                 {nextApptLabel && (
-                  <span className="text-xs font-medium text-blue-600 dark:text-blue-400">{nextApptLabel}</span>
+                  <span className="text-xs font-medium text-teal-700 dark:text-teal-400">{nextApptLabel}</span>
                 )}
               </div>
             )}
@@ -250,6 +265,7 @@ export default async function PatientDetailPage({ params }: PageProps) {
               isActive={patient.isActive}
             />
           )}
+        </div>
         </div>
       </div>
 

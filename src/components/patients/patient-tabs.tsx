@@ -1,7 +1,18 @@
 'use client';
 
 import { useState, type ReactNode } from 'react';
-import { Pencil, X } from 'lucide-react';
+import {
+  Activity,
+  CalendarDays,
+  ClipboardList,
+  FileSignature,
+  FileText,
+  Heart,
+  Paperclip,
+  Pencil,
+  User,
+  X,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PatientSummary } from '@/components/patients/patient-summary';
 import { PatientForm } from '@/components/patients/patient-form';
@@ -21,17 +32,18 @@ export type PatientTabId =
 interface TabDef {
   id: PatientTabId;
   label: string;
+  icon: typeof User;
 }
 
 const ALL_TABS: TabDef[] = [
-  { id: 'datos', label: 'Datos personales' },
-  { id: 'pareja', label: 'Pareja' },
-  { id: 'citas', label: 'Citas' },
-  { id: 'historia', label: 'Historia clínica' },
-  { id: 'signos', label: 'Signos vitales' },
-  { id: 'notas', label: 'Notas clínicas' },
-  { id: 'documentos', label: 'Documentos' },
-  { id: 'adjuntos', label: 'Adjuntos' },
+  { id: 'datos', label: 'Datos personales', icon: User },
+  { id: 'pareja', label: 'Pareja', icon: Heart },
+  { id: 'citas', label: 'Citas', icon: CalendarDays },
+  { id: 'historia', label: 'Historia clínica', icon: ClipboardList },
+  { id: 'signos', label: 'Signos vitales', icon: Activity },
+  { id: 'notas', label: 'Notas clínicas', icon: FileText },
+  { id: 'documentos', label: 'Documentos', icon: FileSignature },
+  { id: 'adjuntos', label: 'Adjuntos', icon: Paperclip },
 ];
 
 interface PatientTabsProps {
@@ -79,24 +91,31 @@ export function PatientTabs({
       {/* Tab nav */}
       <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-700">
         <nav className="-mb-px flex gap-1 overflow-x-auto">
-          {visibleTabs.map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => {
-                setActiveTab(tab.id);
-                setEditing(false);
-              }}
-              className={[
-                'shrink-0 px-4 py-2.5 text-sm font-medium transition-colors',
-                activeTab === tab.id
-                  ? 'border-b-2 border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
-                  : 'border-b-2 border-transparent text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200',
-              ].join(' ')}
-            >
-              {tab.label}
-            </button>
-          ))}
+          {visibleTabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => {
+                  setActiveTab(tab.id);
+                  setEditing(false);
+                }}
+                aria-current={isActive ? 'page' : undefined}
+                className={[
+                  'flex shrink-0 items-center gap-1.5 px-3.5 py-2.5 text-sm font-medium transition-colors duration-150',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40',
+                  isActive
+                    ? 'border-b-2 border-teal-600 text-teal-700 dark:border-teal-400 dark:text-teal-400'
+                    : 'border-b-2 border-transparent text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200',
+                ].join(' ')}
+              >
+                <Icon className="h-4 w-4 shrink-0" />
+                {tab.label}
+              </button>
+            );
+          })}
         </nav>
 
         {activeTab === 'datos' && allowed.has('datos') && (

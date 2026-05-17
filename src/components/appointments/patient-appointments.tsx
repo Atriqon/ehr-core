@@ -44,7 +44,7 @@ export function PatientAppointments({ appointments, patientId, todayStr }: Patie
         </p>
         <Link
           href="/agenda/nueva"
-          className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+          className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-teal-600 px-3.5 py-2 text-sm font-medium text-white shadow-sm transition-colors duration-150 hover:bg-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40"
         >
           <Calendar className="h-3.5 w-3.5" />
           Nueva cita

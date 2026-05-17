@@ -52,7 +52,7 @@ export function AppointmentCard({ appointment, showDoctor = false }: Appointment
   return (
     <div
       className={cn(
-        'group relative rounded-xl border bg-white p-4 shadow-sm transition-shadow hover:shadow-md dark:bg-zinc-900',
+        'group relative rounded-xl border bg-white p-4 shadow-sm transition-shadow duration-150 hover:shadow-md dark:bg-zinc-900',
         status === 'cancelled' || status === 'no_show'
           ? 'border-zinc-100 opacity-70 dark:border-zinc-800'
           : 'border-zinc-200 dark:border-zinc-700',
@@ -131,7 +131,7 @@ export function AppointmentCard({ appointment, showDoctor = false }: Appointment
         <User className="h-3.5 w-3.5 shrink-0 text-zinc-400" />
         <Link
           href={`/pacientes/${appointment.patientId}`}
-          className="font-medium text-blue-600 hover:underline dark:text-blue-400"
+          className="font-medium text-teal-700 hover:underline focus-visible:underline focus-visible:outline-none dark:text-teal-400"
         >
           {patientName}
         </Link>

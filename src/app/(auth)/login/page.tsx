@@ -3,7 +3,7 @@ import { getSession } from '@/lib/auth/session';
 import { LoginForm } from '@/components/login-form';
 
 export const metadata = {
-  title: 'Ingresar · ClinicaMVP',
+  title: 'Ingresar · Hisamed',
 };
 
 export default async function LoginPage() {
@@ -11,12 +11,12 @@ export default async function LoginPage() {
   if (session) redirect('/');
 
   return (
-    <div className="rounded-xl border border-border bg-background p-8 shadow-sm">
+    <div className="rounded-2xl border border-zinc-200 bg-white p-7 shadow-sm sm:p-8">
       <div className="mb-6 space-y-1">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
+        <h2 className="text-lg font-semibold tracking-tight text-zinc-900">
           Iniciar sesión
-        </h1>
-        <p className="text-sm text-muted-foreground">
+        </h2>
+        <p className="text-sm text-zinc-500">
           Accede con tu correo y contraseña.
         </p>
       </div>

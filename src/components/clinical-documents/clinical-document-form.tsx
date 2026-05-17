@@ -105,7 +105,7 @@ function fieldClass(hasError = false) {
     'disabled:cursor-not-allowed disabled:opacity-60',
     hasError
       ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-700'
-      : 'border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-700 dark:focus:border-blue-500',
+      : 'border-zinc-200 focus:border-teal-600 focus:ring-teal-600/20 dark:border-zinc-700 dark:focus:border-teal-600',
   ].join(' ');
 }
 
@@ -117,7 +117,7 @@ function textareaClass(hasError = false) {
     'disabled:cursor-not-allowed disabled:opacity-60',
     hasError
       ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-700'
-      : 'border-zinc-200 focus:border-blue-500 focus:ring-blue-500/20 dark:border-zinc-700 dark:focus:border-blue-500',
+      : 'border-zinc-200 focus:border-teal-600 focus:ring-teal-600/20 dark:border-zinc-700 dark:focus:border-teal-600',
   ].join(' ');
 }
 
@@ -1110,7 +1110,7 @@ function LabOrderFields({
                         className={[
                           'inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1 text-xs transition-colors',
                           checked
-                            ? 'border-blue-500 bg-blue-50 text-blue-700 dark:border-blue-600 dark:bg-blue-950/40 dark:text-blue-300'
+                            ? 'border-teal-500 bg-teal-50 text-teal-700 dark:border-teal-600 dark:bg-teal-950/40 dark:text-teal-300'
                             : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300',
                         ].join(' ')}
                       >
@@ -1232,7 +1232,7 @@ function LabOrderFields({
               type="checkbox"
               checked={state.fasting_required}
               onChange={(e) => onChange({ ...state, fasting_required: e.target.checked })}
-              className="h-4 w-4 rounded border-zinc-300 text-blue-600 focus:ring-blue-500"
+              className="h-4 w-4 rounded border-zinc-300 text-teal-600 focus:ring-teal-600"
             />
             <span className="text-zinc-700 dark:text-zinc-300">Requiere ayuno</span>
           </label>
@@ -1330,7 +1330,7 @@ function ImagingOrderFields({
                   className={[
                     'inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1 text-xs transition-colors',
                     checked
-                      ? 'border-blue-500 bg-blue-50 text-blue-700 dark:border-blue-600 dark:bg-blue-950/40 dark:text-blue-300'
+                      ? 'border-teal-500 bg-teal-50 text-teal-700 dark:border-teal-600 dark:bg-teal-950/40 dark:text-teal-300'
                       : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300',
                   ].join(' ')}
                 >
