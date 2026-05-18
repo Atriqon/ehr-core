@@ -456,9 +456,9 @@ export function MedicalToolsDrawer() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-300 transition-colors duration-150 hover:bg-slate-700/40 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400/70"
+        className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[13.5px] font-medium text-slate-600 transition-[background,color] duration-200 hover:bg-slate-900/5 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40"
       >
-        <Calculator className="h-4 w-4 shrink-0 text-slate-400 transition-colors group-hover:text-slate-200" />
+        <Calculator className="h-4.5 w-4.5 shrink-0 text-slate-400 transition-colors group-hover:text-slate-700" />
         Herramientas médicas
       </button>
 

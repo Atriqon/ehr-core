@@ -40,7 +40,9 @@ export function BrandLogo({
     <div className={cn('flex items-center gap-2.5', className)}>
       <span
         className={cn(
-          'flex shrink-0 items-center justify-center bg-teal-600 shadow-sm',
+          'flex shrink-0 items-center justify-center bg-[linear-gradient(135deg,#14B8A6,#0F766E)] shadow-[0_4px_10px_-3px_rgba(13,148,136,0.45),inset_0_1px_0_rgba(255,255,255,0.3)]',
+          size === 'lg' &&
+            'shadow-[0_12px_24px_-8px_rgba(13,148,136,0.55),inset_0_1px_0_rgba(255,255,255,0.32)]',
           markSizes[size],
         )}
       >

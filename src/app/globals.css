@@ -124,10 +124,48 @@
   * {
     @apply border-border outline-ring/50;
   }
+  /* Hisamed · Vision — Apple-style face stack. SF Pro on macOS/iOS, Inter
+     (wired through next/font) is the accepted fallback on Linux servers. */
+  :root {
+    --font-sans:
+      -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+      var(--font-inter), "Segoe UI", Roboto, sans-serif;
+    --font-heading:
+      -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+      var(--font-inter), "Segoe UI", Roboto, sans-serif;
+  }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    font-family: var(--font-sans);
+    letter-spacing: -0.005em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    /* Ambient backdrop — warm cream base washed with four soft color orbs
+       (teal, sky, amber, pink). Fixed so panels float over a still field. */
+    background-color: #ece7de;
+    background-image:
+      radial-gradient(
+        58rem 58rem at 8% 0%,
+        rgba(45, 212, 191, 0.55),
+        transparent 50%
+      ),
+      radial-gradient(
+        50rem 50rem at 100% 90%,
+        rgba(125, 211, 252, 0.5),
+        transparent 55%
+      ),
+      radial-gradient(
+        44rem 44rem at 75% 6%,
+        rgba(253, 186, 116, 0.32),
+        transparent 60%
+      ),
+      radial-gradient(
+        40rem 40rem at 30% 100%,
+        rgba(232, 121, 249, 0.22),
+        transparent 65%
+      );
+    background-attachment: fixed;
   }
   html {
     @apply font-sans;
@@ -135,24 +173,209 @@
 }
 
 @layer components {
-  /* Soft ambient app surface — a near-white #FAFAFA base washed with faint
-     teal/slate brand gradients so authenticated pages share the login's
-     premium identity instead of reading as flat pure white. */
-  .app-surface {
-    background-color: #fafafa;
-    background-image:
-      radial-gradient(
-        44rem 44rem at 100% 0%,
-        rgba(13, 148, 136, 0.06),
-        transparent 65%
-      ),
-      radial-gradient(
-        40rem 40rem at 0% 100%,
-        rgba(30, 41, 59, 0.05),
-        transparent 60%
-      );
-    background-attachment: fixed;
+  /* ── Vision frosted-glass system ──────────────────────────────────────
+     Floating panels (sidebar + main column), cards, tables and headers all
+     sit on the ambient body backdrop with a backdrop-filter blur. The
+     @supports fallback below keeps them legible where blur is unsupported. */
+
+  /* Sidebar + main column — the app chrome. */
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.38);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    border-radius: 24px;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.8) inset,
+      0 30px 60px -20px rgba(15, 23, 42, 0.3),
+      0 8px 20px -8px rgba(15, 23, 42, 0.1);
   }
+
+  /* Frosted white content card. */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.62);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 22px;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.8) inset,
+      0 18px 40px -16px rgba(15, 23, 42, 0.18),
+      0 4px 10px -4px rgba(15, 23, 42, 0.06);
+  }
+
+  /* Slightly more opaque frosted surface — tables, queues, appointment cards. */
+  .glass-surface {
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.7) inset,
+      0 10px 26px -10px rgba(15, 23, 42, 0.12),
+      0 2px 6px -2px rgba(15, 23, 42, 0.05);
+  }
+
+  /* Translucent header bar, used inside the main panel. */
+  .glass-header {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  /* Branded greeting card — the only solid-color card in the app. */
+  .greeting-card {
+    background: linear-gradient(
+      135deg,
+      rgba(13, 148, 136, 0.92),
+      rgba(15, 118, 110, 0.88) 60%,
+      rgba(15, 23, 42, 0.92)
+    );
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.22) inset,
+      0 22px 48px -18px rgba(13, 148, 136, 0.45),
+      0 6px 14px -4px rgba(15, 23, 42, 0.15);
+  }
+
+  /* Stat card — frosted tile with a per-card color wash via --card-tint. */
+  .stat-card {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0.55)
+    );
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 24px;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.85) inset,
+      0 18px 40px -16px rgba(15, 23, 42, 0.2),
+      0 4px 10px -4px rgba(15, 23, 42, 0.06);
+    transition:
+      transform 0.3s cubic-bezier(0.32, 0.72, 0, 1),
+      box-shadow 0.3s ease;
+  }
+  .stat-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--card-tint, transparent);
+    opacity: 0.55;
+    pointer-events: none;
+  }
+  .stat-card > * {
+    position: relative;
+    z-index: 1;
+  }
+  .stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.85) inset,
+      0 28px 50px -20px rgba(15, 23, 42, 0.28),
+      0 6px 14px -4px rgba(15, 23, 42, 0.1);
+  }
+
+  /* Solid-gradient icon tile — stat cards, pending list. */
+  .glass-tile {
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.85) inset,
+      0 6px 14px -4px rgba(15, 23, 42, 0.18),
+      0 0 0 1px rgba(255, 255, 255, 0.5);
+  }
+
+  /* iOS-style segmented control. */
+  .segmented {
+    display: inline-flex;
+    gap: 2px;
+    padding: 3px;
+    background: rgba(15, 23, 42, 0.06);
+    border-radius: 999px;
+  }
+  .segmented-item {
+    border-radius: 999px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+  .segmented-item[data-active="true"] {
+    background: #fff;
+    box-shadow:
+      0 1px 2px rgba(15, 23, 42, 0.1),
+      0 0 0 1px rgba(15, 23, 42, 0.04);
+  }
+
+  /* Frosted input — capsule search bars and rounded fields. */
+  .glass-input {
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      background 0.2s ease;
+  }
+  .glass-input:focus,
+  .glass-input:focus-within {
+    outline: none;
+    background: #fff;
+    border-color: rgba(13, 148, 136, 0.5);
+    box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.14);
+  }
+
+  /* Page fade-in on route change. */
+  .fade-in {
+    animation: vision-fade-in 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  @keyframes vision-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Firefox / unsupported browsers — drop the blur, keep panels opaque. */
+  @supports not (
+    (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+  ) {
+    .glass-panel,
+    .glass-card,
+    .glass-surface,
+    .stat-card {
+      background: rgba(255, 255, 255, 0.92);
+    }
+    .glass-header {
+      background: rgba(255, 255, 255, 0.85);
+    }
+    .glass-input {
+      background: rgba(255, 255, 255, 0.95);
+    }
+  }
+}
+
+/* Minimal Apple-style scrollbars. */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.15);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 23, 42, 0.25);
+  background-clip: content-box;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 /* Print: hide all app chrome so clinical documents print clean. */

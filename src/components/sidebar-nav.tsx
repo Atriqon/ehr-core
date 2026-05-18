@@ -47,25 +47,18 @@ function NavLink({
       onClick={onNavigate}
       aria-current={isActive ? 'page' : undefined}
       className={cn(
-        'group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-150',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400/70',
+        'group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13.5px] font-medium transition-[background,color] duration-200',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40',
+        // Vision drops the left bar — the pill background carries the state.
         isActive
-          ? 'bg-slate-700/60 text-white'
-          : 'text-slate-300 hover:bg-slate-700/40 hover:text-white',
+          ? 'bg-teal-600/10 text-teal-800 shadow-[inset_0_0_0_1px_rgba(13,148,136,0.12)]'
+          : 'text-slate-600 hover:bg-slate-900/5 hover:text-slate-900',
       )}
     >
-      {/* Active indicator bar */}
-      <span
-        aria-hidden
-        className={cn(
-          'absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-teal-400 transition-opacity duration-150',
-          isActive ? 'opacity-100' : 'opacity-0',
-        )}
-      />
       <Icon
         className={cn(
-          'h-4 w-4 shrink-0 transition-colors',
-          isActive ? 'text-teal-300' : 'text-slate-400 group-hover:text-slate-200',
+          'h-4.5 w-4.5 shrink-0 transition-colors',
+          isActive ? 'text-teal-700' : 'text-slate-400 group-hover:text-slate-700',
         )}
       />
       {label}
@@ -89,7 +82,7 @@ export function SidebarNav({ role, onNavigate }: SidebarNavProps) {
 
   return (
     <nav className="flex flex-col gap-1 p-3">
-      <p className="px-3 pb-1.5 pt-1 text-[0.65rem] font-semibold uppercase tracking-wider text-slate-500">
+      <p className="px-3 pb-1.5 pt-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-400">
         Menú
       </p>
       {primary.map((item) => (
@@ -101,9 +94,9 @@ export function SidebarNav({ role, onNavigate }: SidebarNavProps) {
         />
       ))}
 
-      <div className="my-2 h-px bg-slate-700/70" />
+      <div className="my-3 h-px bg-slate-900/6" />
 
-      <p className="px-3 pb-1.5 pt-1 text-[0.65rem] font-semibold uppercase tracking-wider text-slate-500">
+      <p className="px-3 pb-1.5 pt-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-400">
         Sistema
       </p>
       {config.map((item) => (
