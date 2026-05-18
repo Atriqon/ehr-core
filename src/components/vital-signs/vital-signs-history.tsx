@@ -1,114 +1,128 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { Activity, ChevronDown, ChevronRight } from 'lucide-react';
 import type { VitalSignsRow } from '@/queries/vital-signs';
 import { AttachVitalSignsButton } from './attach-vital-signs-button';
 
-// ─── Mini SVG line chart ──────────────────────────────────────────────────────
+// ─── Evolution chart ──────────────────────────────────────────────────────────
 // Recharts isn't installed in this project. Rather than pull in ~80kb of
-// dependencies for three sparkline-style charts, we render a small inline SVG.
-// It's deliberately minimal — axis line, dots, hover tooltip via <title>.
+// dependencies for three small charts, we render inline SVG with a Catmull-Rom
+// smoothed line + area fill. The SVG always lives inside a fixed h-48 wrapper,
+// so it can never grow taller than 192px regardless of viewport.
 
-interface Series {
+const CHART_W = 320;
+const CHART_H = 192;
+const PAD_X = 12;
+const PAD_TOP = 14;
+const PAD_BOTTOM = 14;
+
+interface ChartSeries {
   label: string;
-  values: { x: Date; y: number }[];
   color: string;
-  unit: string;
+  /** Oldest-first so the line moves left → right. */
+  points: { x: Date; y: number }[];
 }
 
-function MiniLineChart({
+/** Catmull-Rom → cubic Bézier path through the given pixel points. */
+function smoothPath(pts: { x: number; y: number }[]): string {
+  if (pts.length === 0) return '';
+  if (pts.length === 1) return `M${pts[0].x},${pts[0].y}`;
+  let d = `M${pts[0].x},${pts[0].y}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] ?? pts[i];
+    const p1 = pts[i];
+    const p2 = pts[i + 1];
+    const p3 = pts[i + 2] ?? p2;
+    const cp1x = p1.x + (p2.x - p0.x) / 6;
+    const cp1y = p1.y + (p2.y - p0.y) / 6;
+    const cp2x = p2.x - (p3.x - p1.x) / 6;
+    const cp2y = p2.y - (p3.y - p1.y) / 6;
+    d += ` C${cp1x},${cp1y} ${cp2x},${cp2y} ${p2.x},${p2.y}`;
+  }
+  return d;
+}
+
+function EvolutionChart({
   series,
-  height = 140,
-  yPadding = 0.1,
+  unit,
+  shortFmt,
 }: {
-  series: Series[];
-  height?: number;
-  yPadding?: number;
+  series: ChartSeries[];
+  unit: string;
+  shortFmt: Intl.DateTimeFormat;
 }) {
-  // Domain spans every series so multiple lines (e.g. systolic + diastolic)
-  // share the same Y axis. Bail out if there isn't enough data to draw a line.
-  const flatY = series.flatMap((s) => s.values.map((v) => v.y));
-  const flatX = series.flatMap((s) => s.values.map((v) => v.x.getTime()));
-  if (flatY.length === 0 || flatX.length === 0) return null;
+  const allY = series.flatMap((s) => s.points.map((p) => p.y));
+  const allX = series.flatMap((s) => s.points.map((p) => p.x.getTime()));
 
-  const yMin = Math.min(...flatY);
-  const yMax = Math.max(...flatY);
+  const yMin = Math.min(...allY);
+  const yMax = Math.max(...allY);
   const yRange = yMax - yMin || 1;
-  const yLo = yMin - yRange * yPadding;
-  const yHi = yMax + yRange * yPadding;
+  const yLo = yMin - yRange * 0.15;
+  const yHi = yMax + yRange * 0.15;
 
-  const xMin = Math.min(...flatX);
-  const xMax = Math.max(...flatX);
+  const xMin = Math.min(...allX);
+  const xMax = Math.max(...allX);
   const xRange = xMax - xMin || 1;
 
-  const width = 600;
-  const padX = 36;
-  const padY = 12;
-  const innerW = width - padX * 2;
-  const innerH = height - padY * 2;
+  const innerW = CHART_W - PAD_X * 2;
+  const innerH = CHART_H - PAD_TOP - PAD_BOTTOM;
+  const baseY = PAD_TOP + innerH;
 
-  const xToPx = (t: number) =>
-    padX + (xRange === 0 ? innerW / 2 : ((t - xMin) / xRange) * innerW);
-  const yToPx = (y: number) => padY + innerH - ((y - yLo) / (yHi - yLo)) * innerH;
-
-  // Three reference labels on the Y axis (min/mid/max) — readers want a
-  // ballpark sense of magnitude, not gridline accuracy.
-  const yTicks = [yLo, (yLo + yHi) / 2, yHi];
+  const xPx = (t: number) => PAD_X + ((t - xMin) / xRange) * innerW;
+  const yPx = (v: number) =>
+    PAD_TOP + innerH - ((v - yLo) / (yHi - yLo)) * innerH;
 
   return (
     <svg
       role="img"
       aria-label={series.map((s) => s.label).join(', ')}
-      viewBox={`0 0 ${width} ${height}`}
-      className="w-full"
+      viewBox={`0 0 ${CHART_W} ${CHART_H}`}
+      preserveAspectRatio="none"
+      className="h-full w-full"
     >
-      {yTicks.map((t, i) => (
-        <g key={i}>
-          <line
-            x1={padX}
-            x2={width - padX}
-            y1={yToPx(t)}
-            y2={yToPx(t)}
-            className="stroke-zinc-200 dark:stroke-zinc-700"
-            strokeDasharray="2 4"
-          />
-          <text
-            x={padX - 6}
-            y={yToPx(t)}
-            dy="0.32em"
-            textAnchor="end"
-            className="fill-zinc-400 text-[10px] dark:fill-zinc-500"
-          >
-            {Math.round(t * 10) / 10}
-          </text>
-        </g>
+      {/* Gridlines */}
+      {[0, 0.25, 0.5, 0.75, 1].map((f) => (
+        <line
+          key={f}
+          x1={PAD_X}
+          x2={CHART_W - PAD_X}
+          y1={PAD_TOP + innerH * f}
+          y2={PAD_TOP + innerH * f}
+          stroke="rgba(15,23,42,0.05)"
+          strokeWidth={1}
+          vectorEffect="non-scaling-stroke"
+        />
       ))}
+
       {series.map((s) => {
-        if (s.values.length === 0) return null;
-        const points = s.values
-          .map((v) => `${xToPx(v.x.getTime())},${yToPx(v.y)}`)
-          .join(' ');
+        const px = s.points.map((p) => ({ x: xPx(p.x.getTime()), y: yPx(p.y) }));
+        if (px.length === 0) return null;
+        const line = smoothPath(px);
+        const area =
+          px.length >= 2
+            ? `${line} L${px[px.length - 1].x},${baseY} L${px[0].x},${baseY} Z`
+            : '';
         return (
           <g key={s.label}>
-            <polyline
+            {area && <path d={area} fill={s.color} fillOpacity={0.12} />}
+            <path
+              d={line}
               fill="none"
               stroke={s.color}
-              strokeWidth={2}
+              strokeWidth={2.5}
               strokeLinejoin="round"
               strokeLinecap="round"
-              points={points}
+              vectorEffect="non-scaling-stroke"
             />
-            {s.values.map((v, i) => (
-              <circle
-                key={i}
-                cx={xToPx(v.x.getTime())}
-                cy={yToPx(v.y)}
-                r={3}
-                fill={s.color}
-              >
-                <title>{`${s.label}: ${v.y}${s.unit} · ${v.x.toLocaleDateString()}`}</title>
-              </circle>
+            {s.points.map((p, i) => (
+              <g key={i}>
+                <circle cx={px[i].x} cy={px[i].y} r={2.5} fill={s.color} />
+                {/* Wide invisible hit area for the native hover tooltip. */}
+                <circle cx={px[i].x} cy={px[i].y} r={11} fill="transparent">
+                  <title>{`${s.label}: ${p.y}${unit ? ` ${unit}` : ''} · ${shortFmt.format(p.x)}`}</title>
+                </circle>
+              </g>
             ))}
           </g>
         );
@@ -117,23 +131,130 @@ function MiniLineChart({
   );
 }
 
-function ChartLegend({ items }: { items: { label: string; color: string }[] }) {
+function LegendChip({ label, color }: { label: string; color: string }) {
   return (
-    <div className="flex flex-wrap gap-3 text-xs text-slate-500">
-      {items.map((it) => (
-        <div key={it.label} className="flex items-center gap-1.5">
-          <span
-            className="inline-block h-2 w-3 rounded"
-            style={{ backgroundColor: it.color }}
-          />
-          {it.label}
+    <span className="inline-flex items-center gap-1 rounded-full bg-slate-900/5 px-2 py-0.5 text-[10px] font-medium text-slate-600">
+      <span
+        className="h-1.5 w-1.5 rounded-full"
+        style={{ backgroundColor: color }}
+      />
+      {label}
+    </span>
+  );
+}
+
+/** Human-readable span between the first and last record of a metric. */
+function spanLabel(from: Date, to: Date): string {
+  const days = Math.round((to.getTime() - from.getTime()) / 86_400_000);
+  if (days <= 1) return 'mismo día';
+  if (days < 14) return `últimos ${days} días`;
+  if (days < 60) return `últimas ${Math.round(days / 7)} semanas`;
+  if (days < 730) return `últimos ${Math.round(days / 30)} meses`;
+  return `últimos ${Math.round(days / 365)} años`;
+}
+
+interface MetricCardProps {
+  title: string;
+  /** Unit shown next to the title and value (e.g. "kg", "mmHg"). */
+  unit: string;
+  series: ChartSeries[];
+  /** Number of records that contributed a value for this metric. */
+  count: number;
+  /** Compact-mode current value, e.g. "70.0" or "120/80". */
+  compactValue: string;
+  /** Compact-mode delta-vs-previous line. */
+  compactDelta: ReactNode;
+  shortFmt: Intl.DateTimeFormat;
+}
+
+function MetricCard({
+  title,
+  unit,
+  series,
+  count,
+  compactValue,
+  compactDelta,
+  shortFmt,
+}: MetricCardProps) {
+  const maxPoints = Math.max(0, ...series.map((s) => s.points.length));
+  const enoughData = maxPoints >= 3;
+
+  const flatX = series.flatMap((s) => s.points.map((p) => p.x));
+  const span =
+    flatX.length >= 2
+      ? spanLabel(
+          new Date(Math.min(...flatX.map((d) => d.getTime()))),
+          new Date(Math.max(...flatX.map((d) => d.getTime()))),
+        )
+      : null;
+
+  return (
+    <div className="glass-card rounded-[22px] p-5">
+      <div className="mb-3 flex items-start justify-between gap-2">
+        <div className="flex items-baseline gap-1.5">
+          <h4 className="text-sm font-semibold text-slate-800">{title}</h4>
+          {unit && <span className="text-sm text-zinc-500">{unit}</span>}
         </div>
-      ))}
+        <div className="flex flex-col items-end gap-1">
+          {enoughData && series.length > 1 && (
+            <div className="flex flex-wrap justify-end gap-1">
+              {series.map((s) => (
+                <LegendChip key={s.label} label={s.label} color={s.color} />
+              ))}
+            </div>
+          )}
+          <p className="text-xs text-slate-400">
+            {count} {count === 1 ? 'registro' : 'registros'}
+            {span && ` · ${span}`}
+          </p>
+        </div>
+      </div>
+
+      {enoughData ? (
+        <>
+          <div className="h-48 w-full">
+            <EvolutionChart series={series} unit={unit} shortFmt={shortFmt} />
+          </div>
+          <div className="mt-1 flex justify-between text-[10px] text-slate-400">
+            <span>{shortFmt.format(series[0].points[0].x)}</span>
+            <span>
+              {shortFmt.format(
+                series[0].points[series[0].points.length - 1].x,
+              )}
+            </span>
+          </div>
+        </>
+      ) : (
+        <div className="flex h-48 flex-col justify-center">
+          {count === 0 ? (
+            <p className="text-sm text-slate-400">Sin registros</p>
+          ) : (
+            <>
+              <p className="text-3xl font-semibold text-slate-800">
+                {compactValue}
+                {unit && (
+                  <span className="ml-1.5 text-base font-normal text-zinc-400">
+                    {unit}
+                  </span>
+                )}
+              </p>
+              <p className="mt-1 text-sm">{compactDelta}</p>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
+
+const COLOR = {
+  weight: '#14b8a6', // teal
+  systolic: '#dc2626', // red
+  diastolic: '#2563eb', // blue
+  bmi: '#16a34a', // green
+} as const;
 
 interface VitalSignsHistoryProps {
   records: VitalSignsRow[];
@@ -168,46 +289,47 @@ export function VitalSignsHistory({
     [timeZone],
   );
 
-  // Charts read oldest-first so the line moves left → right.
-  const chronological = useMemo(
-    () => [...records].slice().reverse(),
-    [records],
+  const shortFmt = useMemo(
+    () =>
+      new Intl.DateTimeFormat('es-VE', {
+        day: '2-digit',
+        month: '2-digit',
+        timeZone,
+      }),
+    [timeZone],
   );
 
-  const weightSeries = useMemo<Series[]>(() => {
-    const values = chronological
-      .filter((r) => r.weightKg != null)
-      .map((r) => ({ x: r.recordedAt, y: r.weightKg as number }));
-    return values.length >= 2
-      ? [{ label: 'Peso', values, color: '#2563eb', unit: ' kg' }]
-      : [];
-  }, [chronological]);
+  // Charts read oldest-first so the line moves left → right.
+  const chronological = useMemo(() => [...records].slice().reverse(), [records]);
 
-  const bpSeries = useMemo<Series[]>(() => {
-    const sys = chronological
-      .filter((r) => r.systolicBp != null)
-      .map((r) => ({ x: r.recordedAt, y: r.systolicBp as number }));
-    const dia = chronological
-      .filter((r) => r.diastolicBp != null)
-      .map((r) => ({ x: r.recordedAt, y: r.diastolicBp as number }));
-    if (sys.length < 2 && dia.length < 2) return [];
-    return [
-      { label: 'Sistólica', values: sys, color: '#dc2626', unit: ' mmHg' },
-      { label: 'Diastólica', values: dia, color: '#2563eb', unit: ' mmHg' },
-    ];
-  }, [chronological]);
-
-  const bmiSeries = useMemo<Series[]>(() => {
-    const values = chronological
-      .filter((r) => r.bmi != null)
-      .map((r) => ({ x: r.recordedAt, y: r.bmi as number }));
-    return values.length >= 2
-      ? [{ label: 'IMC', values, color: '#16a34a', unit: '' }]
-      : [];
-  }, [chronological]);
-
-  const hasAnyChart =
-    weightSeries.length > 0 || bpSeries.length > 0 || bmiSeries.length > 0;
+  const weight = useMemo(
+    () =>
+      chronological
+        .filter((r) => r.weightKg != null)
+        .map((r) => ({ x: r.recordedAt, y: r.weightKg as number })),
+    [chronological],
+  );
+  const systolic = useMemo(
+    () =>
+      chronological
+        .filter((r) => r.systolicBp != null)
+        .map((r) => ({ x: r.recordedAt, y: r.systolicBp as number })),
+    [chronological],
+  );
+  const diastolic = useMemo(
+    () =>
+      chronological
+        .filter((r) => r.diastolicBp != null)
+        .map((r) => ({ x: r.recordedAt, y: r.diastolicBp as number })),
+    [chronological],
+  );
+  const bmi = useMemo(
+    () =>
+      chronological
+        .filter((r) => r.bmi != null)
+        .map((r) => ({ x: r.recordedAt, y: r.bmi as number })),
+    [chronological],
+  );
 
   if (records.length === 0) {
     return (
@@ -255,30 +377,55 @@ export function VitalSignsHistory({
         )}
       </div>
 
-      {/* Charts (only when ≥2 records exist for at least one metric) */}
-      {hasAnyChart && (
-        <div className="glass-card rounded-[22px] p-5.5">
-          <h3 className="mb-4 text-sm font-semibold text-slate-800">
-            Evolución
-          </h3>
-          <div className="space-y-6">
-            {weightSeries.length > 0 && (
-              <ChartBlock title="Peso (kg)" series={weightSeries} />
+      {/* Evolution — 3 metrics side by side */}
+      <div>
+        <h3 className="mb-3 text-sm font-semibold text-slate-800">Evolución</h3>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <MetricCard
+            title="Peso"
+            unit="kg"
+            count={weight.length}
+            series={[{ label: 'Peso', color: COLOR.weight, points: weight }]}
+            compactValue={
+              weight.length ? weight[weight.length - 1].y.toFixed(1) : '—'
+            }
+            compactDelta={buildDelta(weight, 'kg', 1, shortFmt, 'text-zinc-500')}
+            shortFmt={shortFmt}
+          />
+          <MetricCard
+            title="Tensión arterial"
+            unit="mmHg"
+            count={systolic.length}
+            series={[
+              { label: 'Sistólica', color: COLOR.systolic, points: systolic },
+              { label: 'Diastólica', color: COLOR.diastolic, points: diastolic },
+            ]}
+            compactValue={formatBp(
+              systolic.length ? systolic[systolic.length - 1].y : null,
+              diastolic.length ? diastolic[diastolic.length - 1].y : null,
             )}
-            {bpSeries.length > 0 && (
-              <ChartBlock
-                title="Tensión arterial (mmHg)"
-                series={bpSeries}
-                legend={[
-                  { label: 'Sistólica', color: '#dc2626' },
-                  { label: 'Diastólica', color: '#2563eb' },
-                ]}
-              />
+            compactDelta={buildDelta(
+              systolic,
+              'mmHg sist.',
+              0,
+              shortFmt,
+              systolic.length && systolic[systolic.length - 1].y > 140
+                ? 'text-red-600'
+                : 'text-zinc-500',
             )}
-            {bmiSeries.length > 0 && <ChartBlock title="IMC" series={bmiSeries} />}
-          </div>
+            shortFmt={shortFmt}
+          />
+          <MetricCard
+            title="IMC"
+            unit=""
+            count={bmi.length}
+            series={[{ label: 'IMC', color: COLOR.bmi, points: bmi }]}
+            compactValue={bmi.length ? bmi[bmi.length - 1].y.toFixed(1) : '—'}
+            compactDelta={buildDelta(bmi, '', 1, shortFmt, 'text-zinc-500')}
+            shortFmt={shortFmt}
+          />
         </div>
-      )}
+      </div>
 
       {/* History list */}
       <div className="glass-surface rounded-[20px]">
@@ -352,23 +499,28 @@ export function VitalSignsHistory({
   );
 }
 
-function ChartBlock({
-  title,
-  series,
-  legend,
-}: {
-  title: string;
-  series: Series[];
-  legend?: { label: string; color: string }[];
-}) {
+/** Builds the "↑ 4.5 kg desde 18/04" delta line for compact (insufficient-data) cards. */
+function buildDelta(
+  points: { x: Date; y: number }[],
+  unit: string,
+  precision: number,
+  shortFmt: Intl.DateTimeFormat,
+  colorClass: string,
+): ReactNode {
+  if (points.length === 0) return null;
+  if (points.length === 1) {
+    return <span className="text-slate-400">Único registro hasta ahora</span>;
+  }
+  const curr = points[points.length - 1];
+  const prev = points[points.length - 2];
+  const delta = curr.y - prev.y;
+  const arrow = delta > 0 ? '↑' : delta < 0 ? '↓' : '→';
+  const mag = Math.abs(delta).toFixed(precision);
   return (
-    <div>
-      <div className="mb-2 flex items-center justify-between">
-        <p className="text-xs font-semibold text-slate-600">{title}</p>
-        {legend && <ChartLegend items={legend} />}
-      </div>
-      <MiniLineChart series={series} />
-    </div>
+    <span className={colorClass}>
+      {arrow} {mag}
+      {unit && ` ${unit}`} desde {shortFmt.format(prev.x)}
+    </span>
   );
 }
 
