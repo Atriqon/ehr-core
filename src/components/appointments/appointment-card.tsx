@@ -52,19 +52,18 @@ export function AppointmentCard({ appointment, showDoctor = false }: Appointment
   return (
     <div
       className={cn(
-        'group relative rounded-xl border bg-white p-4 shadow-sm transition-shadow duration-150 hover:shadow-md dark:bg-zinc-900',
-        status === 'cancelled' || status === 'no_show'
-          ? 'border-zinc-100 opacity-70 dark:border-zinc-800'
-          : 'border-zinc-200 dark:border-zinc-700',
+        'group relative rounded-[18px] p-4 transition-[transform,box-shadow] duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5',
+        'glass-surface',
+        (status === 'cancelled' || status === 'no_show') && 'opacity-70',
       )}
     >
       {/* Header row */}
       <div className="flex items-start justify-between gap-2">
-        <div className="flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-          <Clock className="h-4 w-4 shrink-0 text-zinc-400" />
+        <div className="flex items-center gap-2 text-sm font-semibold tracking-[-0.005em] text-slate-900">
+          <Clock className="h-3.5 w-3.5 shrink-0 text-slate-400" />
           <span>{formatTime(appointment.startTime)}</span>
           {appointment.endTime && (
-            <span className="font-normal text-zinc-400">→ {formatTime(appointment.endTime)}</span>
+            <span className="font-normal text-slate-400">→ {formatTime(appointment.endTime)}</span>
           )}
         </div>
         <div className="flex items-center gap-1.5">
@@ -90,7 +89,7 @@ export function AppointmentCard({ appointment, showDoctor = false }: Appointment
                     className="fixed inset-0 z-10"
                     onClick={() => setMenuOpen(false)}
                   />
-                  <div className="absolute right-0 top-8 z-20 min-w-[160px] rounded-lg border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
+                  <div className="absolute right-0 top-8 z-20 min-w-40 rounded-2xl border border-white/60 bg-white/90 py-1 shadow-[0_18px_40px_-16px_rgba(15,23,42,0.25)] backdrop-blur-2xl">
                     {validNext.includes('no_show') && (
                       <form action={statusAction}>
                         <input type="hidden" name="appointment_id" value={appointment.id} />
@@ -127,11 +126,11 @@ export function AppointmentCard({ appointment, showDoctor = false }: Appointment
       </div>
 
       {/* Patient */}
-      <div className="mt-2 flex items-center gap-1.5 text-sm">
-        <User className="h-3.5 w-3.5 shrink-0 text-zinc-400" />
+      <div className="mt-2.5 flex items-center gap-1.5 text-[13.5px]">
+        <User className="h-3.5 w-3.5 shrink-0 text-slate-400" />
         <Link
           href={`/pacientes/${appointment.patientId}`}
-          className="font-medium text-teal-700 hover:underline focus-visible:underline focus-visible:outline-none dark:text-teal-400"
+          className="font-semibold text-teal-700 hover:underline focus-visible:underline focus-visible:outline-none"
         >
           {patientName}
         </Link>
@@ -139,26 +138,26 @@ export function AppointmentCard({ appointment, showDoctor = false }: Appointment
 
       {/* Doctor (optional) */}
       {showDoctor && (
-        <div className="mt-1 flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
-          <Stethoscope className="h-3.5 w-3.5 shrink-0" />
+        <div className="mt-1 flex items-center gap-1.5 text-xs text-slate-500">
+          <Stethoscope className="h-3.5 w-3.5 shrink-0 text-slate-400" />
           {appointment.doctor.fullName}
         </div>
       )}
 
       {/* Reason */}
       {appointment.reason && (
-        <div className="mt-1 flex items-start gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
-          <FileText className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+        <div className="mt-1 flex items-start gap-1.5 text-xs text-slate-500">
+          <FileText className="mt-0.5 h-3.5 w-3.5 shrink-0 text-slate-400" />
           <span className="line-clamp-2">{appointment.reason}</span>
         </div>
       )}
 
       {/* Error feedback */}
       {(statusState && !statusState.success) && (
-        <p className="mt-2 text-xs text-red-600 dark:text-red-400">{statusState.error}</p>
+        <p className="mt-2 text-xs text-red-600">{statusState.error}</p>
       )}
       {(cancelState && !cancelState.success) && (
-        <p className="mt-2 text-xs text-red-600 dark:text-red-400">{cancelState.error}</p>
+        <p className="mt-2 text-xs text-red-600">{cancelState.error}</p>
       )}
 
       {/* Primary action buttons */}
@@ -179,8 +178,8 @@ export function AppointmentCard({ appointment, showDoctor = false }: Appointment
 
       {/* Cancel form */}
       {showCancelForm && (
-        <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-900/50 dark:bg-red-950/30">
-          <p className="mb-2 text-sm font-medium text-red-700 dark:text-red-400">
+        <div className="mt-3 rounded-2xl border border-red-600/20 bg-red-100/70 p-3.5 backdrop-blur-md">
+          <p className="mb-2 text-sm font-semibold text-red-700">
             ¿Cancelar esta cita?
           </p>
           <form action={cancelAction}>
@@ -189,7 +188,7 @@ export function AppointmentCard({ appointment, showDoctor = false }: Appointment
               name="reason"
               placeholder="Motivo (opcional)"
               rows={2}
-              className="w-full rounded-md border border-red-200 bg-white p-2 text-xs text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-red-400 dark:border-red-900 dark:bg-zinc-900 dark:text-zinc-100"
+              className="w-full rounded-xl border border-red-600/20 bg-white/85 p-2.5 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-red-400/40"
             />
             <div className="mt-2 flex gap-2">
               <Button type="submit" variant="destructive" size="sm">

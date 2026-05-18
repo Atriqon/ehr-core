@@ -75,14 +75,14 @@ export default async function AgendaPage({ searchParams }: PageProps) {
     : formatDayTitle(activeDate);
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
+    <div className="fade-in p-6 sm:p-8 lg:px-10">
       {/* Page header */}
-      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold capitalize tracking-tight text-zinc-900 dark:text-zinc-100">
+          <h1 className="text-[32px] font-semibold leading-[1.15] tracking-[-0.025em] text-slate-900">
             Agenda
           </h1>
-          <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">{title}</p>
+          <p className="mt-1 text-sm capitalize text-slate-500">{title}</p>
         </div>
         <AppointmentFormDrawer
           doctors={doctors}
@@ -93,7 +93,7 @@ export default async function AgendaPage({ searchParams }: PageProps) {
       </div>
 
       {/* Controls */}
-      <div className="mb-4">
+      <div className="mb-5">
         <AgendaControls
           doctors={doctors}
           weekStartsOn={weekStartsOn}

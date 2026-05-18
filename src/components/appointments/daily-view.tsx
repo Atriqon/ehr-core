@@ -40,14 +40,16 @@ export function DailyView({
 }: DailyViewProps) {
   if (appointments.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-zinc-300 bg-white py-16 text-center dark:border-zinc-700 dark:bg-zinc-900">
-        <Calendar className="mb-3 h-8 w-8 text-zinc-300 dark:text-zinc-600" />
-        <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">
+      <div className="glass-card flex flex-col items-center justify-center rounded-[22px] py-14 text-center">
+        <span className="flex h-16 w-16 items-center justify-center rounded-[22px] bg-[linear-gradient(135deg,#F0FDFA,#CCFBF1)] text-teal-600 shadow-[inset_0_0_0_1px_rgba(13,148,136,0.15),0_8px_18px_-8px_rgba(13,148,136,0.35)]">
+          <Calendar className="h-7 w-7" />
+        </span>
+        <p className="mt-2 text-[15px] font-semibold text-slate-800">
           {isToday
             ? 'No tienes citas programadas para hoy'
             : 'Sin citas para este día'}
         </p>
-        <p className="mt-1 max-w-sm text-xs text-zinc-400 dark:text-zinc-500">
+        <p className="mt-1 max-w-80 text-[13px] capitalize leading-relaxed text-slate-500">
           {isToday
             ? 'Las próximas citas aparecerán aquí cuando sean registradas.'
             : formatDateHeader(date)}
@@ -58,17 +60,17 @@ export function DailyView({
 
   return (
     <div className="space-y-4">
-      <p className="text-sm font-medium capitalize text-zinc-500 dark:text-zinc-400">
+      <p className="text-[13px] font-medium capitalize text-slate-500">
         {formatDateHeader(date)} · {appointments.length} cita
         {appointments.length !== 1 ? 's' : ''}
       </p>
       {/* Vertical timeline */}
-      <ol className="relative ml-1.5 space-y-3 border-l-2 border-zinc-200 pl-6 dark:border-zinc-700">
+      <ol className="relative ml-1.5 space-y-3 border-l-2 border-slate-900/8 pl-6">
         {appointments.map((appt) => (
           <li key={appt.id} className="relative">
             <span
               aria-hidden
-              className={`absolute -left-[1.95rem] top-4 h-3.5 w-3.5 rounded-full border-2 border-white ring-1 ring-zinc-200 dark:border-zinc-900 dark:ring-zinc-700 ${
+              className={`absolute -left-[1.95rem] top-4 h-3.5 w-3.5 rounded-full border-2 border-white ring-1 ring-slate-900/10 ${
                 DOT_COLOR[appt.status] ?? DOT_COLOR.scheduled
               }`}
               title={STATUS_CONFIG[appt.status]?.label}

@@ -60,7 +60,7 @@ export function WeeklyView({
 
   return (
     <div className="overflow-x-auto">
-      <div className="grid min-w-[700px] grid-cols-7 gap-1">
+      <div className="grid min-w-175 grid-cols-7 gap-1">
         {/* Headers */}
         {days.map((day) => {
           const dateStr = toDateStr(day);
@@ -69,18 +69,18 @@ export function WeeklyView({
           return (
             <div
               key={dateStr}
-              className={`rounded-t-lg px-2 py-2 text-center ${
+              className={`rounded-t-[14px] px-2 py-2.5 text-center ${
                 isToday
-                  ? 'bg-teal-600 text-white'
-                  : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400'
+                  ? 'bg-[linear-gradient(135deg,#14B8A6,#0F766E)] text-white shadow-[0_8px_18px_-8px_rgba(13,148,136,0.5)]'
+                  : 'bg-white/55 text-slate-600 backdrop-blur-md'
               }`}
             >
-              <p className="text-xs font-medium">{WEEKDAY_SHORT[day.getDay()]}</p>
-              <p className={`text-lg font-bold leading-tight ${isToday ? '' : 'text-zinc-900 dark:text-zinc-100'}`}>
+              <p className="text-[11px] font-medium">{WEEKDAY_SHORT[day.getDay()]}</p>
+              <p className={`text-lg font-bold leading-tight ${isToday ? '' : 'text-slate-900'}`}>
                 {day.getDate()}
               </p>
               {count > 0 && (
-                <p className={`text-xs ${isToday ? 'text-teal-100' : 'text-zinc-500 dark:text-zinc-500'}`}>
+                <p className={`text-[11px] ${isToday ? 'text-teal-100' : 'text-slate-500'}`}>
                   {count} cita{count !== 1 ? 's' : ''}
                 </p>
               )}
@@ -97,15 +97,15 @@ export function WeeklyView({
           return (
             <div
               key={dateStr}
-              className={`min-h-[200px] rounded-b-lg border p-1.5 ${
+              className={`min-h-50 rounded-b-[14px] border p-1.5 backdrop-blur-md ${
                 isToday
-                  ? 'border-teal-200 bg-teal-50/50 dark:border-teal-900/50 dark:bg-teal-950/20'
-                  : 'border-zinc-100 bg-white dark:border-zinc-800 dark:bg-zinc-900'
+                  ? 'border-teal-600/25 bg-teal-50/55'
+                  : 'border-white/60 bg-white/45'
               }`}
             >
               {dayAppts.length === 0 ? (
-                <div className="flex h-full min-h-[120px] items-center justify-center">
-                  <span className="text-xs text-zinc-300 dark:text-zinc-700">—</span>
+                <div className="flex h-full min-h-30 items-center justify-center">
+                  <span className="text-xs text-slate-300">—</span>
                 </div>
               ) : (
                 <div className="space-y-1">
@@ -132,15 +132,15 @@ function WeeklyApptChip({ appointment, showDoctor }: WeeklyApptChipProps) {
 
   return (
     <Link href={`/pacientes/${appointment.patientId}`} className="block group">
-      <div className="rounded-md border border-zinc-200 bg-white p-1.5 text-xs shadow-sm transition-shadow duration-150 hover:shadow-md dark:border-zinc-700 dark:bg-zinc-800">
-        <p className="font-medium text-zinc-600 dark:text-zinc-400">
+      <div className="rounded-[10px] border border-white/70 bg-white/85 p-1.5 text-xs shadow-[0_2px_6px_-2px_rgba(15,23,42,0.1)] transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_18px_-8px_rgba(15,23,42,0.2)]">
+        <p className="font-medium text-slate-500">
           {formatTime(appointment.startTime)}
         </p>
-        <p className="mt-0.5 truncate font-semibold text-zinc-900 group-hover:text-teal-700 dark:text-zinc-100 dark:group-hover:text-teal-400">
+        <p className="mt-0.5 truncate font-semibold text-slate-900 group-hover:text-teal-700">
           {name}
         </p>
         {showDoctor && (
-          <p className="mt-0.5 truncate text-zinc-500 dark:text-zinc-500">
+          <p className="mt-0.5 truncate text-slate-500">
             {appointment.doctor.fullName}
           </p>
         )}

@@ -108,29 +108,21 @@ export function AgendaControls({ doctors, weekStartsOn, todayStr }: AgendaContro
         isPending ? 'opacity-60' : 'opacity-100'
       }`}
     >
-      {/* View toggle */}
-      <div className="flex rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900">
+      {/* View toggle — iOS-style segmented control */}
+      <div className="segmented">
         <button
           type="button"
           onClick={() => switchView('day')}
-          className={[
-            'px-3 py-1.5 text-sm font-medium rounded-l-lg transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40',
-            view === 'day'
-              ? 'bg-teal-600 text-white shadow-sm'
-              : 'text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-800',
-          ].join(' ')}
+          data-active={view === 'day'}
+          className="segmented-item px-4 py-1.5 text-[13px] text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40 data-[active=true]:text-slate-900"
         >
           Día
         </button>
         <button
           type="button"
           onClick={() => switchView('week')}
-          className={[
-            'px-3 py-1.5 text-sm font-medium rounded-r-lg transition-colors duration-150 border-l border-zinc-200 dark:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40',
-            view === 'week'
-              ? 'bg-teal-600 text-white shadow-sm'
-              : 'text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-800',
-          ].join(' ')}
+          data-active={view === 'week'}
+          className="segmented-item px-4 py-1.5 text-[13px] text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40 data-[active=true]:text-slate-900"
         >
           Semana
         </button>
@@ -154,7 +146,7 @@ export function AgendaControls({ doctors, weekStartsOn, todayStr }: AgendaContro
         <select
           value={selectedDoctorId}
           onChange={(e) => push({ doctor: e.target.value || undefined })}
-          className="h-8 rounded-lg border border-zinc-200 bg-white px-2 text-sm text-zinc-700 shadow-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
+          className="glass-input h-9 rounded-full px-3.5 text-[13px] text-slate-700 outline-none"
         >
           <option value="">Todos los médicos</option>
           {doctors.map((d) => (
