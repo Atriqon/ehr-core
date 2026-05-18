@@ -15,7 +15,7 @@ interface ReportFiltersProps {
 }
 
 const SELECT_CLASS =
-  'h-8 rounded-md border border-zinc-200 bg-white px-2 text-sm text-zinc-900 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100';
+  'glass-input h-9 rounded-full px-3.5 text-[13px] text-slate-700 outline-none';
 
 export function ReportFilters({
   preset,
@@ -42,10 +42,10 @@ export function ReportFilters({
   );
 
   return (
-    <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900">
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="flex flex-col gap-1">
-          <label className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+    <div className="glass-card rounded-[22px] p-5">
+      <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[13px] font-semibold text-slate-700">
             Período
           </label>
           <select
@@ -63,8 +63,8 @@ export function ReportFilters({
 
         {preset === 'custom' && (
           <>
-            <div className="flex flex-col gap-1">
-              <label className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[13px] font-semibold text-slate-700">
                 Desde
               </label>
               <input
@@ -75,8 +75,8 @@ export function ReportFilters({
                 className={SELECT_CLASS}
               />
             </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[13px] font-semibold text-slate-700">
                 Hasta
               </label>
               <input
@@ -91,8 +91,8 @@ export function ReportFilters({
         )}
 
         {canFilterByDoctor && (
-          <div className="flex flex-col gap-1">
-            <label className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[13px] font-semibold text-slate-700">
               Médico
             </label>
             <select

@@ -95,13 +95,35 @@ function formatDateTime(date: Date, timezone: string): string {
 
 // ─── Presentational helpers ───────────────────────────────────────────────────
 
-function StatCard({ label, value }: { label: string; value: number }) {
+// Vision stat-card washes — the grid rotates through these four tints so the
+// reports dashboard reads at a glance, same palette as the home stat cards.
+const STAT_TINTS = [
+  'linear-gradient(135deg, rgba(94,234,212,0.18), transparent 60%)',
+  'linear-gradient(135deg, rgba(147,197,253,0.20), transparent 60%)',
+  'linear-gradient(135deg, rgba(253,230,138,0.25), transparent 60%)',
+  'linear-gradient(135deg, rgba(196,181,253,0.20), transparent 60%)',
+];
+
+function StatCard({
+  label,
+  value,
+  tint = 0,
+}: {
+  label: string;
+  value: number;
+  tint?: number;
+}) {
   return (
-    <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900">
-      <p className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+    <div
+      className="stat-card p-5"
+      style={
+        { '--card-tint': STAT_TINTS[tint % STAT_TINTS.length] } as React.CSSProperties
+      }
+    >
+      <p className="text-[28px] font-bold leading-none tabular-nums tracking-[-0.03em] text-slate-900">
         {value.toLocaleString('es-VE')}
       </p>
-      <p className="mt-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">{label}</p>
+      <p className="mt-1.5 text-xs font-medium text-slate-500">{label}</p>
     </div>
   );
 }
@@ -114,11 +136,11 @@ function SectionHeader({
   title: string;
 }) {
   return (
-    <div className="mb-3 flex items-center gap-2.5">
-      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-50 dark:bg-teal-900/30">
-        <Icon className="h-4 w-4 text-teal-600 dark:text-teal-400" />
+    <div className="mb-3.5 flex items-center gap-2.5">
+      <div className="glass-tile flex h-8 w-8 items-center justify-center rounded-xl bg-[linear-gradient(135deg,#5EEAD4,#14B8A6)]">
+        <Icon className="h-4 w-4 text-white" />
       </div>
-      <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">{title}</h2>
+      <h2 className="text-base font-semibold text-slate-900">{title}</h2>
     </div>
   );
 }
@@ -132,20 +154,20 @@ function BarList({
 }) {
   const max = Math.max(1, ...rows.map((r) => r.value));
   return (
-    <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900">
+    <div className="glass-card rounded-[22px] p-5.5">
       <div className="flex flex-col gap-2.5">
         {rows.map((r) => (
           <div key={r.label} className="flex items-center gap-3">
-            <span className="w-44 shrink-0 truncate text-xs text-zinc-600 dark:text-zinc-400">
+            <span className="w-44 shrink-0 truncate text-xs text-slate-600">
               {r.label}
             </span>
-            <div className="h-2 flex-1 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
+            <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-900/6">
               <div
                 className={`h-full rounded-full ${color}`}
                 style={{ width: `${(r.value / max) * 100}%` }}
               />
             </div>
-            <span className="w-10 shrink-0 text-right text-xs font-semibold tabular-nums text-zinc-900 dark:text-zinc-100">
+            <span className="w-10 shrink-0 text-right text-xs font-semibold tabular-nums text-slate-900">
               {r.value.toLocaleString('es-VE')}
             </span>
           </div>
@@ -196,23 +218,18 @@ export default async function ReportesPage({ searchParams }: PageProps) {
     report;
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
+    <div className="fade-in p-6 sm:p-8 lg:px-10">
       <Breadcrumbs items={[{ label: 'Reportes' }]} />
-      <div className="mb-6 flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-50 dark:bg-teal-900/30">
-          <BarChart3 className="h-5 w-5 text-teal-600 dark:text-teal-400" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-            Reportes
-          </h1>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            {range.from} — {range.to}
-          </p>
-        </div>
+      <div className="mb-6">
+        <h1 className="text-[32px] font-semibold leading-[1.15] tracking-[-0.025em] text-slate-900">
+          Reportes
+        </h1>
+        <p className="mt-1 text-sm text-slate-500">
+          {range.from} — {range.to}
+        </p>
       </div>
 
-      <div className="mb-4">
+      <div className="mb-5">
         <Suspense>
           <ReportFilters
             preset={range.preset}
@@ -226,19 +243,21 @@ export default async function ReportesPage({ searchParams }: PageProps) {
       </div>
 
       {range.error && (
-        <div className="mb-4 flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm text-amber-800 dark:border-amber-900/50 dark:bg-amber-900/20 dark:text-amber-300">
+        <div className="mb-4 flex items-center gap-2 rounded-2xl border border-amber-600/20 bg-amber-100/70 px-4 py-3 text-sm text-amber-700 backdrop-blur-md">
           <AlertTriangle className="h-4 w-4 shrink-0" />
           {range.error}
         </div>
       )}
 
       {!report.hasData ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-zinc-200 bg-white py-16 text-center dark:border-zinc-700 dark:bg-zinc-900">
-          <BarChart3 className="mb-3 h-10 w-10 text-zinc-300 dark:text-zinc-600" />
-          <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-            No hay datos para este período.
+        <div className="glass-card flex flex-col items-center justify-center rounded-[22px] py-14 text-center">
+          <span className="flex h-16 w-16 items-center justify-center rounded-[22px] bg-[linear-gradient(135deg,#F0FDFA,#CCFBF1)] text-teal-600 shadow-[inset_0_0_0_1px_rgba(13,148,136,0.15),0_8px_18px_-8px_rgba(13,148,136,0.35)]">
+            <BarChart3 className="h-7 w-7" />
+          </span>
+          <p className="mt-2 text-[15px] font-semibold text-slate-800">
+            No hay datos para este período
           </p>
-          <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
+          <p className="mt-1 max-w-80 text-[13px] leading-relaxed text-slate-500">
             Ajusta el rango de fechas para ver más resultados.
           </p>
         </div>
@@ -247,29 +266,32 @@ export default async function ReportesPage({ searchParams }: PageProps) {
           {/* A — Actividad clínica */}
           <section>
             <SectionHeader icon={Activity} title="Actividad clínica" />
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-              <StatCard label="Pacientes totales" value={activity.totalPatients} />
-              <StatCard label="Pacientes nuevos" value={activity.newPatients} />
-              <StatCard label="Citas en el período" value={activity.totalAppointments} />
+            <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 lg:grid-cols-4">
+              <StatCard label="Pacientes totales" value={activity.totalPatients} tint={0} />
+              <StatCard label="Pacientes nuevos" value={activity.newPatients} tint={1} />
+              <StatCard label="Citas en el período" value={activity.totalAppointments} tint={2} />
               <StatCard
                 label="Citas completadas"
                 value={activity.appointmentsByStatus.completed}
+                tint={3}
               />
               <StatCard
                 label="Citas canceladas"
                 value={activity.appointmentsByStatus.cancelled}
+                tint={0}
               />
               <StatCard
                 label="Inasistencias"
                 value={activity.appointmentsByStatus.no_show}
+                tint={1}
               />
-              <StatCard label="Notas clínicas" value={activity.notesCreated} />
-              <StatCard label="Notas firmadas" value={activity.notesSigned} />
-              <StatCard label="Borradores" value={activity.notesDraft} />
+              <StatCard label="Notas clínicas" value={activity.notesCreated} tint={2} />
+              <StatCard label="Notas firmadas" value={activity.notesSigned} tint={3} />
+              <StatCard label="Borradores" value={activity.notesDraft} tint={0} />
             </div>
             <div className="mt-3 grid gap-3 lg:grid-cols-2">
               <div>
-                <p className="mb-2 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                <p className="mb-2 text-xs font-medium text-slate-500">
                   Distribución de citas por estado
                 </p>
                 <BarList
@@ -280,7 +302,7 @@ export default async function ReportesPage({ searchParams }: PageProps) {
                 />
               </div>
               <div>
-                <p className="mb-2 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                <p className="mb-2 text-xs font-medium text-slate-500">
                   Notas firmadas vs. borradores
                 </p>
                 <BarList
@@ -297,20 +319,22 @@ export default async function ReportesPage({ searchParams }: PageProps) {
           {/* B — Documentos */}
           <section>
             <SectionHeader icon={FileText} title="Documentos" />
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <StatCard label="Documentos generados" value={documents.totalDocuments} />
-              <StatCard label="Exportaciones PDF" value={documents.historyPdfExports} />
+            <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-4">
+              <StatCard label="Documentos generados" value={documents.totalDocuments} tint={0} />
+              <StatCard label="Exportaciones PDF" value={documents.historyPdfExports} tint={1} />
               <StatCard
                 label="Correos enviados"
                 value={documents.historyEmailExportsSent}
+                tint={2}
               />
               <StatCard
                 label="Correos intentados"
                 value={documents.historyEmailExportsAttempted}
+                tint={3}
               />
             </div>
             <div className="mt-3">
-              <p className="mb-2 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              <p className="mb-2 text-xs font-medium text-slate-500">
                 Documentos por tipo
               </p>
               <BarList
@@ -326,24 +350,22 @@ export default async function ReportesPage({ searchParams }: PageProps) {
           {/* C — Adjuntos */}
           <section>
             <SectionHeader icon={Paperclip} title="Adjuntos" />
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <StatCard label="Adjuntos cargados" value={attachments.totalAttachments} />
-              <StatCard label="Ecografías" value={attachments.ultrasoundCount} />
+            <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-4">
+              <StatCard label="Adjuntos cargados" value={attachments.totalAttachments} tint={0} />
+              <StatCard label="Ecografías" value={attachments.ultrasoundCount} tint={1} />
               <StatCard
                 label="Fotos de procedimiento"
                 value={attachments.procedurePhotoCount}
+                tint={2}
               />
-              <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900">
-                <p className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-                  {attachments.totalStorageMb.toLocaleString('es-VE')}
-                </p>
-                <p className="mt-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                  Almacenamiento (MB)
-                </p>
-              </div>
+              <StatCard
+                label="Almacenamiento (MB)"
+                value={attachments.totalStorageMb}
+                tint={3}
+              />
             </div>
             <div className="mt-3">
-              <p className="mb-2 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              <p className="mb-2 text-xs font-medium text-slate-500">
                 Adjuntos por categoría
               </p>
               <BarList
@@ -359,19 +381,21 @@ export default async function ReportesPage({ searchParams }: PageProps) {
           {/* D — Obstetricia y ginecología */}
           <section>
             <SectionHeader icon={Baby} title="Obstetricia y ginecología" />
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <StatCard label="Embarazos activos" value={obstetric.activePregnancies} />
+            <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-4">
+              <StatCard label="Embarazos activos" value={obstetric.activePregnancies} tint={0} />
               <StatCard
                 label="Alertas de FUM vencida"
                 value={obstetric.staleFumWarnings}
+                tint={1}
               />
-              <StatCard label="Notas con ecografía" value={obstetric.ultrasoundNotes} />
+              <StatCard label="Notas con ecografía" value={obstetric.ultrasoundNotes} tint={2} />
               <StatCard
                 label="Notas con examen ginecológico"
                 value={obstetric.gynecologicalExamNotes}
+                tint={3}
               />
             </div>
-            <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-500">
+            <p className="mt-2 text-xs text-slate-400">
               Embarazos activos y alertas de FUM reflejan el estado actual, no el
               período seleccionado.
             </p>
@@ -380,37 +404,37 @@ export default async function ReportesPage({ searchParams }: PageProps) {
           {/* E — Actividad reciente */}
           <section>
             <SectionHeader icon={BarChart3} title="Actividad reciente" />
-            <div className="grid gap-3 lg:grid-cols-2">
+            <div className="grid gap-3.5 lg:grid-cols-2">
               {/* Recent exports */}
-              <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900">
-                <div className="border-b border-zinc-100 px-4 py-2.5 dark:border-zinc-700">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+              <div className="glass-surface overflow-hidden rounded-[20px]">
+                <div className="border-b border-slate-900/6 bg-slate-50/60 px-4.5 py-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.06em] text-slate-500">
                     Exportaciones y envíos
                   </p>
                 </div>
                 {recentExports.length === 0 ? (
-                  <p className="px-4 py-6 text-center text-xs text-zinc-400 dark:text-zinc-500">
+                  <p className="px-4 py-6 text-center text-xs text-slate-400">
                     No hay datos para este período.
                   </p>
                 ) : (
                   <table className="w-full text-sm">
-                    <tbody className="divide-y divide-zinc-100 dark:divide-zinc-700/50">
+                    <tbody className="divide-y divide-slate-900/4">
                       {recentExports.map((row) => (
                         <tr key={row.id}>
-                          <td className="whitespace-nowrap px-4 py-2 font-mono text-xs text-zinc-500 dark:text-zinc-400">
+                          <td className="whitespace-nowrap px-4.5 py-2.5 font-mono text-xs text-slate-500">
                             {formatDateTime(row.createdAt, timezone)}
                           </td>
-                          <td className="px-4 py-2 text-xs text-zinc-700 dark:text-zinc-300">
+                          <td className="px-4.5 py-2.5 text-xs text-slate-700">
                             {row.userFullName ?? (
-                              <span className="italic text-zinc-400">
+                              <span className="italic text-slate-400">
                                 Usuario eliminado
                               </span>
                             )}
                           </td>
-                          <td className="px-4 py-2 text-xs text-zinc-700 dark:text-zinc-300">
+                          <td className="px-4.5 py-2.5 text-xs text-slate-700">
                             {ACTION_LABELS[row.action] ?? row.action}
                           </td>
-                          <td className="px-4 py-2 text-xs text-zinc-500 dark:text-zinc-400">
+                          <td className="px-4.5 py-2.5 text-xs text-slate-500">
                             {row.status
                               ? (EXPORT_STATUS_LABELS[row.status] ?? row.status)
                               : '—'}
@@ -423,31 +447,31 @@ export default async function ReportesPage({ searchParams }: PageProps) {
               </div>
 
               {/* Recent clinical activity */}
-              <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900">
-                <div className="border-b border-zinc-100 px-4 py-2.5 dark:border-zinc-700">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+              <div className="glass-surface overflow-hidden rounded-[20px]">
+                <div className="border-b border-slate-900/6 bg-slate-50/60 px-4.5 py-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.06em] text-slate-500">
                     Actividad clínica reciente
                   </p>
                 </div>
                 {recentActivity.length === 0 ? (
-                  <p className="px-4 py-6 text-center text-xs text-zinc-400 dark:text-zinc-500">
+                  <p className="px-4 py-6 text-center text-xs text-slate-400">
                     No hay datos para este período.
                   </p>
                 ) : (
                   <table className="w-full text-sm">
-                    <tbody className="divide-y divide-zinc-100 dark:divide-zinc-700/50">
+                    <tbody className="divide-y divide-slate-900/4">
                       {recentActivity.map((row) => (
                         <tr key={`${row.type}-${row.id}`}>
-                          <td className="whitespace-nowrap px-4 py-2 font-mono text-xs text-zinc-500 dark:text-zinc-400">
+                          <td className="whitespace-nowrap px-4.5 py-2.5 font-mono text-xs text-slate-500">
                             {formatDateTime(row.occurredAt, timezone)}
                           </td>
-                          <td className="px-4 py-2 text-xs text-zinc-700 dark:text-zinc-300">
+                          <td className="px-4.5 py-2.5 text-xs text-slate-700">
                             {row.patientName}
                           </td>
-                          <td className="px-4 py-2 text-xs text-zinc-500 dark:text-zinc-400">
+                          <td className="px-4.5 py-2.5 text-xs text-slate-500">
                             {row.doctorName}
                           </td>
-                          <td className="px-4 py-2 text-xs text-zinc-500 dark:text-zinc-400">
+                          <td className="px-4.5 py-2.5 text-xs text-slate-500">
                             {ACTIVITY_TYPE_LABELS[row.type]}
                           </td>
                         </tr>
