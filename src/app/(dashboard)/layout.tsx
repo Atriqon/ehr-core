@@ -87,7 +87,7 @@ export default async function DashboardLayout({
 
           <GlobalSearch />
 
-          <div className="flex items-center justify-end gap-3">
+          <div className="ml-auto flex items-center justify-end gap-3">
             <div className="hidden flex-col items-end leading-tight sm:flex">
               <span className="text-[13px] font-semibold text-zinc-900">
                 {user.fullName}
