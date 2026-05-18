@@ -41,20 +41,20 @@ export function PatientSearchBar() {
   }
 
   return (
-    <div className="relative w-full max-w-md">
-      <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+    <div className="relative w-full max-w-105">
+      <Search className="pointer-events-none absolute left-3.5 top-1/2 h-3.75 w-3.75 -translate-y-1/2 text-slate-400" />
       <input
         type="search"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Buscar por nombre, cédula o teléfono…"
-        className="h-10 w-full rounded-lg border border-zinc-300 bg-white py-2 pl-10 pr-10 text-sm shadow-sm outline-none transition-colors duration-150 placeholder:text-zinc-400 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-teal-500"
+        className="glass-input h-9.5 w-full rounded-full py-2 pl-9.5 pr-10 text-[13.5px] text-slate-900 outline-none placeholder:text-slate-400"
       />
       {value && (
         <button
           type="button"
           onClick={handleClear}
-          className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded p-0.5 text-zinc-400 transition-colors hover:text-zinc-700 dark:hover:text-zinc-300"
+          className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-slate-400 transition-colors hover:text-slate-700"
           aria-label="Limpiar búsqueda"
         >
           <X className="h-3.5 w-3.5" />

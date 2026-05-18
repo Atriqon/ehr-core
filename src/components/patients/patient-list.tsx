@@ -6,6 +6,8 @@ import { ChevronLeft, ChevronRight, SearchX, UserPlus, Users } from 'lucide-reac
 import type { PatientListItem, PatientsPage } from '@/queries/patients';
 import { PatientAvatar } from '@/components/patients/patient-avatar';
 import { calcGestationalAge } from '@/lib/obstetric';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 function calcAge(dateOfBirth: string): number {
   const dob = new Date(dateOfBirth);
@@ -48,12 +50,14 @@ export function PatientList({ data, todayStr, canCreate = false }: PatientListPr
 
     if (isSearching) {
       return (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-zinc-200/80 bg-linear-to-br from-white to-zinc-50/70 py-16 text-center shadow-sm dark:border-zinc-700 dark:from-zinc-900 dark:to-zinc-900">
-          <SearchX className="mb-3 h-10 w-10 text-zinc-300 dark:text-zinc-600" />
-          <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-            No se encontraron resultados.
+        <div className="glass-card flex flex-col items-center justify-center rounded-[22px] py-14 text-center">
+          <span className="flex h-16 w-16 items-center justify-center rounded-[22px] bg-zinc-100 text-zinc-400 shadow-[inset_0_0_0_1px_var(--color-zinc-200)]">
+            <SearchX className="h-7 w-7" />
+          </span>
+          <p className="mt-2 text-[15px] font-semibold text-slate-800">
+            No se encontraron resultados
           </p>
-          <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
+          <p className="mt-1 max-w-80 text-[13px] leading-relaxed text-slate-500">
             Intenta con otro término de búsqueda.
           </p>
         </div>
@@ -61,22 +65,22 @@ export function PatientList({ data, todayStr, canCreate = false }: PatientListPr
     }
 
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-zinc-200/80 bg-linear-to-br from-white to-teal-50/40 py-16 text-center shadow-sm dark:border-zinc-700 dark:from-zinc-900 dark:to-zinc-900">
-        <span className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-teal-50 ring-1 ring-teal-100 dark:bg-teal-900/30 dark:ring-teal-800">
-          <Users className="h-6 w-6 text-teal-500 dark:text-teal-400" />
+      <div className="glass-card flex flex-col items-center justify-center rounded-[22px] py-14 text-center">
+        <span className="flex h-16 w-16 items-center justify-center rounded-[22px] bg-[linear-gradient(135deg,#F0FDFA,#CCFBF1)] text-teal-600 shadow-[inset_0_0_0_1px_rgba(13,148,136,0.15),0_8px_18px_-8px_rgba(13,148,136,0.35)]">
+          <Users className="h-7 w-7" />
         </span>
-        <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">
+        <p className="mt-2 text-[15px] font-semibold text-slate-800">
           Registra tu primer paciente
         </p>
-        <p className="mt-1 max-w-sm text-xs text-zinc-400 dark:text-zinc-500">
+        <p className="mt-1 max-w-80 text-[13px] leading-relaxed text-slate-500">
           Agrega un paciente para comenzar a gestionar su historia clínica.
         </p>
         {canCreate && (
           <Link
             href="/pacientes/nuevo"
-            className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-teal-600 px-3.5 py-2 text-sm font-medium text-white shadow-sm transition-colors duration-150 hover:bg-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40"
+            className={cn(buttonVariants({ size: 'sm' }), 'mt-4')}
           >
-            <UserPlus className="h-4 w-4" />
+            <UserPlus className="h-3.5 w-3.5" />
             Nuevo paciente
           </Link>
         )}
@@ -85,29 +89,24 @@ export function PatientList({ data, todayStr, canCreate = false }: PatientListPr
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-zinc-200/80 bg-white shadow-sm ring-1 ring-zinc-900/2 dark:border-zinc-700 dark:bg-zinc-900 dark:ring-0">
+    <div className="glass-surface overflow-hidden rounded-[20px]">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-zinc-200 bg-linear-to-b from-zinc-50 to-zinc-50/40 dark:border-zinc-700 dark:from-zinc-800/60 dark:to-zinc-800/30">
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                Nombre
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                Documento
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                Teléfono
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                Edad
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                Última cita
-              </th>
+            <tr className="border-b border-slate-900/6 bg-slate-50/60">
+              {['Nombre', 'Documento', 'Teléfono', 'Edad', 'Última cita'].map(
+                (h) => (
+                  <th
+                    key={h}
+                    className="px-4.5 py-3.5 text-left text-[11px] font-semibold uppercase tracking-[0.06em] text-slate-500"
+                  >
+                    {h}
+                  </th>
+                ),
+              )}
             </tr>
           </thead>
-          <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
+          <tbody className="divide-y divide-slate-900/4">
             {data.items.map((patient: PatientListItem) => (
               <PatientRow key={patient.id} patient={patient} todayStr={todayStr} />
             ))}
@@ -116,8 +115,8 @@ export function PatientList({ data, todayStr, canCreate = false }: PatientListPr
       </div>
 
       {data.totalPages > 1 && (
-        <div className="flex items-center justify-between border-t border-zinc-100 px-4 py-3 dark:border-zinc-800">
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">
+        <div className="flex items-center justify-between border-t border-slate-900/5 px-4.5 py-3">
+          <p className="text-xs text-slate-500">
             {data.total} paciente{data.total !== 1 ? 's' : ''}
           </p>
           <div className="flex items-center gap-1">
@@ -125,19 +124,19 @@ export function PatientList({ data, todayStr, canCreate = false }: PatientListPr
               type="button"
               onClick={() => goToPage(data.page - 1)}
               disabled={data.page <= 1}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-600 transition-colors duration-150 hover:bg-zinc-50 hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40 disabled:pointer-events-none disabled:opacity-40 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
+              className="glass-input inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-600 transition-colors duration-200 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40 disabled:pointer-events-none disabled:opacity-40"
               aria-label="Página anterior"
             >
               <ChevronLeft className="h-3.5 w-3.5" />
             </button>
-            <span className="px-2 text-xs text-zinc-500 dark:text-zinc-400">
+            <span className="px-2 text-xs text-slate-500">
               {data.page} / {data.totalPages}
             </span>
             <button
               type="button"
               onClick={() => goToPage(data.page + 1)}
               disabled={data.page >= data.totalPages}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-600 transition-colors duration-150 hover:bg-zinc-50 hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40 disabled:pointer-events-none disabled:opacity-40 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
+              className="glass-input inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-600 transition-colors duration-200 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40 disabled:pointer-events-none disabled:opacity-40"
               aria-label="Página siguiente"
             >
               <ChevronRight className="h-3.5 w-3.5" />
@@ -164,7 +163,7 @@ function PatientRow({ patient, todayStr }: { patient: PatientListItem; todayStr:
 
   return (
     <tr
-      className="group cursor-pointer transition-colors duration-150 hover:bg-teal-50/60 dark:hover:bg-teal-950/20 [&_td]:px-4 [&_td]:py-3.5"
+      className="group cursor-pointer transition-colors duration-200 hover:bg-teal-600/4 [&_td]:px-4.5 [&_td]:py-4"
       onClick={() => router.push(href)}
     >
       <td>
@@ -174,7 +173,7 @@ function PatientRow({ patient, todayStr }: { patient: PatientListItem; todayStr:
             firstName={patient.firstName}
             lastName={patient.lastName}
             avatarStorageKey={patient.avatarStorageKey}
-            className="h-8 w-8"
+            className="h-9 w-9"
             textClassName="text-xs"
           />
           <div>
@@ -183,34 +182,34 @@ function PatientRow({ patient, todayStr }: { patient: PatientListItem; todayStr:
                 href={href}
                 prefetch={false}
                 onClick={(e) => e.stopPropagation()}
-                className="font-medium text-zinc-900 transition-colors group-hover:text-teal-700 focus-visible:underline focus-visible:outline-none dark:text-zinc-100 dark:group-hover:text-teal-400"
+                className="font-semibold tracking-[-0.005em] text-slate-900 transition-colors group-hover:text-teal-700 focus-visible:underline focus-visible:outline-none"
               >
                 {patient.lastName}, {patient.firstName}
               </Link>
               {activePregnancy && (
-                <span className="inline-flex items-center rounded-full bg-pink-100 px-1.5 py-0.5 text-[11px] font-medium text-pink-700 dark:bg-pink-900/30 dark:text-pink-300">
+                <span className="inline-flex items-center rounded-full bg-pink-700/12 px-2.5 py-0.5 text-[11px] font-semibold text-pink-700">
                   🤰 {activePregnancy.weeks}s+{activePregnancy.days}d
                 </span>
               )}
               {staleFUM && (
-                <span className="inline-flex items-center rounded-full bg-yellow-100 px-1.5 py-0.5 text-[11px] font-medium text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300">
+                <span className="inline-flex items-center rounded-full bg-amber-600/14 px-2.5 py-0.5 text-[11px] font-semibold text-amber-700">
                   ⚠️ Verificar FUM
                 </span>
               )}
             </div>
             {!patient.isActive && (
-              <span className="block text-xs text-zinc-400 dark:text-zinc-500">(Inactivo)</span>
+              <span className="block text-xs text-slate-400">(Inactivo)</span>
             )}
           </div>
         </div>
       </td>
-      <td className="text-zinc-600 dark:text-zinc-400">
+      <td className="text-slate-600">
         {prefix}
         {patient.idNumber}
       </td>
-      <td className="text-zinc-600 dark:text-zinc-400">{patient.phone ?? '—'}</td>
-      <td className="text-zinc-600 dark:text-zinc-400">{age} años</td>
-      <td className="text-zinc-400 dark:text-zinc-500">—</td>
+      <td className="text-slate-600">{patient.phone ?? '—'}</td>
+      <td className="text-slate-600">{age} años</td>
+      <td className="text-slate-400">—</td>
     </tr>
   );
 }

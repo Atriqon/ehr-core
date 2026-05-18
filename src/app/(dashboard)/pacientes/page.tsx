@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { UserPlus, Users } from 'lucide-react';
+import { UserPlus } from 'lucide-react';
 
 import { getSession } from '@/lib/auth/session';
 import { redirect } from 'next/navigation';
@@ -9,6 +9,7 @@ import { getClinicSettings } from '@/queries/clinic';
 import { todayInTz } from '@/lib/dates';
 import { PatientSearchBar } from '@/components/patients/patient-search-bar';
 import { PatientList } from '@/components/patients/patient-list';
+import { buttonVariants } from '@/components/ui/button';
 
 interface PageProps {
   searchParams: Promise<{ q?: string; page?: string }>;
@@ -29,33 +30,26 @@ export default async function PacientesPage({ searchParams }: PageProps) {
   const todayStr = todayInTz(clinicSettings.timezone);
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
-      {/* Branded page header */}
-      <div className="mb-6 flex flex-col gap-3 overflow-hidden rounded-xl border border-zinc-200/80 bg-linear-to-br from-white via-white to-teal-50/50 p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-6">
-        <div className="flex items-center gap-3">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-teal-50 ring-1 ring-teal-100">
-            <Users className="h-5 w-5 text-teal-600" />
-          </span>
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
-              Pacientes
-            </h1>
-            <p className="mt-0.5 text-sm text-zinc-500">
-              {data.total} paciente{data.total !== 1 ? 's' : ''} registrado{data.total !== 1 ? 's' : ''}
-            </p>
-          </div>
+    <div className="fade-in p-6 sm:p-8 lg:px-10">
+      {/* Page header */}
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-[32px] font-semibold leading-[1.15] tracking-[-0.025em] text-slate-900">
+            Pacientes
+          </h1>
+          <p className="mt-1 text-sm text-slate-500">
+            {data.total} paciente{data.total !== 1 ? 's' : ''} registrado
+            {data.total !== 1 ? 's' : ''}
+          </p>
         </div>
-        <Link
-          href="/pacientes/nuevo"
-          className="inline-flex h-10 items-center justify-center gap-1.5 rounded-lg bg-teal-600 px-4 text-sm font-medium text-white shadow-sm transition-colors duration-150 hover:bg-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40"
-        >
+        <Link href="/pacientes/nuevo" className={buttonVariants()}>
           <UserPlus className="h-4 w-4" />
           Nuevo paciente
         </Link>
       </div>
 
       {/* Search bar */}
-      <div className="mb-4">
+      <div className="mb-5">
         <Suspense>
           <PatientSearchBar />
         </Suspense>
@@ -64,7 +58,7 @@ export default async function PacientesPage({ searchParams }: PageProps) {
       {/* List */}
       <Suspense
         fallback={
-          <div className="h-64 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800" />
+          <div className="h-64 animate-pulse rounded-[20px] bg-white/40" />
         }
       >
         <PatientList data={data} todayStr={todayStr} canCreate />
