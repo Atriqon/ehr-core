@@ -14,9 +14,9 @@ const ROLE_LABELS: Record<string, string> = {
 };
 
 const ROLE_COLORS: Record<string, string> = {
-  admin: 'bg-purple-50 text-purple-700 ring-purple-600/20 dark:bg-purple-900/30 dark:text-purple-400',
-  doctor: 'bg-blue-50 text-blue-700 ring-blue-600/20 dark:bg-blue-900/30 dark:text-blue-400',
-  receptionist: 'bg-zinc-50 text-zinc-700 ring-zinc-600/20 dark:bg-zinc-800 dark:text-zinc-400',
+  admin: 'bg-violet-600/12 text-violet-700',
+  doctor: 'bg-blue-600/12 text-blue-700',
+  receptionist: 'bg-zinc-500/12 text-slate-700',
 };
 
 interface UserManagementProps {
@@ -55,7 +55,7 @@ export function UserManagement({
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="text-sm text-slate-500">
           {users.length} usuario{users.length !== 1 ? 's' : ''} en la clínica
         </p>
         <Button onClick={() => setShowCreate(true)}>
@@ -65,74 +65,74 @@ export function UserManagement({
       </div>
 
       {users.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-zinc-200 bg-white py-16 text-center dark:border-zinc-700 dark:bg-zinc-900">
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">No hay usuarios registrados</p>
+        <div className="glass-card flex flex-col items-center justify-center rounded-[22px] py-14 text-center">
+          <p className="text-[15px] font-semibold text-slate-800">No hay usuarios registrados</p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900">
+        <div className="glass-surface overflow-hidden rounded-[20px]">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-zinc-100 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800/50">
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                <tr className="border-b border-slate-900/6 bg-slate-50/60">
+                  <th className="px-4.5 py-3.5 text-left text-[11px] font-semibold uppercase tracking-[0.06em] text-slate-500">
                     Nombre
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                  <th className="px-4.5 py-3.5 text-left text-[11px] font-semibold uppercase tracking-[0.06em] text-slate-500">
                     Email
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                  <th className="px-4.5 py-3.5 text-left text-[11px] font-semibold uppercase tracking-[0.06em] text-slate-500">
                     Rol
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                  <th className="px-4.5 py-3.5 text-left text-[11px] font-semibold uppercase tracking-[0.06em] text-slate-500">
                     Estado
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                  <th className="px-4.5 py-3.5 text-left text-[11px] font-semibold uppercase tracking-[0.06em] text-slate-500">
                     Último acceso
                   </th>
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-100 dark:divide-zinc-700/50">
+              <tbody className="divide-y divide-slate-900/4">
                 {users.map((user) => (
                   <tr
                     key={user.id}
-                    className="transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/30"
+                    className="transition-colors hover:bg-teal-600/4"
                   >
                     <td className="px-4 py-3">
-                      <span className="font-medium text-zinc-900 dark:text-zinc-100">
+                      <span className="font-semibold text-slate-900">
                         {user.fullName}
                         {user.id === currentUserId && (
                           <span className="ml-2 text-xs font-normal text-zinc-400">(tú)</span>
                         )}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">{user.email}</td>
+                    <td className="px-4.5 py-3 text-slate-600">{user.email}</td>
                     <td className="px-4 py-3">
                       <span
-                        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${ROLE_COLORS[user.role] ?? ''}`}
+                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11.5px] font-semibold ${ROLE_COLORS[user.role] ?? ''}`}
                       >
                         {ROLE_LABELS[user.role] ?? user.role}
                       </span>
                     </td>
                     <td className="px-4 py-3">
                       <span
-                        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${
+                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11.5px] font-semibold ${
                           user.isActive
-                            ? 'bg-green-50 text-green-700 ring-green-600/20 dark:bg-green-900/30 dark:text-green-400'
-                            : 'bg-red-50 text-red-700 ring-red-600/20 dark:bg-red-900/30 dark:text-red-400'
+                            ? 'bg-green-700/14 text-green-700'
+                            : 'bg-red-600/12 text-red-600'
                         }`}
                       >
                         {user.isActive ? 'Activo' : 'Inactivo'}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-xs text-zinc-500 dark:text-zinc-400">
+                    <td className="px-4.5 py-3 text-xs text-slate-500">
                       {formatDate(user.lastLoginAt)}
                     </td>
                     <td className="px-4 py-3">
                       <button
                         type="button"
                         onClick={() => setEditingUser(user)}
-                        className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-100"
+                        className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-900/5 hover:text-slate-900"
                       >
                         <Edit2 className="h-3.5 w-3.5" />
                         Editar

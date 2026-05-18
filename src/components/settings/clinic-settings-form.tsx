@@ -40,14 +40,14 @@ export function ClinicSettingsForm({ clinic, action }: ClinicSettingsFormProps) 
   return (
     <form action={formAction} className="space-y-5">
       {state && !state.success && (
-        <div className="flex items-start gap-2.5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400">
+        <div className="flex items-start gap-2.5 rounded-2xl border border-red-600/20 bg-red-100/70 px-4 py-3 text-sm text-red-700 backdrop-blur-md">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
           <p>{state.error}</p>
         </div>
       )}
 
       {state?.success && (
-        <div className="flex items-start gap-2.5 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700 dark:border-green-900/50 dark:bg-green-950/30 dark:text-green-400">
+        <div className="flex items-start gap-2.5 rounded-2xl border border-green-600/20 bg-green-100/70 px-4 py-3 text-sm text-green-700 backdrop-blur-md">
           <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
           <p>Configuración actualizada correctamente</p>
         </div>
@@ -63,7 +63,7 @@ export function ClinicSettingsForm({ clinic, action }: ClinicSettingsFormProps) 
             type="text"
             defaultValue={clinic.name}
             required
-            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
+            className="glass-input w-full rounded-[14px] px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none"
           />
           {field('name') && <p className="mt-1 text-xs text-red-600">{field('name')}</p>}
         </div>
@@ -76,7 +76,7 @@ export function ClinicSettingsForm({ clinic, action }: ClinicSettingsFormProps) 
             name="address"
             rows={2}
             defaultValue={clinic.address ?? ''}
-            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
+            className="glass-input w-full rounded-[14px] px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none"
           />
         </div>
 
@@ -88,7 +88,7 @@ export function ClinicSettingsForm({ clinic, action }: ClinicSettingsFormProps) 
             name="phone"
             type="tel"
             defaultValue={clinic.phone ?? ''}
-            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500"
+            className="glass-input w-full rounded-[14px] px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none"
           />
         </div>
 
@@ -99,7 +99,7 @@ export function ClinicSettingsForm({ clinic, action }: ClinicSettingsFormProps) 
           <select
             name="timezone"
             defaultValue={clinic.timezone}
-            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+            className="glass-input w-full rounded-[14px] px-3.5 py-2.5 text-sm text-slate-900 outline-none"
           >
             {TIMEZONES.map((tz) => (
               <option key={tz} value={tz}>
@@ -119,7 +119,7 @@ export function ClinicSettingsForm({ clinic, action }: ClinicSettingsFormProps) 
           <select
             name="week_starts_on"
             defaultValue={String(clinic.weekStartsOn)}
-            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+            className="glass-input w-full rounded-[14px] px-3.5 py-2.5 text-sm text-slate-900 outline-none"
           >
             <option value="1">Lunes</option>
             <option value="0">Domingo</option>

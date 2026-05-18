@@ -1,5 +1,4 @@
 import { notFound, redirect } from 'next/navigation';
-import { Users } from 'lucide-react';
 import { getSession } from '@/lib/auth/session';
 import { getClinicSettings } from '@/queries/clinic';
 import { getClinicUsers } from '@/queries/users';
@@ -19,21 +18,16 @@ export default async function UsuariosPage() {
   ]);
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
+    <div className="fade-in p-6 sm:p-8 lg:px-10">
       <Breadcrumbs items={settingsTrail({ label: 'Usuarios' })} />
 
-      <div className="mb-6 flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-50 dark:bg-teal-900/30">
-          <Users className="h-5 w-5 text-teal-600 dark:text-teal-400" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-            Gestión de usuarios
-          </h1>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            Usuarios con acceso a la clínica
-          </p>
-        </div>
+      <div className="mb-6">
+        <h1 className="text-[32px] font-semibold leading-[1.15] tracking-[-0.025em] text-slate-900">
+          Gestión de usuarios
+        </h1>
+        <p className="mt-1 text-sm text-slate-500">
+          Usuarios con acceso a la clínica
+        </p>
       </div>
 
       <UserManagement

@@ -23,16 +23,15 @@ const ACTION_LABELS: Record<string, string> = {
   EXPORT: 'Exportación',
 };
 
+// Capsule status pills — soft alpha fills, Vision style.
 const ACTION_COLORS: Record<string, string> = {
-  CREATE: 'bg-green-50 text-green-700 ring-green-600/20 dark:bg-green-900/30 dark:text-green-400',
-  READ: 'bg-blue-50 text-blue-700 ring-blue-600/20 dark:bg-blue-900/30 dark:text-blue-400',
-  UPDATE:
-    'bg-yellow-50 text-yellow-700 ring-yellow-600/20 dark:bg-yellow-900/30 dark:text-yellow-400',
-  DELETE: 'bg-red-50 text-red-700 ring-red-600/20 dark:bg-red-900/30 dark:text-red-400',
-  LOGIN: 'bg-purple-50 text-purple-700 ring-purple-600/20 dark:bg-purple-900/30 dark:text-purple-400',
-  LOGOUT: 'bg-zinc-50 text-zinc-700 ring-zinc-600/20 dark:bg-zinc-800 dark:text-zinc-400',
-  EXPORT:
-    'bg-orange-50 text-orange-700 ring-orange-600/20 dark:bg-orange-900/30 dark:text-orange-400',
+  CREATE: 'bg-green-700/14 text-green-700',
+  READ: 'bg-blue-600/12 text-blue-700',
+  UPDATE: 'bg-amber-600/14 text-amber-700',
+  DELETE: 'bg-red-600/12 text-red-600',
+  LOGIN: 'bg-violet-600/12 text-violet-700',
+  LOGOUT: 'bg-zinc-500/12 text-slate-700',
+  EXPORT: 'bg-orange-600/14 text-orange-700',
 };
 
 const RESOURCE_LABELS: Record<string, string> = {
@@ -110,26 +109,21 @@ export default async function AuditoriaPage({ searchParams }: PageProps) {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
+    <div className="fade-in p-6 sm:p-8 lg:px-10">
       <Breadcrumbs items={settingsTrail({ label: 'Auditoría' })} />
 
-      <div className="mb-6 flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-50 dark:bg-teal-900/30">
-          <Shield className="h-5 w-5 text-teal-600 dark:text-teal-400" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-            Log de auditoría
-          </h1>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            {data.total} registro{data.total !== 1 ? 's' : ''}
-            {data.total > 0 ? ` · Página ${data.page} de ${data.totalPages}` : ''}
-          </p>
-        </div>
+      <div className="mb-6">
+        <h1 className="text-[32px] font-semibold leading-[1.15] tracking-[-0.025em] text-slate-900">
+          Log de auditoría
+        </h1>
+        <p className="mt-1 text-sm text-slate-500">
+          {data.total} registro{data.total !== 1 ? 's' : ''}
+          {data.total > 0 ? ` · Página ${data.page} de ${data.totalPages}` : ''}
+        </p>
       </div>
 
       {/* Filters */}
-      <div className="mb-4">
+      <div className="mb-5">
         <Suspense>
           <AuditLogFilters clinicUsers={clinicUsers} currentFilters={filters} />
         </Suspense>
@@ -137,82 +131,79 @@ export default async function AuditoriaPage({ searchParams }: PageProps) {
 
       {/* Table */}
       {data.items.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-zinc-200 bg-white py-16 text-center dark:border-zinc-700 dark:bg-zinc-900">
-          <Shield className="mb-3 h-10 w-10 text-zinc-300 dark:text-zinc-600" />
-          <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+        <div className="glass-card flex flex-col items-center justify-center rounded-[22px] py-14 text-center">
+          <span className="flex h-16 w-16 items-center justify-center rounded-[22px] bg-[linear-gradient(135deg,#F0FDFA,#CCFBF1)] text-teal-600 shadow-[inset_0_0_0_1px_rgba(13,148,136,0.15),0_8px_18px_-8px_rgba(13,148,136,0.35)]">
+            <Shield className="h-7 w-7" />
+          </span>
+          <p className="mt-2 text-[15px] font-semibold text-slate-800">
             No se encontraron registros
           </p>
-          <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
-            Intenta ajustar los filtros
+          <p className="mt-1 max-w-80 text-[13px] leading-relaxed text-slate-500">
+            Intenta ajustar los filtros.
           </p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900">
+        <div className="glass-surface overflow-hidden rounded-[20px]">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-zinc-100 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800/50">
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                    Fecha / Hora
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                    Usuario
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                    Acción
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                    Recurso
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                    Detalles
-                  </th>
+                <tr className="border-b border-slate-900/6 bg-slate-50/60">
+                  {['Fecha / Hora', 'Usuario', 'Acción', 'Recurso', 'Detalles'].map(
+                    (h) => (
+                      <th
+                        key={h}
+                        className="px-4.5 py-3.5 text-left text-[11px] font-semibold uppercase tracking-[0.06em] text-slate-500"
+                      >
+                        {h}
+                      </th>
+                    ),
+                  )}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-100 dark:divide-zinc-700/50">
+              <tbody className="divide-y divide-slate-900/4">
                 {data.items.map((log) => (
                   <tr
                     key={log.id}
-                    className="transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/30"
+                    className="transition-colors hover:bg-teal-600/4"
                   >
-                    <td className="whitespace-nowrap px-4 py-3 font-mono text-xs text-zinc-600 dark:text-zinc-400">
+                    <td className="whitespace-nowrap px-4.5 py-3 font-mono text-xs text-slate-600">
                       {formatDateTime(log.createdAt, timezone)}
                     </td>
-                    <td className="px-4 py-3">
-                      <span className="font-medium text-zinc-900 dark:text-zinc-100">
+                    <td className="px-4.5 py-3">
+                      <span className="font-semibold text-slate-900">
                         {log.userFullName ?? (
-                          <span className="italic text-zinc-400 dark:text-zinc-500">
+                          <span className="italic text-slate-400">
                             Usuario eliminado
                           </span>
                         )}
                       </span>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4.5 py-3">
                       <span
-                        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${ACTION_COLORS[log.action] ?? 'bg-zinc-50 text-zinc-700 ring-zinc-600/20'}`}
+                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11.5px] font-semibold ${ACTION_COLORS[log.action] ?? 'bg-zinc-500/12 text-slate-700'}`}
                       >
                         {ACTION_LABELS[log.action] ?? log.action}
                       </span>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4.5 py-3">
                       <div className="flex flex-col gap-0.5">
-                        <span className="text-zinc-700 dark:text-zinc-300">
+                        <span className="text-slate-700">
                           {RESOURCE_LABELS[log.resourceType] ?? log.resourceType}
                         </span>
                         {log.resourceId && (
-                          <span className="font-mono text-xs text-zinc-400 dark:text-zinc-500">
+                          <span className="font-mono text-xs text-slate-400">
                             {log.resourceId.slice(0, 8)}…
                           </span>
                         )}
                       </div>
                     </td>
-                    <td className="max-w-xs px-4 py-3">
+                    <td className="max-w-xs px-4.5 py-3">
                       {log.details ? (
-                        <pre className="max-h-16 overflow-auto whitespace-pre-wrap break-all font-mono text-xs text-zinc-500 dark:text-zinc-400">
+                        <pre className="max-h-16 overflow-auto whitespace-pre-wrap break-all font-mono text-xs text-slate-500">
                           {JSON.stringify(log.details, null, 2)}
                         </pre>
                       ) : (
-                        <span className="text-zinc-300 dark:text-zinc-600">—</span>
+                        <span className="text-slate-300">—</span>
                       )}
                     </td>
                   </tr>
@@ -223,8 +214,8 @@ export default async function AuditoriaPage({ searchParams }: PageProps) {
 
           {/* Pagination */}
           {data.totalPages > 1 && (
-            <div className="flex items-center justify-between border-t border-zinc-100 px-4 py-3 dark:border-zinc-700">
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">
+            <div className="flex items-center justify-between border-t border-slate-900/5 px-4.5 py-3">
+              <p className="text-xs text-slate-500">
                 Mostrando {(data.page - 1) * data.limit + 1}–
                 {Math.min(data.page * data.limit, data.total)} de {data.total}
               </p>
@@ -232,27 +223,27 @@ export default async function AuditoriaPage({ searchParams }: PageProps) {
                 {data.page > 1 ? (
                   <Link
                     href={buildUrl(base, filterParams, data.page - 1)}
-                    className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-zinc-200 bg-white text-zinc-600 transition-colors hover:bg-zinc-50 hover:text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
+                    className="glass-input inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-600 transition-colors hover:text-slate-900"
                   >
                     <ChevronLeft className="h-3.5 w-3.5" />
                   </Link>
                 ) : (
-                  <span className="inline-flex h-7 w-7 cursor-not-allowed items-center justify-center rounded-md border border-zinc-100 bg-white text-zinc-300 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-600">
+                  <span className="inline-flex h-8 w-8 cursor-not-allowed items-center justify-center rounded-full border border-slate-900/5 text-slate-300">
                     <ChevronLeft className="h-3.5 w-3.5" />
                   </span>
                 )}
-                <span className="px-2 text-xs text-zinc-500 dark:text-zinc-400">
+                <span className="px-2 text-xs text-slate-500">
                   {data.page} / {data.totalPages}
                 </span>
                 {data.page < data.totalPages ? (
                   <Link
                     href={buildUrl(base, filterParams, data.page + 1)}
-                    className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-zinc-200 bg-white text-zinc-600 transition-colors hover:bg-zinc-50 hover:text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
+                    className="glass-input inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-600 transition-colors hover:text-slate-900"
                   >
                     <ChevronRight className="h-3.5 w-3.5" />
                   </Link>
                 ) : (
-                  <span className="inline-flex h-7 w-7 cursor-not-allowed items-center justify-center rounded-md border border-zinc-100 bg-white text-zinc-300 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-600">
+                  <span className="inline-flex h-8 w-8 cursor-not-allowed items-center justify-center rounded-full border border-slate-900/5 text-slate-300">
                     <ChevronRight className="h-3.5 w-3.5" />
                   </span>
                 )}

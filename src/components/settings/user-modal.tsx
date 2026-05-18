@@ -36,15 +36,15 @@ export function CreateUserModal({ action, onClose }: CreateUserModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-md rounded-xl bg-white shadow-xl dark:bg-zinc-900">
-        <div className="flex items-center justify-between border-b border-zinc-100 px-6 py-4 dark:border-zinc-700">
-          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+      <div className="w-full max-w-md rounded-[22px] border border-white/60 bg-white/90 shadow-[0_30px_60px_-20px_rgba(15,23,42,0.4)] backdrop-blur-2xl">
+        <div className="flex items-center justify-between border-b border-slate-900/6 px-6 py-4">
+          <h2 className="text-base font-semibold text-slate-900">
             Nuevo usuario
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
+            className="rounded-full p-1 text-slate-400 transition-colors hover:bg-slate-900/5 hover:text-slate-600"
           >
             <X className="h-4 w-4" />
           </button>
@@ -52,21 +52,21 @@ export function CreateUserModal({ action, onClose }: CreateUserModalProps) {
 
         <form action={formAction} className="space-y-4 p-6">
           {state && !state.success && (
-            <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400">
+            <div className="flex items-start gap-2 rounded-2xl border border-red-600/20 bg-red-100/70 px-3.5 py-3 text-sm text-red-700 backdrop-blur-md">
               <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
               <p>{state.error}</p>
             </div>
           )}
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <label className="mb-1.5 block text-[13px] font-semibold text-slate-700">
               Nombre completo <span className="text-red-500">*</span>
             </label>
             <input
               name="full_name"
               type="text"
               required
-              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+              className="glass-input w-full rounded-[14px] px-3.5 py-2.5 text-sm text-slate-900 outline-none"
             />
             {field('full_name') && (
               <p className="mt-1 text-xs text-red-600">{field('full_name')}</p>
@@ -74,14 +74,14 @@ export function CreateUserModal({ action, onClose }: CreateUserModalProps) {
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <label className="mb-1.5 block text-[13px] font-semibold text-slate-700">
               Email <span className="text-red-500">*</span>
             </label>
             <input
               name="email"
               type="email"
               required
-              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+              className="glass-input w-full rounded-[14px] px-3.5 py-2.5 text-sm text-slate-900 outline-none"
             />
             {field('email') && (
               <p className="mt-1 text-xs text-red-600">{field('email')}</p>
@@ -89,7 +89,7 @@ export function CreateUserModal({ action, onClose }: CreateUserModalProps) {
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <label className="mb-1.5 block text-[13px] font-semibold text-slate-700">
               Contraseña <span className="text-red-500">*</span>
             </label>
             <input
@@ -97,22 +97,22 @@ export function CreateUserModal({ action, onClose }: CreateUserModalProps) {
               type="password"
               required
               minLength={10}
-              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+              className="glass-input w-full rounded-[14px] px-3.5 py-2.5 text-sm text-slate-900 outline-none"
             />
-            <p className="mt-1 text-xs text-zinc-400">Mínimo 10 caracteres</p>
+            <p className="mt-1 text-xs text-slate-400">Mínimo 10 caracteres</p>
             {field('password') && (
               <p className="mt-1 text-xs text-red-600">{field('password')}</p>
             )}
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <label className="mb-1.5 block text-[13px] font-semibold text-slate-700">
               Rol <span className="text-red-500">*</span>
             </label>
             <select
               name="role"
               defaultValue="receptionist"
-              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+              className="glass-input w-full rounded-[14px] px-3.5 py-2.5 text-sm text-slate-900 outline-none"
             >
               {Object.entries(ROLE_LABELS).map(([value, label]) => (
                 <option key={value} value={value}>
@@ -174,34 +174,30 @@ export function EditUserModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-md rounded-xl bg-white shadow-xl dark:bg-zinc-900">
-        <div className="flex items-center justify-between border-b border-zinc-100 px-6 py-4 dark:border-zinc-700">
-          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+      <div className="w-full max-w-md rounded-[22px] border border-white/60 bg-white/90 shadow-[0_30px_60px_-20px_rgba(15,23,42,0.4)] backdrop-blur-2xl">
+        <div className="flex items-center justify-between border-b border-slate-900/6 px-6 py-4">
+          <h2 className="text-base font-semibold text-slate-900">
             Editar usuario
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
+            className="rounded-full p-1 text-slate-400 transition-colors hover:bg-slate-900/5 hover:text-slate-600"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
 
-        {/* Tab selector */}
-        <div className="border-b border-zinc-100 px-6 dark:border-zinc-700">
-          <nav className="-mb-px flex gap-1">
+        {/* Tab selector — iOS-style segmented control */}
+        <div className="px-6 pt-4">
+          <nav className="segmented w-full">
             {(['edit', 'password'] as const).map((t) => (
               <button
                 key={t}
                 type="button"
                 onClick={() => setTab(t)}
-                className={[
-                  'px-3 py-2.5 text-sm font-medium transition-colors',
-                  tab === t
-                    ? 'border-b-2 border-teal-600 text-teal-700 dark:border-teal-400 dark:text-teal-400'
-                    : 'border-b-2 border-transparent text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200',
-                ].join(' ')}
+                data-active={tab === t}
+                className="segmented-item flex-1 px-3 py-1.5 text-[13px] text-slate-600 data-[active=true]:text-slate-900"
               >
                 {t === 'edit' ? 'Datos' : 'Contraseña'}
               </button>
@@ -214,21 +210,21 @@ export function EditUserModal({
             <input type="hidden" name="user_id" value={user.id} />
 
             {editState && !editState.success && (
-              <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400">
+              <div className="flex items-start gap-2 rounded-2xl border border-red-600/20 bg-red-100/70 px-3.5 py-3 text-sm text-red-700 backdrop-blur-md">
                 <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
                 <p>{editState.error}</p>
               </div>
             )}
 
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              <label className="mb-1.5 block text-[13px] font-semibold text-slate-700">
                 Nombre completo
               </label>
               <input
                 name="full_name"
                 type="text"
                 defaultValue={user.fullName}
-                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+                className="glass-input w-full rounded-[14px] px-3.5 py-2.5 text-sm text-slate-900 outline-none"
               />
               {editErrors?.full_name?.[0] && (
                 <p className="mt-1 text-xs text-red-600">{editErrors.full_name[0]}</p>
@@ -236,13 +232,13 @@ export function EditUserModal({
             </div>
 
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              <label className="mb-1.5 block text-[13px] font-semibold text-slate-700">
                 Rol
               </label>
               <select
                 name="role"
                 defaultValue={user.role}
-                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+                className="glass-input w-full rounded-[14px] px-3.5 py-2.5 text-sm text-slate-900 outline-none"
               >
                 {Object.entries(ROLE_LABELS).map(([value, label]) => (
                   <option key={value} value={value}>
@@ -260,12 +256,12 @@ export function EditUserModal({
                   checked={isActive}
                   disabled={isSelf}
                   onChange={(e) => setIsActive(e.target.checked)}
-                  className="h-4 w-4 rounded border-zinc-300 text-teal-600 focus:ring-teal-600 disabled:opacity-50"
+                  className="h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-600 disabled:opacity-50"
                 />
-                <span className="text-sm text-zinc-700 dark:text-zinc-300">
+                <span className="text-sm text-slate-700">
                   Usuario activo
                   {isSelf && (
-                    <span className="ml-1 text-xs text-zinc-400">(no puedes desactivarte)</span>
+                    <span className="ml-1 text-xs text-slate-400">(no puedes desactivarte)</span>
                   )}
                 </span>
               </label>
@@ -288,19 +284,19 @@ export function EditUserModal({
             <input type="hidden" name="user_id" value={user.id} />
 
             {resetState && !resetState.success && (
-              <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400">
+              <div className="flex items-start gap-2 rounded-2xl border border-red-600/20 bg-red-100/70 px-3.5 py-3 text-sm text-red-700 backdrop-blur-md">
                 <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
                 <p>{resetState.error}</p>
               </div>
             )}
 
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="text-sm text-slate-500">
               Define una nueva contraseña para{' '}
-              <span className="font-medium text-zinc-700 dark:text-zinc-300">{user.fullName}</span>.
+              <span className="font-semibold text-slate-700">{user.fullName}</span>.
             </p>
 
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              <label className="mb-1.5 block text-[13px] font-semibold text-slate-700">
                 Nueva contraseña <span className="text-red-500">*</span>
               </label>
               <input
@@ -308,9 +304,9 @@ export function EditUserModal({
                 type="password"
                 required
                 minLength={10}
-                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+                className="glass-input w-full rounded-[14px] px-3.5 py-2.5 text-sm text-slate-900 outline-none"
               />
-              <p className="mt-1 text-xs text-zinc-400">Mínimo 10 caracteres</p>
+              <p className="mt-1 text-xs text-slate-400">Mínimo 10 caracteres</p>
             </div>
 
             <div className="flex justify-end gap-2 pt-2">
