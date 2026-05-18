@@ -98,9 +98,9 @@ export function PatientForm({ action, patient, mode = 'create', todayStr }: Pati
         </nav>
       </div>
 
-      {/* Personal tab */}
-      {activeTab === 'personal' && (
-        <div className="grid gap-4 sm:grid-cols-2">
+      {/* Personal tab — all panels stay mounted so tab switching preserves
+          typed values; inactive panels are hidden via CSS. */}
+      <div className={panelClass(activeTab === 'personal', 'grid gap-4 sm:grid-cols-2')}>
           <div className="space-y-1.5">
             <label htmlFor="id_type" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
               Tipo de documento
@@ -244,12 +244,10 @@ export function PatientForm({ action, patient, mode = 'create', todayStr }: Pati
             />
             {field('occupation') && <FieldError msg={field('occupation')} />}
           </div>
-        </div>
-      )}
+      </div>
 
       {/* Contact tab */}
-      {activeTab === 'contact' && (
-        <div className="grid gap-4 sm:grid-cols-2">
+      <div className={panelClass(activeTab === 'contact', 'grid gap-4 sm:grid-cols-2')}>
           <div className="space-y-1.5">
             <label htmlFor="phone" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
               Teléfono
@@ -352,12 +350,10 @@ export function PatientForm({ action, patient, mode = 'create', todayStr }: Pati
             />
             {field('referral_source') && <FieldError msg={field('referral_source')} />}
           </div>
-        </div>
-      )}
+      </div>
 
       {/* Insurance/Notes tab */}
-      {activeTab === 'insurance' && (
-        <div className="space-y-4">
+      <div className={panelClass(activeTab === 'insurance', 'space-y-4')}>
           <div className="space-y-1.5">
             <label htmlFor="insurance_info" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
               Información de seguro médico
@@ -385,8 +381,7 @@ export function PatientForm({ action, patient, mode = 'create', todayStr }: Pati
               className={textareaClass(!!field('notes'))}
             />
           </div>
-        </div>
-      )}
+      </div>
 
       <div className="flex items-center justify-between border-t border-zinc-100 pt-4 dark:border-zinc-800">
         <div className="flex gap-2">
@@ -429,6 +424,10 @@ function Required() {
 
 function FieldError({ msg }: { msg: string }) {
   return <p className="text-xs text-red-600 dark:text-red-400">{msg}</p>;
+}
+
+function panelClass(active: boolean, layout: string) {
+  return active ? layout : `${layout} hidden`;
 }
 
 function fieldClass(hasError: boolean) {
