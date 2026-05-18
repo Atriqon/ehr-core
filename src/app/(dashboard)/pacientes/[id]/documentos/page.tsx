@@ -33,14 +33,14 @@ export default async function PatientDocumentsPage({ params }: PageProps) {
   const canCreate = session.role === 'doctor';
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="fade-in p-6 sm:p-8 lg:px-10">
       <Breadcrumbs items={patientTrail(patient, { label: 'Documentos' })} />
 
       <div className="mb-6">
-        <p className="text-xs uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+        <p className="text-xs font-semibold uppercase tracking-[0.06em] text-slate-400">
           {patient.firstName} {patient.lastName}
         </p>
-        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+        <h1 className="mt-1 text-[28px] font-semibold leading-tight tracking-[-0.025em] text-slate-900">
           Documentos clínicos
         </h1>
       </div>

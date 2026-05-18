@@ -99,25 +99,23 @@ const FREQUENT_SPECIALTIES = [
 
 function fieldClass(hasError = false) {
   return [
-    'flex h-9 w-full rounded-lg border bg-white px-3 text-sm shadow-sm outline-none transition-colors',
-    'placeholder:text-zinc-400 focus:ring-2',
-    'dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500',
+    'glass-input flex h-9 w-full rounded-[14px] px-3.5 text-sm text-slate-900 outline-none transition-colors',
+    'placeholder:text-slate-400',
     'disabled:cursor-not-allowed disabled:opacity-60',
     hasError
       ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-700'
-      : 'border-zinc-200 focus:border-teal-600 focus:ring-teal-600/20 dark:border-zinc-700 dark:focus:border-teal-600',
+      : '',
   ].join(' ');
 }
 
 function textareaClass(hasError = false) {
   return [
-    'w-full rounded-lg border bg-white px-3 py-2 text-sm shadow-sm outline-none transition-colors resize-y',
-    'placeholder:text-zinc-400 focus:ring-2',
-    'dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500',
+    'glass-input w-full resize-y rounded-[14px] px-3.5 py-2 text-sm text-slate-900 outline-none transition-colors',
+    'placeholder:text-slate-400',
     'disabled:cursor-not-allowed disabled:opacity-60',
     hasError
       ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20 dark:border-red-700'
-      : 'border-zinc-200 focus:border-teal-600 focus:ring-teal-600/20 dark:border-zinc-700 dark:focus:border-teal-600',
+      : '',
   ].join(' ');
 }
 
@@ -125,7 +123,7 @@ function Label({ htmlFor, children }: { htmlFor?: string; children: React.ReactN
   return (
     <label
       htmlFor={htmlFor}
-      className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+      className="block text-[13px] font-semibold text-slate-700"
     >
       {children}
     </label>
@@ -508,58 +506,58 @@ export function ClinicalDocumentForm({
   return (
     <form onSubmit={onSubmit} className="space-y-5">
       {state && !state.success && (
-        <div className="flex items-start gap-2.5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400">
+        <div className="flex items-start gap-2.5 rounded-2xl border border-red-600/20 bg-red-100/70 px-4 py-3 text-sm text-red-700 backdrop-blur-md">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
           <p>{state.error}</p>
         </div>
       )}
 
       {/* ── Datos pre-rellenados (read-only summary) ───────────────────────── */}
-      <section className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
-        <h2 className="mb-3 text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+      <section className="glass-card rounded-[22px] p-5.5">
+        <h2 className="mb-3 text-sm font-semibold text-slate-800">
           Datos del documento
         </h2>
         <dl className="grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
           <div>
-            <dt className="text-xs uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
+            <dt className="text-[11px] uppercase tracking-[0.06em] text-slate-400">
               Paciente
             </dt>
-            <dd className="text-zinc-800 dark:text-zinc-200">
+            <dd className="text-slate-800">
               {patient.firstName} {patient.lastName}
             </dd>
           </div>
           <div>
-            <dt className="text-xs uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
+            <dt className="text-[11px] uppercase tracking-[0.06em] text-slate-400">
               {patient.idType === 'cedula' ? 'Cédula' : 'Identificación'}
             </dt>
-            <dd className="text-zinc-800 dark:text-zinc-200">{patient.idNumber}</dd>
+            <dd className="text-slate-800">{patient.idNumber}</dd>
           </div>
           <div>
-            <dt className="text-xs uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
+            <dt className="text-[11px] uppercase tracking-[0.06em] text-slate-400">
               Edad
             </dt>
-            <dd className="text-zinc-800 dark:text-zinc-200">
+            <dd className="text-slate-800">
               {age != null ? `${age} años` : '—'}
             </dd>
           </div>
           <div>
-            <dt className="text-xs uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
+            <dt className="text-[11px] uppercase tracking-[0.06em] text-slate-400">
               Médico
             </dt>
-            <dd className="text-zinc-800 dark:text-zinc-200">{doctorName}</dd>
+            <dd className="text-slate-800">{doctorName}</dd>
           </div>
           <div>
-            <dt className="text-xs uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
+            <dt className="text-[11px] uppercase tracking-[0.06em] text-slate-400">
               Fecha
             </dt>
-            <dd className="text-zinc-800 dark:text-zinc-200">{todayStr}</dd>
+            <dd className="text-slate-800">{todayStr}</dd>
           </div>
         </dl>
       </section>
 
       {/* ── Tipo + título ──────────────────────────────────────────────────── */}
-      <section className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
-        <h2 className="mb-4 text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+      <section className="glass-card rounded-[22px] p-5.5">
+        <h2 className="mb-4 text-sm font-semibold text-slate-800">
           Tipo de documento
         </h2>
         <div className="grid gap-4 sm:grid-cols-[260px_1fr]">
@@ -658,7 +656,7 @@ export function ClinicalDocumentForm({
         />
       )}
 
-      <div className="sticky bottom-0 -mx-4 flex flex-col gap-3 border-t border-zinc-200 bg-white/95 px-4 py-3 backdrop-blur-sm sm:mx-0 sm:flex-row sm:justify-end dark:border-zinc-700 dark:bg-zinc-900/95">
+      <div className="sticky bottom-0 -mx-4 flex flex-col gap-3 border-t border-slate-900/6 bg-white/70 px-4 py-3 backdrop-blur-2xl sm:mx-0 sm:flex-row sm:justify-end">
         <Button type="submit" size="lg" disabled={isPending}>
           {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
           Generar documento
@@ -680,8 +678,8 @@ function MedicalRestFields({
   err: (key: string) => string | undefined;
 }) {
   return (
-    <section className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
-      <h2 className="mb-4 text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+    <section className="glass-card rounded-[22px] p-5.5">
+      <h2 className="mb-4 text-sm font-semibold text-slate-800">
         Reposo médico
       </h2>
       <div className="space-y-4">
@@ -744,9 +742,9 @@ function MedicalRestFields({
               type="date"
               value={state.end_date}
               readOnly
-              className={`${fieldClass()} bg-zinc-50 dark:bg-zinc-800`}
+              className={`${fieldClass()} bg-slate-900/4`}
             />
-            <p className="text-xs text-zinc-400 dark:text-zinc-500">
+            <p className="text-xs text-slate-400">
               Calculada desde la fecha de inicio + días de reposo.
             </p>
           </div>
@@ -782,8 +780,8 @@ function MedicalCertificateFields({
   err: (key: string) => string | undefined;
 }) {
   return (
-    <section className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
-      <h2 className="mb-4 text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+    <section className="glass-card rounded-[22px] p-5.5">
+      <h2 className="mb-4 text-sm font-semibold text-slate-800">
         Constancia médica
       </h2>
       <div className="space-y-4">
@@ -828,8 +826,8 @@ function ReferralFields({
   err: (key: string) => string | undefined;
 }) {
   return (
-    <section className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
-      <h2 className="mb-4 text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+    <section className="glass-card rounded-[22px] p-5.5">
+      <h2 className="mb-4 text-sm font-semibold text-slate-800">
         Referencia médica
       </h2>
       <div className="space-y-4">
@@ -908,9 +906,9 @@ function PrescriptionFields({
 }) {
   const arrayError = err('content.medications');
   return (
-    <section className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
+    <section className="glass-card rounded-[22px] p-5.5">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+        <h2 className="text-sm font-semibold text-slate-800">
           Récipe médico
         </h2>
         <Button type="button" variant="outline" size="sm" onClick={onAdd}>
@@ -925,10 +923,10 @@ function PrescriptionFields({
         {medications.map((med, idx) => (
           <div
             key={idx}
-            className="rounded-lg border border-zinc-200 bg-zinc-50/40 p-4 dark:border-zinc-700 dark:bg-zinc-800/30"
+            className="rounded-2xl border border-slate-900/6 bg-slate-50/60 p-4"
           >
             <div className="mb-3 flex items-center justify-between">
-              <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.06em] text-slate-500">
                 Medicamento #{idx + 1}
               </p>
               {medications.length > 1 && (
@@ -1021,8 +1019,8 @@ function PatientInstructionsFields({
   err: (key: string) => string | undefined;
 }) {
   return (
-    <section className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
-      <h2 className="mb-4 text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+    <section className="glass-card rounded-[22px] p-5.5">
+      <h2 className="mb-4 text-sm font-semibold text-slate-800">
         Indicaciones al paciente
       </h2>
       <div className="space-y-1.5">
@@ -1084,21 +1082,21 @@ function LabOrderFields({
   const customStudies = state.studies.filter((s) => !LAB_STUDY_GROUPS.flatMap((g) => g.studies).includes(s.name));
 
   return (
-    <section className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
-      <h2 className="mb-4 text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+    <section className="glass-card rounded-[22px] p-5.5">
+      <h2 className="mb-4 text-sm font-semibold text-slate-800">
         Orden de laboratorio
       </h2>
       <div className="space-y-5">
 
         {/* Frequent studies by category */}
         <div>
-          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.06em] text-slate-500">
             Estudios frecuentes
           </p>
           <div className="space-y-4">
             {LAB_STUDY_GROUPS.map((group) => (
               <div key={group.label}>
-                <p className="mb-1.5 text-xs font-medium text-zinc-600 dark:text-zinc-400">
+                <p className="mb-1.5 text-xs font-semibold text-slate-600">
                   {group.label}
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -1111,7 +1109,7 @@ function LabOrderFields({
                           'inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1 text-xs transition-colors',
                           checked
                             ? 'border-teal-500 bg-teal-50 text-teal-700 dark:border-teal-600 dark:bg-teal-950/40 dark:text-teal-300'
-                            : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300',
+                            : 'border-slate-900/10 bg-white/70 text-slate-700 hover:border-slate-900/20',
                         ].join(' ')}
                       >
                         <input
@@ -1133,7 +1131,7 @@ function LabOrderFields({
         {/* Notes per selected frequent study */}
         {state.studies.filter((s) => LAB_STUDY_GROUPS.flatMap((g) => g.studies).includes(s.name)).length > 0 && (
           <div className="space-y-2">
-            <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+            <p className="text-xs font-semibold text-slate-500">
               Notas por estudio seleccionado (opcional)
             </p>
             {state.studies
@@ -1142,7 +1140,7 @@ function LabOrderFields({
                 const idx = state.studies.indexOf(s);
                 return (
                   <div key={s.name} className="flex items-center gap-2">
-                    <span className="w-40 shrink-0 truncate text-xs text-zinc-700 dark:text-zinc-300">{s.name}</span>
+                    <span className="w-40 shrink-0 truncate text-xs text-slate-700">{s.name}</span>
                     <input
                       type="text"
                       value={s.notes}
@@ -1160,7 +1158,7 @@ function LabOrderFields({
         {/* Custom studies */}
         {customStudies.length > 0 && (
           <div className="space-y-2">
-            <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+            <p className="text-xs font-semibold text-slate-500">
               Estudios adicionales
             </p>
             {customStudies.map((s) => {
@@ -1232,9 +1230,9 @@ function LabOrderFields({
               type="checkbox"
               checked={state.fasting_required}
               onChange={(e) => onChange({ ...state, fasting_required: e.target.checked })}
-              className="h-4 w-4 rounded border-zinc-300 text-teal-600 focus:ring-teal-600"
+              className="h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-600"
             />
-            <span className="text-zinc-700 dark:text-zinc-300">Requiere ayuno</span>
+            <span className="text-slate-700">Requiere ayuno</span>
           </label>
           <div className="flex items-center gap-2">
             <Label htmlFor="lab_urgency">Urgencia</Label>
@@ -1310,15 +1308,15 @@ function ImagingOrderFields({
   const customStudies = state.studies.filter((s) => !FREQUENT_IMAGING_STUDIES.includes(s.name));
 
   return (
-    <section className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
-      <h2 className="mb-4 text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+    <section className="glass-card rounded-[22px] p-5.5">
+      <h2 className="mb-4 text-sm font-semibold text-slate-800">
         Orden de imagen
       </h2>
       <div className="space-y-5">
 
         {/* Frequent studies */}
         <div>
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.06em] text-slate-500">
             Estudios frecuentes
           </p>
           <div className="flex flex-wrap gap-2">
@@ -1331,7 +1329,7 @@ function ImagingOrderFields({
                     'inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1 text-xs transition-colors',
                     checked
                       ? 'border-teal-500 bg-teal-50 text-teal-700 dark:border-teal-600 dark:bg-teal-950/40 dark:text-teal-300'
-                      : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300',
+                      : 'border-slate-900/10 bg-white/70 text-slate-700 hover:border-slate-900/20',
                   ].join(' ')}
                 >
                   <input
@@ -1350,7 +1348,7 @@ function ImagingOrderFields({
         {/* Notes per selected frequent study */}
         {state.studies.filter((s) => FREQUENT_IMAGING_STUDIES.includes(s.name)).length > 0 && (
           <div className="space-y-2">
-            <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+            <p className="text-xs font-semibold text-slate-500">
               Notas por estudio (opcional)
             </p>
             {state.studies
@@ -1359,7 +1357,7 @@ function ImagingOrderFields({
                 const idx = state.studies.indexOf(s);
                 return (
                   <div key={s.name} className="flex items-center gap-2">
-                    <span className="w-48 shrink-0 truncate text-xs text-zinc-700 dark:text-zinc-300">{s.name}</span>
+                    <span className="w-48 shrink-0 truncate text-xs text-slate-700">{s.name}</span>
                     <input
                       type="text"
                       value={s.notes}
@@ -1377,7 +1375,7 @@ function ImagingOrderFields({
         {/* Custom studies */}
         {customStudies.length > 0 && (
           <div className="space-y-2">
-            <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+            <p className="text-xs font-semibold text-slate-500">
               Estudios adicionales
             </p>
             {customStudies.map((s) => {
@@ -1476,8 +1474,8 @@ function InterconsultationFields({
   const isCustom = state.specialty === '__custom__';
 
   return (
-    <section className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
-      <h2 className="mb-4 text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+    <section className="glass-card rounded-[22px] p-5.5">
+      <h2 className="mb-4 text-sm font-semibold text-slate-800">
         Interconsulta
       </h2>
       <div className="space-y-4">

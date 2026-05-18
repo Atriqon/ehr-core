@@ -87,9 +87,9 @@ export default async function NewClinicalDocumentPage({ params, searchParams }: 
   const prefillClinicalSummary = buildClinicalSummaryPrefill(latestNotePrefill);
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="fade-in p-6 sm:p-8 lg:px-10">
       {allergies && (
-        <div className="mb-4 flex items-start gap-3 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm font-medium text-red-800 dark:border-red-800 dark:bg-red-950/40 dark:text-red-300">
+        <div className="mb-4 flex items-start gap-3 rounded-2xl border border-red-600/20 bg-red-100/80 px-4 py-3.5 text-[13.5px] font-medium text-red-700 backdrop-blur-md">
           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
           <span><strong>ALERGIAS:</strong> {allergies}</span>
         </div>
@@ -103,10 +103,10 @@ export default async function NewClinicalDocumentPage({ params, searchParams }: 
       />
 
       <div className="mb-6">
-        <p className="text-xs uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+        <p className="text-xs font-semibold uppercase tracking-[0.06em] text-slate-400">
           {patient.firstName} {patient.lastName}
         </p>
-        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+        <h1 className="mt-1 text-[28px] font-semibold leading-tight tracking-[-0.025em] text-slate-900">
           Nuevo documento clínico
         </h1>
       </div>
