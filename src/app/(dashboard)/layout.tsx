@@ -1,9 +1,12 @@
 import { redirect } from 'next/navigation';
+import { headers } from 'next/headers';
 import { eq } from 'drizzle-orm';
-import { Menu } from 'lucide-react';
+import { Menu, AlertTriangle, Info, CreditCard } from 'lucide-react';
+import Link from 'next/link';
 import { db } from '@/lib/db';
 import { users } from '@/lib/db/schema';
 import { getSession } from '@/lib/auth/session';
+import { getClinicSubscription } from '@/queries/clinic';
 import { LogoutButton } from '@/components/logout-button';
 import { SidebarNav } from '@/components/sidebar-nav';
 import { MobileSidebar } from '@/components/mobile-sidebar';
@@ -26,6 +29,28 @@ function getInitials(name: string) {
     .toUpperCase();
 }
 
+const PLANS = [
+  {
+    key: 'basico',
+    name: 'Básico',
+    price: 'Próximamente',
+    features: ['Hasta 500 pacientes', '1 médico', '1 GB de almacenamiento'],
+  },
+  {
+    key: 'profesional',
+    name: 'Profesional',
+    price: 'Próximamente',
+    features: ['Hasta 2.000 pacientes', '3 médicos', '5 GB de almacenamiento'],
+    highlight: true,
+  },
+  {
+    key: 'clinica',
+    name: 'Clínica',
+    price: 'Próximamente',
+    features: ['Pacientes ilimitados', 'Médicos ilimitados', '20 GB de almacenamiento'],
+  },
+];
+
 export default async function DashboardLayout({
   children,
 }: {
@@ -34,12 +59,19 @@ export default async function DashboardLayout({
   const session = await getSession();
   if (!session) redirect('/login');
 
-  const user = await db.query.users.findFirst({
-    where: eq(users.id, session.userId),
-    columns: { fullName: true, role: true, email: true },
-  });
+  const [user, subscription] = await Promise.all([
+    db.query.users.findFirst({
+      where: eq(users.id, session.userId),
+      columns: { fullName: true, role: true, email: true },
+    }),
+    getClinicSubscription(session.clinicId),
+  ]);
 
   if (!user) redirect('/login');
+
+  const headersList = await headers();
+  const pathname = headersList.get('x-pathname') ?? '';
+  const isConfigPage = pathname.startsWith('/configuracion');
 
   const roleLabel = roleLabels[user.role] ?? user.role;
 
@@ -101,9 +133,100 @@ export default async function DashboardLayout({
           </div>
         </header>
 
+        {/* ── Trial banner ── */}
+        {subscription.status === 'trialing' && !subscription.isTrialExpired && (
+          <div
+            className={[
+              'flex shrink-0 items-center justify-between gap-3 px-4 py-2.5 text-[13px] lg:px-6',
+              subscription.daysRemaining <= 3
+                ? 'bg-amber-50 text-amber-800 border-b border-amber-200'
+                : 'bg-sky-50 text-sky-800 border-b border-sky-200',
+            ].join(' ')}
+          >
+            <span className="flex items-center gap-2">
+              {subscription.daysRemaining <= 3 ? (
+                <AlertTriangle className="h-4 w-4 shrink-0" />
+              ) : (
+                <Info className="h-4 w-4 shrink-0" />
+              )}
+              <span>
+                Estás en tu prueba gratuita.{' '}
+                {subscription.daysRemaining === 1
+                  ? 'Te queda 1 día.'
+                  : `Te quedan ${subscription.daysRemaining} días.`}
+              </span>
+            </span>
+            <Link
+              href="/configuracion"
+              className="shrink-0 rounded-lg border border-current/30 px-3 py-1 font-medium transition-colors hover:bg-black/5"
+            >
+              Ver planes
+            </Link>
+          </div>
+        )}
+
         {/* ── Page content ── */}
         <main className="flex-1 overflow-y-auto">
-          <ToastProvider>{children}</ToastProvider>
+          <ToastProvider>
+            {subscription.isTrialExpired && !isConfigPage ? (
+              <div className="flex min-h-full flex-col items-center justify-center gap-10 px-6 py-16">
+                <div className="text-center">
+                  <CreditCard className="mx-auto mb-4 h-12 w-12 text-slate-300" />
+                  <h1 className="text-2xl font-semibold text-slate-900">
+                    Tu prueba ha expirado
+                  </h1>
+                  <p className="mt-2 max-w-md text-sm text-slate-500">
+                    El período de prueba gratuita de 7 días ha concluido. Elige un plan para
+                    seguir usando Hisamed.
+                  </p>
+                  <Link
+                    href="/configuracion"
+                    className="mt-4 inline-block text-sm font-medium text-teal-700 hover:underline"
+                  >
+                    Ir a configuración para exportar tus datos →
+                  </Link>
+                </div>
+
+                <div className="grid w-full max-w-3xl gap-4 sm:grid-cols-3">
+                  {PLANS.map((plan) => (
+                    <div
+                      key={plan.key}
+                      className={[
+                        'glass-card flex flex-col rounded-2xl p-6',
+                        plan.highlight
+                          ? 'ring-2 ring-teal-500'
+                          : 'ring-1 ring-slate-900/8',
+                      ].join(' ')}
+                    >
+                      {plan.highlight && (
+                        <span className="mb-3 self-start rounded-full bg-teal-100 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-teal-700">
+                          Popular
+                        </span>
+                      )}
+                      <p className="text-base font-semibold text-slate-900">{plan.name}</p>
+                      <p className="mt-1 text-2xl font-bold text-slate-900">{plan.price}</p>
+                      <ul className="mt-4 flex-1 space-y-2">
+                        {plan.features.map((f) => (
+                          <li key={f} className="flex items-center gap-2 text-[13px] text-slate-600">
+                            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-teal-500" />
+                            {f}
+                          </li>
+                        ))}
+                      </ul>
+                      <button
+                        disabled
+                        className="mt-6 w-full cursor-not-allowed rounded-xl bg-teal-600/40 py-2.5 text-[13px] font-semibold text-white"
+                      >
+                        Suscribirse
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              children
+            )}
+          </ToastProvider>
         </main>
       </div>
     </div>

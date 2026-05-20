@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import { db } from '@/lib/db';
-import { clinics } from '@/lib/db/schema';
+import { clinics, type SubscriptionStatus, type SubscriptionPlan } from '@/lib/db/schema';
 
 export interface ClinicSummary {
   id: string;
@@ -83,6 +83,66 @@ export async function getFullClinic(clinicId: string): Promise<FullClinic | null
     phone: row.phone,
     timezone: row.timezone,
     weekStartsOn: normalizeWeekStartsOn(row.weekStartsOn),
+  };
+}
+
+export interface ClinicSubscription {
+  status: SubscriptionStatus;
+  trialEndsAt: Date | null;
+  daysRemaining: number;
+  isTrialExpired: boolean;
+  plan: SubscriptionPlan | null;
+  maxPatients: number;
+  maxDoctors: number;
+  maxStorageMb: number;
+}
+
+export async function getClinicSubscription(clinicId: string): Promise<ClinicSubscription> {
+  const rows = await db
+    .select({
+      subscriptionStatus: clinics.subscriptionStatus,
+      trialEndsAt: clinics.trialEndsAt,
+      subscriptionPlan: clinics.subscriptionPlan,
+      maxPatients: clinics.maxPatients,
+      maxDoctors: clinics.maxDoctors,
+      maxStorageMb: clinics.maxStorageMb,
+    })
+    .from(clinics)
+    .where(eq(clinics.id, clinicId))
+    .limit(1);
+
+  const row = rows[0];
+  if (!row) {
+    return {
+      status: 'active',
+      trialEndsAt: null,
+      daysRemaining: 0,
+      isTrialExpired: false,
+      plan: null,
+      maxPatients: 500,
+      maxDoctors: 1,
+      maxStorageMb: 1024,
+    };
+  }
+
+  const now = Date.now();
+  const trialEndsAt = row.trialEndsAt ?? null;
+  const isTrialing = row.subscriptionStatus === 'trialing';
+  const isTrialExpired = isTrialing && trialEndsAt !== null && trialEndsAt.getTime() < now;
+  const daysRemaining =
+    isTrialing && trialEndsAt !== null
+      ? Math.max(0, Math.ceil((trialEndsAt.getTime() - now) / (1000 * 60 * 60 * 24)))
+      : 0;
+
+  return {
+    status: row.subscriptionStatus,
+    trialEndsAt,
+    daysRemaining,
+    isTrialExpired,
+    plan: row.subscriptionPlan ?? null,
+    maxPatients: row.maxPatients,
+    maxDoctors: row.maxDoctors,
+    maxStorageMb: row.maxStorageMb,
   };
 }
 

@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, sum } from 'drizzle-orm';
 import { db } from '@/lib/db';
-import { attachments, clinicalNotes, patients } from '@/lib/db/schema';
+import { attachments, clinicalNotes, clinics, patients } from '@/lib/db/schema';
 import { getSession } from '@/lib/auth/session';
 import { auditLog, safeAuditLog, getClientIpFromHeaders } from '@/lib/audit';
 import { consumeRateLimit } from '@/lib/rate-limit';
@@ -214,6 +214,31 @@ export async function POST(request: NextRequest) {
       { success: false, error: 'Paciente no encontrado' },
       { status: 404 },
     );
+  }
+
+  // Storage quota check: sum existing bytes for this clinic and compare to plan limit.
+  const [clinicRow] = await db
+    .select({ maxStorageMb: clinics.maxStorageMb })
+    .from(clinics)
+    .where(eq(clinics.id, session.clinicId))
+    .limit(1);
+  if (clinicRow) {
+    const [{ used }] = await db
+      .select({ used: sum(attachments.fileSizeBytes) })
+      .from(attachments)
+      .innerJoin(patients, eq(attachments.patientId, patients.id))
+      .where(eq(patients.clinicId, session.clinicId));
+    const usedBytes = Number(used ?? 0);
+    const limitBytes = clinicRow.maxStorageMb * 1024 * 1024;
+    if (usedBytes + file.size > limitBytes) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: `Has alcanzado el límite de almacenamiento de tu plan (${clinicRow.maxStorageMb} MB). Actualiza tu plan para subir más archivos.`,
+        },
+        { status: 413 },
+      );
+    }
   }
 
   // If the client linked the upload to a clinical note, that note must belong

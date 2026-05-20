@@ -1,9 +1,9 @@
 'use server';
 
-import { and, eq } from 'drizzle-orm';
+import { and, eq, count } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
-import { users } from '@/lib/db/schema';
+import { users, clinics } from '@/lib/db/schema';
 import { requireRole } from '@/lib/auth/session';
 import { auditLog, getClientIpFromHeaders } from '@/lib/audit';
 import { hashPassword } from '@/lib/auth/password';
@@ -54,6 +54,26 @@ export async function createUser(
 
   if (existing.length > 0) {
     return { success: false, error: `Ya existe un usuario con el email ${email}` };
+  }
+
+  if (role === 'doctor') {
+    const [clinicRow] = await db
+      .select({ maxDoctors: clinics.maxDoctors })
+      .from(clinics)
+      .where(eq(clinics.id, session.clinicId))
+      .limit(1);
+    if (clinicRow) {
+      const [{ total }] = await db
+        .select({ total: count() })
+        .from(users)
+        .where(and(eq(users.clinicId, session.clinicId), eq(users.role, 'doctor')));
+      if (total >= clinicRow.maxDoctors) {
+        return {
+          success: false,
+          error: `Has alcanzado el límite de médicos de tu plan (${clinicRow.maxDoctors}). Actualiza tu plan para agregar más médicos.`,
+        };
+      }
+    }
   }
 
   const passwordHash = await hashPassword(password);

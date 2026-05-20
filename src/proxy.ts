@@ -5,18 +5,32 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { ACCESS_COOKIE } from '@/lib/auth/session';
 
-const PUBLIC_PATHS = new Set<string>(['/login', '/forgot-password']);
+const PUBLIC_PATHS = new Set<string>(['/login', '/forgot-password', '/registro']);
+
+// Forward the pathname as a request header so server components (e.g. the
+// dashboard layout) can read it via `headers().get('x-pathname')` without
+// coupling to client-only APIs like usePathname().
+function withPathname(request: NextRequest): NextResponse {
+  return NextResponse.next({
+    request: {
+      headers: new Headers({
+        ...Object.fromEntries(request.headers.entries()),
+        'x-pathname': request.nextUrl.pathname,
+      }),
+    },
+  });
+}
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (PUBLIC_PATHS.has(pathname)) {
-    return NextResponse.next();
+    return withPathname(request);
   }
 
   const hasAccessToken = request.cookies.has(ACCESS_COOKIE);
   if (hasAccessToken) {
-    return NextResponse.next();
+    return withPathname(request);
   }
 
   const loginUrl = new URL('/login', request.url);

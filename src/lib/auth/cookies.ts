@@ -1,3 +1,4 @@
+import { cookies } from 'next/headers';
 import type { NextResponse } from 'next/server';
 import { ACCESS_COOKIE, REFRESH_COOKIE } from '@/lib/auth/session';
 
@@ -24,6 +25,33 @@ export function setAuthCookies(
 
   if (tokens.refreshToken !== undefined) {
     response.cookies.set({
+      name: REFRESH_COOKIE,
+      value: tokens.refreshToken,
+      httpOnly: true,
+      secure: isProd(),
+      sameSite: 'lax',
+      path: '/',
+      maxAge: REFRESH_MAX_AGE,
+    });
+  }
+}
+
+export async function setAuthCookiesInAction(tokens: {
+  accessToken: string;
+  refreshToken?: string;
+}): Promise<void> {
+  const store = await cookies();
+  store.set({
+    name: ACCESS_COOKIE,
+    value: tokens.accessToken,
+    httpOnly: true,
+    secure: isProd(),
+    sameSite: 'lax',
+    path: '/',
+    maxAge: ACCESS_MAX_AGE,
+  });
+  if (tokens.refreshToken !== undefined) {
+    store.set({
       name: REFRESH_COOKIE,
       value: tokens.refreshToken,
       httpOnly: true,

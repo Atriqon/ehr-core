@@ -1,10 +1,10 @@
 'use server';
 
-import { and, eq } from 'drizzle-orm';
+import { and, eq, count } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
-import { patients, medicalHistories, patientPartners } from '@/lib/db/schema';
+import { patients, medicalHistories, patientPartners, clinics } from '@/lib/db/schema';
 import { requireSession, requireRole } from '@/lib/auth/session';
 import { auditLog, getClientIpFromHeaders } from '@/lib/audit';
 import { generateId } from '@/lib/utils/generate-id';
@@ -46,6 +46,24 @@ export async function createPatient(
   }
 
   const data = parsed.data;
+
+  const [clinicRow] = await db
+    .select({ maxPatients: clinics.maxPatients })
+    .from(clinics)
+    .where(eq(clinics.id, session.clinicId))
+    .limit(1);
+  if (clinicRow) {
+    const [{ total }] = await db
+      .select({ total: count() })
+      .from(patients)
+      .where(eq(patients.clinicId, session.clinicId));
+    if (total >= clinicRow.maxPatients) {
+      return {
+        success: false,
+        error: `Has alcanzado el límite de pacientes de tu plan (${clinicRow.maxPatients}). Actualiza tu plan para registrar más pacientes.`,
+      };
+    }
+  }
 
   const duplicate = await checkDuplicateIdNumber(session.clinicId, data.id_number);
   if (duplicate) {

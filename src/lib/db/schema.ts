@@ -24,6 +24,19 @@ import { sql } from 'drizzle-orm';
 
 export const userRoleEnum = pgEnum('user_role', ['admin', 'doctor', 'receptionist']);
 
+export const subscriptionStatusEnum = pgEnum('subscription_status', [
+  'trialing',
+  'active',
+  'past_due',
+  'canceled',
+]);
+
+export const subscriptionPlanEnum = pgEnum('subscription_plan', [
+  'basico',
+  'profesional',
+  'clinica',
+]);
+
 export const bloodTypeEnum = pgEnum('blood_type', ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']);
 
 export const idTypeEnum = pgEnum('id_type', ['cedula', 'passport', 'other']);
@@ -84,6 +97,12 @@ export const clinics = pgTable('clinics', {
   // 1 = Monday (most of Europe / ISO 8601). Default 1 because it is the most
   // universal expectation; Venezuela accepts either without friction.
   weekStartsOn: smallint('week_starts_on').notNull().default(1),
+  subscriptionStatus: subscriptionStatusEnum('subscription_status').notNull().default('trialing'),
+  trialEndsAt: timestamp('trial_ends_at'),
+  subscriptionPlan: subscriptionPlanEnum('subscription_plan'),
+  maxPatients: integer('max_patients').notNull().default(500),
+  maxDoctors: integer('max_doctors').notNull().default(1),
+  maxStorageMb: integer('max_storage_mb').notNull().default(1024),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
@@ -527,6 +546,8 @@ export type PatientPartner = typeof patientPartners.$inferSelect;
 export type NewPatientPartner = typeof patientPartners.$inferInsert;
 
 export type UserRole = 'admin' | 'doctor' | 'receptionist';
+export type SubscriptionStatus = 'trialing' | 'active' | 'past_due' | 'canceled';
+export type SubscriptionPlan = 'basico' | 'profesional' | 'clinica';
 export type AuditAction =
   | 'CREATE'
   | 'READ'
