@@ -44,9 +44,9 @@ export interface ImportResult {
 export async function importPatients(rows: CsvImportRow[]): Promise<ImportResult> {
   let session;
   try {
-    session = await requireRole(['admin']);
+    session = await requireRole(['admin', 'doctor']);
   } catch {
-    return { success: false, imported: 0, errors: [], error: 'Solo administradores pueden importar pacientes' };
+    return { success: false, imported: 0, errors: [], error: 'No tienes permisos para importar pacientes' };
   }
 
   if (!Array.isArray(rows) || rows.length === 0) {

@@ -21,9 +21,9 @@ describe('canAccessReports', () => {
 });
 
 describe('canFilterByDoctor', () => {
-  it('is admin-only', () => {
+  it('allows admin and doctor, blocks receptionist', () => {
     expect(canFilterByDoctor('admin')).toBe(true);
-    expect(canFilterByDoctor('doctor')).toBe(false);
+    expect(canFilterByDoctor('doctor')).toBe(true);
     expect(canFilterByDoctor('receptionist')).toBe(false);
     expect(canFilterByDoctor(null)).toBe(false);
   });

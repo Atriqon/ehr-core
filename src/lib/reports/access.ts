@@ -14,7 +14,10 @@ export function canAccessReports(role: UserRole | null | undefined): boolean {
   return role != null && REPORTS_ALLOWED_ROLES.includes(role);
 }
 
-/** Only admins may filter the dashboard by an individual doctor. */
+/**
+ * Admins and doctor-owners may filter the dashboard by an individual doctor.
+ * Receptionists cannot reach reports at all (see `canAccessReports`).
+ */
 export function canFilterByDoctor(role: UserRole | null | undefined): boolean {
-  return role === 'admin';
+  return role === 'admin' || role === 'doctor';
 }

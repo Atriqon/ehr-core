@@ -221,9 +221,9 @@ export async function togglePatientActive(
 ): Promise<PatientActionState> {
   let session;
   try {
-    session = await requireRole(['admin']);
+    session = await requireRole(['admin', 'doctor']);
   } catch {
-    return { success: false, error: 'Solo administradores pueden activar/desactivar pacientes' };
+    return { success: false, error: 'No tienes permisos para activar/desactivar pacientes' };
   }
 
   const patientId = formData.get('patient_id') as string;

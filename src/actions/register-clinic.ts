@@ -93,11 +93,11 @@ export async function registerClinic(
       email: normalizedEmail,
       passwordHash,
       fullName,
-      role: 'admin',
+      role: 'doctor',
     });
   });
 
-  const claims = { userId, clinicId, role: 'admin' as const };
+  const claims = { userId, clinicId, role: 'doctor' as const };
   const [accessToken, refreshToken] = await Promise.all([
     generateAccessToken(claims),
     generateRefreshToken(claims),

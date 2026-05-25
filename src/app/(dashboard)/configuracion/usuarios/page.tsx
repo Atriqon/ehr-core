@@ -10,7 +10,7 @@ import { settingsTrail } from '@/lib/breadcrumbs';
 export default async function UsuariosPage() {
   const session = await getSession();
   if (!session) redirect('/login');
-  if (session.role !== 'admin') notFound();
+  if (session.role !== 'admin' && session.role !== 'doctor') notFound();
 
   const [clinicSettings, users] = await Promise.all([
     getClinicSettings(session.clinicId),

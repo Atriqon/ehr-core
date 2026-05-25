@@ -19,9 +19,9 @@ export async function updateClinicSettings(
 ): Promise<ClinicActionState> {
   let session;
   try {
-    session = await requireRole(['admin']);
+    session = await requireRole(['admin', 'doctor']);
   } catch {
-    return { success: false, error: 'Solo administradores pueden modificar la configuración' };
+    return { success: false, error: 'No tienes permisos para modificar la configuración' };
   }
 
   const raw = Object.fromEntries(formData.entries());

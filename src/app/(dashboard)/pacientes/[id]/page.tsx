@@ -259,7 +259,7 @@ export default async function PatientDetailPage({ params }: PageProps) {
               defaultRecipientEmail={patient.email}
             />
           )}
-          {session.role === 'admin' && (
+          {(session.role === 'admin' || session.role === 'doctor') && (
             <ToggleActiveButton
               patientId={patient.id}
               isActive={patient.isActive}

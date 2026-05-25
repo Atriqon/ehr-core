@@ -30,7 +30,7 @@ const adminLinks = [
 export default async function ConfiguracionPage() {
   const session = await getSession();
   if (!session) redirect('/login');
-  if (session.role !== 'admin') {
+  if (session.role !== 'admin' && session.role !== 'doctor') {
     return (
       <div className="fade-in p-6 sm:p-8 lg:px-10">
         <h1 className="text-[32px] font-semibold leading-[1.15] tracking-[-0.025em] text-slate-900">

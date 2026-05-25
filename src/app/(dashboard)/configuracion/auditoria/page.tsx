@@ -78,7 +78,7 @@ function formatDateTime(date: Date, timezone: string): string {
 export default async function AuditoriaPage({ searchParams }: PageProps) {
   const session = await getSession();
   if (!session) redirect('/login');
-  if (session.role !== 'admin') notFound();
+  if (session.role !== 'admin' && session.role !== 'doctor') notFound();
 
   const params = await searchParams;
   const filters = {

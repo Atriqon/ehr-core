@@ -28,9 +28,9 @@ export async function createUser(
 ): Promise<UserActionState> {
   let session;
   try {
-    session = await requireRole(['admin']);
+    session = await requireRole(['admin', 'doctor']);
   } catch {
-    return { success: false, error: 'Solo administradores pueden crear usuarios' };
+    return { success: false, error: 'No tienes permisos para crear usuarios' };
   }
 
   const raw = Object.fromEntries(formData.entries());
@@ -110,9 +110,9 @@ export async function updateUser(
 ): Promise<UserActionState> {
   let session;
   try {
-    session = await requireRole(['admin']);
+    session = await requireRole(['admin', 'doctor']);
   } catch {
-    return { success: false, error: 'Solo administradores pueden editar usuarios' };
+    return { success: false, error: 'No tienes permisos para editar usuarios' };
   }
 
   const raw = Object.fromEntries(formData.entries());
@@ -173,9 +173,9 @@ export async function resetUserPassword(
 ): Promise<UserActionState> {
   let session;
   try {
-    session = await requireRole(['admin']);
+    session = await requireRole(['admin', 'doctor']);
   } catch {
-    return { success: false, error: 'Solo administradores pueden resetear contraseñas' };
+    return { success: false, error: 'No tienes permisos para resetear contraseñas' };
   }
 
   const raw = Object.fromEntries(formData.entries());

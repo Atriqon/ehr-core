@@ -7,7 +7,7 @@ import { settingsTrail } from '@/lib/breadcrumbs';
 export default async function ImportarPage() {
   const session = await getSession();
   if (!session) redirect('/login');
-  if (session.role !== 'admin') notFound();
+  if (session.role !== 'admin' && session.role !== 'doctor') notFound();
 
   return (
     <div className="fade-in p-6 sm:p-8 lg:px-10">
