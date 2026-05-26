@@ -1,6 +1,7 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Loader2, UserCheck, UserX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { togglePatientActive } from '@/actions/patients';
@@ -16,6 +17,13 @@ export function ToggleActiveButton({ patientId, isActive }: ToggleActiveButtonPr
     togglePatientActive,
     null,
   );
+  const router = useRouter();
+
+  useEffect(() => {
+    if (state?.success) {
+      router.refresh();
+    }
+  }, [state, router]);
 
   return (
     <form action={formAction}>

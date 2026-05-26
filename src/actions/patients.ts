@@ -247,6 +247,9 @@ export async function togglePatientActive(
     ipAddress: await getClientIpFromHeaders(),
   });
 
+  revalidatePath(`/pacientes/${patientId}`);
+  revalidatePath('/pacientes');
+
   return { success: true };
 }
 
