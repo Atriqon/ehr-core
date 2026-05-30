@@ -31,7 +31,14 @@ FILIACION.csv
 
 # misc
 .DS_Store
+
+# TLS certificates / private keys — never commit
+/certs/
 *.pem
+*.key
+*.crt
+*.p12
+*.pfx
 
 # debug
 npm-debug.log*
