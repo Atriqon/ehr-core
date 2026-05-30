@@ -152,11 +152,33 @@ export async function getPatientById(clinicId: string, patientId: string) {
   return row ?? null;
 }
 
-export async function getPatientPartner(patientId: string) {
-  const row = await db.query.patientPartners.findFirst({
-    where: eq(patientPartners.patientId, patientId),
-  });
-  return row ?? null;
+// Clinic-scoped: join through `patients` and require the patient to belong to
+// `clinicId` before returning the partner row. Self-protecting so future
+// callers can't accidentally use it without first gating on the patient — a
+// cross-clinic `patientId` simply yields null, same as a non-existent patient.
+export async function getPatientPartner(clinicId: string, patientId: string) {
+  const rows = await db
+    .select({
+      id: patientPartners.id,
+      patientId: patientPartners.patientId,
+      fullName: patientPartners.fullName,
+      idNumber: patientPartners.idNumber,
+      dateOfBirth: patientPartners.dateOfBirth,
+      phone: patientPartners.phone,
+      email: patientPartners.email,
+      bloodType: patientPartners.bloodType,
+      occupation: patientPartners.occupation,
+      notes: patientPartners.notes,
+      avatarStorageKey: patientPartners.avatarStorageKey,
+      createdAt: patientPartners.createdAt,
+      updatedAt: patientPartners.updatedAt,
+    })
+    .from(patientPartners)
+    .innerJoin(patients, eq(patientPartners.patientId, patients.id))
+    .where(and(eq(patientPartners.patientId, patientId), eq(patients.clinicId, clinicId)))
+    .limit(1);
+
+  return rows[0] ?? null;
 }
 
 export async function checkDuplicateIdNumber(

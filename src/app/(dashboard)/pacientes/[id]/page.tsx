@@ -88,7 +88,7 @@ export default async function PatientDetailPage({ params }: PageProps) {
     canViewClinical
       ? getClinicalDocumentsByPatient(session.clinicId, patient.id)
       : Promise.resolve([]),
-    getPatientPartner(patient.id),
+    getPatientPartner(session.clinicId, patient.id),
     getPatientAllergies(session.clinicId, patient.id),
     getVitalSignsByPatient(session.clinicId, patient.id),
   ]);
